@@ -5,9 +5,7 @@ import Data.Void (Void)
 import Text.Megaparsec (Parsec, parseTest, some)
 import Text.Megaparsec.Char (char, letterChar, lowerChar, spaceChar, string')
 
-x = 1
-
-data Node = Node {alias :: Char, name :: String} deriving (Show)
+data Node = Node {alias :: Char, name :: String} deriving (Show, Eq)
 
 type Parser = Parsec Void Text
 

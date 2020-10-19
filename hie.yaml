@@ -1,2 +1,13 @@
 cradle:
   stack:
+    - path: "./src"
+      component: "cypher-formatter:lib"
+
+    - path: "./app/Main.hs"
+      component: "cypher-formatter:exe:cypher-formatter-exe"
+
+    - path: "./app/Paths_cypher_formatter.hs"
+      component: "cypher-formatter:exe:cypher-formatter-exe"
+
+    - path: "./test"
+      component: "cypher-formatter:test:cypher-formatter-test"
