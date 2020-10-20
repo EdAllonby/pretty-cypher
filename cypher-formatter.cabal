@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 8672abe33ef6974766fc862773f507ad3b073ad8096cd0b028684a12b3ba51a4
+-- hash: fbda31e1806ce4a534245346ae62d5f00aaeff8cfb60a2f838d724d139a673ec
 
 name:           cypher-formatter
 version:        0.1.0.0
@@ -32,12 +32,14 @@ library
       Paths_cypher_formatter
   hs-source-dirs:
       src
-  default-extensions: OverloadedStrings
+  default-extensions: OverloadedStrings RecordWildCards
   build-depends:
       base >=4.7 && <5
+    , containers
     , hspec
     , hspec-megaparsec
     , megaparsec
+    , parser-combinators
     , text
   default-language: Haskell2010
 
@@ -47,14 +49,16 @@ executable cypher-formatter-exe
       Paths_cypher_formatter
   hs-source-dirs:
       app
-  default-extensions: OverloadedStrings
+  default-extensions: OverloadedStrings RecordWildCards
   ghc-options: -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       base >=4.7 && <5
+    , containers
     , cypher-formatter
     , hspec
     , hspec-megaparsec
     , megaparsec
+    , parser-combinators
     , text
   default-language: Haskell2010
 
@@ -66,13 +70,15 @@ test-suite cypher-formatter-test
       Paths_cypher_formatter
   hs-source-dirs:
       test
-  default-extensions: OverloadedStrings
+  default-extensions: OverloadedStrings RecordWildCards
   ghc-options: -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       base >=4.7 && <5
+    , containers
     , cypher-formatter
     , hspec
     , hspec-megaparsec
     , megaparsec
+    , parser-combinators
     , text
   default-language: Haskell2010

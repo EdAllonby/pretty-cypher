@@ -25,9 +25,12 @@ dependencies:
 - text
 - hspec
 - hspec-megaparsec
+- containers
+- parser-combinators
 
 default-extensions:
   - OverloadedStrings
+  - RecordWildCards
 
 library:
   source-dirs: src

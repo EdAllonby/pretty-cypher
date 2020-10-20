@@ -1,35 +1,66 @@
-module Parser where
+module Parser (parseQuery, Node(..), QueryExpr(..)) where
 
-import Data.Text (Text)
-import Data.Void (Void)
-import Text.Megaparsec (Parsec, parseTest, some)
-import Text.Megaparsec.Char (char, letterChar, lowerChar, spaceChar, string')
+import           Data.Text (Text)
+import qualified Data.Text as T
+import           Data.Void
+import           Text.Megaparsec
+import           Text.Megaparsec.Char
+import qualified Text.Megaparsec.Char.Lexer as L
 
-data Node = Node {alias :: Char, name :: String} deriving (Show, Eq)
+data Clause = ClauseMatch
+            | ClauseReturn
+
+data Node = Node { nodeAlias :: Char, nodeLabel :: Text }
+  deriving (Show, Eq)
+
+data QueryExpr = Match Node QueryExpr
+               | Return
+               | End
+  deriving (Eq, Show)
 
 type Parser = Parsec Void Text
 
-exampleQuery :: Text
-exampleQuery = "mATCH (u:User)-[r:Relationship]->(u:User)"
-
-runParse :: IO ()
-runParse = parseTest parseQuery exampleQuery
-
-parseMatch :: Parser Node
-parseMatch = do
-  string' "MATCH"
-  some spaceChar
-  node <- char '(' *> parseNode <* char ')'
-  return node
-
-parseQuery :: Parser Node
+parseQuery :: Parser QueryExpr
 parseQuery = do
-  node <- parseMatch
-  return (node)
+  sc
+  clause <- parseClause
+  match <- parseMatch
+  eof
+  return match
+
+sc :: Parser ()
+sc = L.space space1 (L.skipLineComment "//") empty
+
+lexeme :: Parser a -> Parser a
+lexeme = L.lexeme sc
+
+symbol :: Text -> Parser Text
+symbol = L.symbol sc
+
+symbol' :: Text -> Parser Text
+symbol' = L.symbol' sc
+
+parens :: Parser a -> Parser a
+parens = between (symbol "(") (symbol ")")
+
+pKeyword :: Text -> Parser Text
+pKeyword keyword = lexeme (string keyword)
+
+pKeyword' :: Text -> Parser Text
+pKeyword' keyword = lexeme (string keyword <* notFollowedBy alphaNumChar)
+
+parseClause :: Parser Clause
+parseClause = choice
+  [ClauseMatch <$ symbol' "MATCH", ClauseReturn <$ symbol' "RETURN"]
+  <?> "valid clause"
+
+parseMatch :: Parser QueryExpr
+parseMatch = do
+  sc
+  node <- parens parseNode
+  eof
+  return (Match node End)
 
 parseNode :: Parser Node
-parseNode = do
-  alias <- lowerChar
-  char ':'
-  name <- some letterChar
-  return (Node alias name)
+parseNode = Node <$> lowerChar
+  <*> (char ':' *> (T.pack <$> lexeme (some letterChar)))

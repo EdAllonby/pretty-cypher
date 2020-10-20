@@ -1,6 +1,7 @@
 module Main where
 
-import Parser
+import           Parser
+import           Text.Megaparsec (parseTest)
 
 main :: IO ()
-main = runParse
+main = parseTest parseQuery ""
