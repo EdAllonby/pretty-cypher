@@ -75,7 +75,8 @@ parseMatch = do
        [ parens parseNode <?> "valid node"
        , brackets parseRelationship <?> "valid relationship"
        , parseConnectorDirection <?> "connector"])
-    (lookAhead parseReturn) -- Might need to update this to lookahead to something more intelligent
+    -- Might need to update this to lookahead to something more intelligent
+    (lookAhead . choice $ [symbol' "RETURN", symbol' "MATCH", symbol ","])
   return $ Match node
 
 parseNode :: Parser MatchSection

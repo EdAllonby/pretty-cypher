@@ -47,17 +47,17 @@ runParserTests = describe "Parser"
         it "parses match clause with extra spaces"
           $ "  MATCH  (  p:Person   )     RETURN    "
           `shouldParseQuery` Match [Node 'p' "Person"] Return
-
         --
         -- it "fails on invalid clause producing correct error message"
         --   $ parse parseQuery "" "MARCH"
         --   `shouldFailWith` err
         --     0
         --     (utoks "MARCH" <> elabel "match clause or return clause")
-        -- it "parses match clause followed by another match clause"
-        --   $ "MATCH (n:Node) MATCH (n:Node) RETURN"
-        --   `shouldParseQuery` Match
-        --     (Node { nodeAlias = 'n', nodeLabel = "Node" })
-        --     (Match (Node { nodeAlias = 'n', nodeLabel = "Node" }) Return)
+        it "parses match clause followed by another match clause"
+          $ "MATCH (n:Node) MATCH (n:Node) RETURN"
+          `shouldParseQuery` Match
+            [Node { nodeAlias = 'n', nodeLabel = "Node" }]
+            (Match [Node { nodeAlias = 'n', nodeLabel = "Node" }] Return)
+
 shouldParseQuery :: Text -> QueryExpr -> Expectation
 shouldParseQuery query result = parse parseQuery "" query `shouldParse` result
