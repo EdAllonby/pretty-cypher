@@ -1,4 +1,4 @@
-module Parser (parseQuery, Node(..), QueryExpr(..)) where
+module Parser where
 
 import           Data.Text (Text)
 import qualified Data.Text as T
@@ -7,26 +7,35 @@ import           Text.Megaparsec
 import           Text.Megaparsec.Char
 import qualified Text.Megaparsec.Char.Lexer as L
 
-data Clause = ClauseMatch
-            | ClauseReturn
-
-data Node = Node { nodeAlias :: Char, nodeLabel :: Text }
+data ConnectorDirection = LeftDirection
+                        | RightDirection
+                        | NoDirection
   deriving (Show, Eq)
 
-data QueryExpr = Match Node QueryExpr
+data MatchSection =
+    Node { nodeAlias :: Char, nodeLabel :: Text }
+  | Relationship { relationshipAlias :: Char, relationshipLabel :: Text }
+  | ConnectorDirection ConnectorDirection
+  | Direction
+  deriving (Show, Eq)
+
+data QueryExpr = Match [MatchSection] QueryExpr
                | Return
-               | End
   deriving (Eq, Show)
 
 type Parser = Parsec Void Text
 
+pTerm :: Parser QueryExpr
+pTerm = choice
+  [ (parseMatch <*> parseQuery) <?> "match clause"
+  , parseReturn <?> "return clause"]
+
 parseQuery :: Parser QueryExpr
 parseQuery = do
   sc
-  clause <- parseClause
-  match <- parseMatch
+  term <- pTerm
   eof
-  return match
+  return term
 
 sc :: Parser ()
 sc = L.space space1 (L.skipLineComment "//") empty
@@ -43,24 +52,43 @@ symbol' = L.symbol' sc
 parens :: Parser a -> Parser a
 parens = between (symbol "(") (symbol ")")
 
+brackets :: Parser a -> Parser a
+brackets = between (symbol "[") (symbol "]")
+
 pKeyword :: Text -> Parser Text
 pKeyword keyword = lexeme (string keyword)
 
 pKeyword' :: Text -> Parser Text
 pKeyword' keyword = lexeme (string keyword <* notFollowedBy alphaNumChar)
 
-parseClause :: Parser Clause
-parseClause = choice
-  [ClauseMatch <$ symbol' "MATCH", ClauseReturn <$ symbol' "RETURN"]
-  <?> "valid clause"
+parseReturn :: Parser QueryExpr
+parseReturn = do
+  symbol' "RETURN"
+  return Return
 
-parseMatch :: Parser QueryExpr
+parseMatch :: Parser (QueryExpr -> QueryExpr)
 parseMatch = do
   sc
-  node <- parens parseNode
-  eof
-  return (Match node End)
+  symbol' "MATCH"
+  node <- manyTill
+    (choice
+       [ parens parseNode <?> "valid node"
+       , brackets parseRelationship <?> "valid relationship"
+       , parseConnectorDirection <?> "connector"])
+    (lookAhead parseReturn) -- Might need to update this to lookahead to something more intelligent
+  return $ Match node
 
-parseNode :: Parser Node
+parseNode :: Parser MatchSection
 parseNode = Node <$> lowerChar
   <*> (char ':' *> (T.pack <$> lexeme (some letterChar)))
+
+parseRelationship :: Parser MatchSection
+parseRelationship = Relationship <$> lowerChar
+  <*> (char ':' *> (T.pack <$> lexeme (some letterChar)))
+
+-- parseConnectorDirection :: Parser MatchSection
+parseConnectorDirection = ConnectorDirection
+  <$> choice
+    [ RightDirection <$ symbol "->"
+    , NoDirection <$ symbol "-"
+    , LeftDirection <$ symbol "<-"]
