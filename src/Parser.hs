@@ -12,11 +12,12 @@ data ConnectorDirection = LeftDirection
                         | NoDirection
   deriving (Show, Eq)
 
-data MatchSection =
-    Node { nodeAlias :: Char, nodeLabel :: Text }
-  | Relationship { relationshipAlias :: Char, relationshipLabel :: Text }
-  | ConnectorDirection ConnectorDirection
-  | Direction
+data MatchSection = Node { nodeVariable :: Maybe Text, nodeLabel :: Text }
+                  | Relationship { relationshipVariable :: Maybe Text
+                                 , relationshipLabel :: Text
+                                 }
+                  | ConnectorDirection ConnectorDirection
+                  | Direction
   deriving (Show, Eq)
 
 data QueryExpr = Match [MatchSection] QueryExpr
@@ -61,6 +62,9 @@ pKeyword keyword = lexeme (string keyword)
 pKeyword' :: Text -> Parser Text
 pKeyword' keyword = lexeme (string' keyword <* notFollowedBy alphaNumChar)
 
+parseText :: Parser Text
+parseText = T.pack <$> lexeme (some letterChar)
+
 parseReturn :: Parser QueryExpr
 parseReturn = do
   symbol' "RETURN"
@@ -80,12 +84,11 @@ parseMatch = do
   return $ Match node
 
 parseNode :: Parser MatchSection
-parseNode = Node <$> (lexeme lowerChar)
-  <*> (symbol ":" *> (T.pack <$> lexeme (some letterChar)))
+parseNode = Node <$> optional parseText <*> (symbol ":" *> parseText)
 
 parseRelationship :: Parser MatchSection
-parseRelationship = Relationship <$> (lexeme lowerChar)
-  <*> (symbol ":" *> (T.pack <$> lexeme (some letterChar)))
+parseRelationship = Relationship <$> optional parseText
+  <*> (symbol ":" *> parseText)
 
 parseConnectorDirection :: Parser MatchSection
 parseConnectorDirection = ConnectorDirection
