@@ -4,11 +4,11 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: fbda31e1806ce4a534245346ae62d5f00aaeff8cfb60a2f838d724d139a673ec
+-- hash: 12b958ed71b21d9aa41cc4e63e6b9da76005a97bb8a3040ac2fa84e1cb339d6a
 
 name:           cypher-formatter
 version:        0.1.0.0
-description:    Please see the README on GitHub at <https://github.com/githubuser/cypher-formatter#readme>
+description:    Please see the README on GitHub at <https://github.com/EdAllonby/cypher-formatter#readme>
 homepage:       https://github.com/EdAllonby/cypher-formatter#readme
 bug-reports:    https://github.com/EdAllonby/cypher-formatter/issues
 author:         Ed Allonby
@@ -28,6 +28,7 @@ source-repository head
 library
   exposed-modules:
       Parser
+      Types
   other-modules:
       Paths_cypher_formatter
   hs-source-dirs:

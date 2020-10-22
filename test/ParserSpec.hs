@@ -1,5 +1,6 @@
 module ParserSpec where
 
+import           Types
 import           Parser
 import           Test.Hspec
 import           Test.Hspec.Megaparsec
