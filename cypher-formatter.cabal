@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 12b958ed71b21d9aa41cc4e63e6b9da76005a97bb8a3040ac2fa84e1cb339d6a
+-- hash: 397d2e0ac082d48e3ad14e371c81f45ff6ddb894e18d58590449fd982098b2c2
 
 name:           cypher-formatter
 version:        0.1.0.0
@@ -28,6 +28,7 @@ source-repository head
 library
   exposed-modules:
       Parser
+      ParserCore
       Types
   other-modules:
       Paths_cypher_formatter
