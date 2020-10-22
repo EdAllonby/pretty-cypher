@@ -59,7 +59,7 @@ pKeyword :: Text -> Parser Text
 pKeyword keyword = lexeme (string keyword)
 
 pKeyword' :: Text -> Parser Text
-pKeyword' keyword = lexeme (string keyword <* notFollowedBy alphaNumChar)
+pKeyword' keyword = lexeme (string' keyword <* notFollowedBy alphaNumChar)
 
 parseReturn :: Parser QueryExpr
 parseReturn = do
@@ -76,18 +76,18 @@ parseMatch = do
        , brackets parseRelationship <?> "valid relationship"
        , parseConnectorDirection <?> "connector"])
     -- Might need to update this to lookahead to something more intelligent
-    (lookAhead . choice $ [symbol' "RETURN", symbol' "MATCH", symbol ","])
+    (lookAhead . choice $ [pKeyword' "RETURN", pKeyword' "MATCH", symbol ","])
   return $ Match node
 
 parseNode :: Parser MatchSection
-parseNode = Node <$> lowerChar
-  <*> (char ':' *> (T.pack <$> lexeme (some letterChar)))
+parseNode = Node <$> (lexeme lowerChar)
+  <*> (symbol ":" *> (T.pack <$> lexeme (some letterChar)))
 
 parseRelationship :: Parser MatchSection
-parseRelationship = Relationship <$> lowerChar
-  <*> (char ':' *> (T.pack <$> lexeme (some letterChar)))
+parseRelationship = Relationship <$> (lexeme lowerChar)
+  <*> (symbol ":" *> (T.pack <$> lexeme (some letterChar)))
 
--- parseConnectorDirection :: Parser MatchSection
+parseConnectorDirection :: Parser MatchSection
 parseConnectorDirection = ConnectorDirection
   <$> choice
     [ RightDirection <$ symbol "->"

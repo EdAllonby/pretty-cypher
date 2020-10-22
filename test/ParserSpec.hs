@@ -45,8 +45,12 @@ runParserTests = describe "Parser"
             , Node 'c' "Car"]
             Return
         it "parses match clause with extra spaces"
-          $ "  MATCH  (  p:Person   )     RETURN    "
-          `shouldParseQuery` Match [Node 'p' "Person"] Return
+          $ "  MATCH  (  p : Person   )   ->  [  o : OWNS  ]    RETURN    "
+          `shouldParseQuery` Match
+            [ Node 'p' "Person"
+            , ConnectorDirection RightDirection
+            , Relationship 'o' "OWNS"]
+            Return
         --
         -- it "fails on invalid clause producing correct error message"
         --   $ parse parseQuery "" "MARCH"
