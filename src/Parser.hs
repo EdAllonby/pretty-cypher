@@ -12,12 +12,23 @@ data ConnectorDirection = LeftDirection
                         | NoDirection
   deriving (Show, Eq)
 
-data MatchSection = Node { nodeVariable :: Maybe Text, nodeLabel :: Text }
-                  | Relationship { relationshipVariable :: Maybe Text
-                                 , relationshipLabel :: Text
-                                 }
+data Node = LabelledNode { labelledNodeVariable :: Maybe Text
+                         , labelledNodeLabel :: Text
+                         }
+          | AnyNode { anyNodeVariable :: Text }
+          | EmptyNode
+  deriving (Show, Eq)
+
+data Relationship =
+    LabelledRelationship { labelledRelationshipVariable :: Maybe Text
+                         , labelledRelationshipLabel :: Text
+                         }
+  | AnyRelationship { anyRelationshipVariable :: Text }
+  deriving (Show, Eq)
+
+data MatchSection = Node Node
+                  | Relationship Relationship
                   | ConnectorDirection ConnectorDirection
-                  | Direction
   deriving (Show, Eq)
 
 data QueryExpr = Match [MatchSection] QueryExpr
@@ -65,6 +76,9 @@ pKeyword' keyword = lexeme (string' keyword <* notFollowedBy alphaNumChar)
 parseText :: Parser Text
 parseText = T.pack <$> lexeme (some letterChar)
 
+parseNothing :: Parser Text
+parseNothing = symbol ""
+
 parseReturn :: Parser QueryExpr
 parseReturn = do
   symbol' "RETURN"
@@ -76,19 +90,27 @@ parseMatch = do
   symbol' "MATCH"
   node <- manyTill
     (choice
-       [ parens parseNode <?> "valid node"
-       , brackets parseRelationship <?> "valid relationship"
+       [ Node <$> parseNode <?> "valid node"
+       , Relationship <$> parseRelationship <?> "valid relationship"
        , parseConnectorDirection <?> "connector"])
     -- Might need to update this to lookahead to something more intelligent
     (lookAhead . choice $ [pKeyword' "RETURN", pKeyword' "MATCH", symbol ","])
   return $ Match node
 
-parseNode :: Parser MatchSection
-parseNode = Node <$> optional parseText <*> (symbol ":" *> parseText)
+parseNode :: Parser Node
+parseNode = parens
+  $ choice
+    [ try $ LabelledNode <$> optional parseText <*> (symbol ":" *> parseText)
+    , AnyNode <$> parseText
+    , EmptyNode <$ symbol ""]
 
-parseRelationship :: Parser MatchSection
-parseRelationship = Relationship <$> optional parseText
-  <*> (symbol ":" *> parseText)
+parseRelationship :: Parser Relationship
+parseRelationship = brackets
+  $ choice
+    [ try
+        $ LabelledRelationship <$> optional parseText
+        <*> (symbol ":" *> parseText)
+    , AnyRelationship <$> parseText]
 
 parseConnectorDirection :: Parser MatchSection
 parseConnectorDirection = ConnectorDirection
