@@ -8,11 +8,16 @@ data ConnectorDirection = LeftDirection
                         | NoDirection
   deriving (Show, Eq)
 
-type Properties = M.Map Text Text
+data PropertyValue = TextValue Text
+                   | IntegerValue Integer
+                   | DoubleValue Double
+  deriving (Show, Eq)
+
+type Properties = M.Map Text PropertyValue
 
 data Node = LabelledNode { labelledNodeVariable :: Maybe Text
                          , labelledNodeLabel :: Text
-                         , properties :: Properties
+                         , labelledNodeProperties :: Properties
                          }
           | AnyNode { anyNodeVariable :: Text }
           | EmptyNode
@@ -21,6 +26,7 @@ data Node = LabelledNode { labelledNodeVariable :: Maybe Text
 data Relationship =
     LabelledRelationship { labelledRelationshipVariable :: Maybe Text
                          , labelledRelationshipLabel :: Text
+                         , labelledRelationshipProperties :: Properties
                          }
   | AnyRelationship { anyRelationshipVariable :: Text }
   deriving (Show, Eq)

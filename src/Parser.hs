@@ -36,7 +36,7 @@ parseNode = parens
     [ try
         $ LabelledNode <$> optional parseText
         <*> (symbol ":" *> parseText)
-        <*> (parseProperties <?> "labels")
+        <*> parseProperties
     , AnyNode <$> parseText
     , EmptyNode <$ symbol ""]
 
@@ -46,6 +46,7 @@ parseRelationship = brackets
     [ try
         $ LabelledRelationship <$> optional parseText
         <*> (symbol ":" *> parseText)
+        <*> parseProperties
     , AnyRelationship <$> parseText]
 
 parseConnectorDirection :: Parser MatchSection
@@ -55,10 +56,15 @@ parseConnectorDirection = ConnectorDirection
     , NoDirection <$ symbol "-"
     , LeftDirection <$ symbol "<-"]
 
-parseProperties :: Parser (M.Map Text Text)
+parseProperties :: Parser (M.Map Text PropertyValue)
 parseProperties = do
   props <- optional $ curlyBrackets $ parseProperty `sepBy` symbol ","
   return $ M.unions (M.fromList <$> props)
 
-parseProperty :: Parser (Text, Text)
-parseProperty = (,) <$> parseText <*> (symbol ":" *> betweenQuotes)
+parseProperty :: Parser (Text, PropertyValue)
+parseProperty = (,) <$> parseText
+  <*> (symbol ":"
+       *> choice
+         [ DoubleValue <$> try signedDouble -- TODO: Not too sure why this one needs a try, shouldn't it be atomic? Investigate
+         , IntegerValue <$> signedInteger
+         , TextValue <$> betweenQuotes])

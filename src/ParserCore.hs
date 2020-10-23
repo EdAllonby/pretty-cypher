@@ -10,7 +10,11 @@ module ParserCore
     , brackets
     , curlyBrackets
     , parseText
-    , betweenQuotes) where
+    , betweenQuotes
+    , integer
+    , double
+    , signedInteger
+    , signedDouble) where
 
 import           Data.Text (Text)
 import           Data.Void (Void)
@@ -34,6 +38,18 @@ symbol = L.symbol sc
 
 symbol' :: Text -> Parser Text
 symbol' = L.symbol' sc
+
+integer :: Parser Integer
+integer = lexeme L.decimal
+
+double :: Parser Double
+double = lexeme L.float
+
+signedInteger :: Parser Integer
+signedInteger = L.signed sc integer
+
+signedDouble :: Parser Double
+signedDouble = L.signed sc double
 
 keyword' :: Text -> Parser Text
 keyword' keyword = lexeme (string' keyword <* notFollowedBy alphaNumChar)

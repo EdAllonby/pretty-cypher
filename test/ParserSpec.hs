@@ -19,13 +19,18 @@ runParserTests = describe "Parser"
             [Node $ LabelledNode (Just "per") "Person" M.empty]
             Return
         it "parses match clause with node specifying properties"
-          $ "MATCH (per:Person { name: ' D. A. V. E '}) RETURN"
+          $ "MATCH (per:Person { name: ' D. A. V. E ', age: 32, height: 1.6, delta: -10, base: -3.14 }) RETURN"
           `shouldParseQuery` Match
             [ Node
                 $ LabelledNode
                   (Just "per")
                   "Person"
-                  (M.fromList [("name", " D. A. V. E ")])]
+                  (M.fromList
+                     [ ("age", IntegerValue 32)
+                     , ("base", DoubleValue (-3.14))
+                     , ("delta", IntegerValue (-10))
+                     , ("height", DoubleValue 1.6)
+                     , ("name", TextValue " D. A. V. E ")])]
             Return
         it "parses match clause with anonymous node"
           $ "MATCH (:Person) RETURN"
@@ -40,12 +45,26 @@ runParserTests = describe "Parser"
         it "parses match clause with relationship"
           $ "MATCH [fo:FOLLOWS] RETURN"
           `shouldParseQuery` Match
-            [Relationship $ LabelledRelationship (Just "fo") "FOLLOWS"]
+            [Relationship $ LabelledRelationship (Just "fo") "FOLLOWS" M.empty]
+            Return
+        it "parses match clause with relationship specifying properties"
+          $ "MATCH [fo:FOLLOWS { name: ' D. A. V. E ', age: 32, height: 1.6, delta: -10, base: -3.14 }] RETURN"
+          `shouldParseQuery` Match
+            [ Relationship
+                $ LabelledRelationship
+                  (Just "fo")
+                  "FOLLOWS"
+                  (M.fromList
+                     [ ("age", IntegerValue 32)
+                     , ("base", DoubleValue (-3.14))
+                     , ("delta", IntegerValue (-10))
+                     , ("height", DoubleValue 1.6)
+                     , ("name", TextValue " D. A. V. E ")])]
             Return
         it "parses match clause with anonymous relationship"
           $ "MATCH [:FOLLOWS] RETURN"
           `shouldParseQuery` Match
-            [Relationship $ LabelledRelationship Nothing "FOLLOWS"]
+            [Relationship $ LabelledRelationship Nothing "FOLLOWS" M.empty]
             Return
         it "parses match clause with any relationship"
           $ "MATCH [a] RETURN"
@@ -55,7 +74,7 @@ runParserTests = describe "Parser"
           `shouldParseQuery` Match
             [ Node $ LabelledNode (Just "p") "Person" M.empty
             , ConnectorDirection NoDirection
-            , Relationship $ LabelledRelationship (Just "h") "HAS"
+            , Relationship $ LabelledRelationship (Just "h") "HAS" M.empty
             , ConnectorDirection RightDirection
             , Node $ LabelledNode (Just "c") "Car" M.empty]
             Return
@@ -64,7 +83,7 @@ runParserTests = describe "Parser"
           `shouldParseQuery` Match
             [ Node $ LabelledNode (Just "p") "Person" M.empty
             , ConnectorDirection LeftDirection
-            , Relationship $ LabelledRelationship (Just "h") "HAS"
+            , Relationship $ LabelledRelationship (Just "h") "HAS" M.empty
             , ConnectorDirection NoDirection
             , Node $ LabelledNode (Just "c") "Car" M.empty]
             Return
@@ -73,16 +92,25 @@ runParserTests = describe "Parser"
           `shouldParseQuery` Match
             [ Node $ LabelledNode (Just "p") "Person" M.empty
             , ConnectorDirection NoDirection
-            , Relationship $ LabelledRelationship (Just "h") "HAS"
+            , Relationship $ LabelledRelationship (Just "h") "HAS" M.empty
             , ConnectorDirection NoDirection
             , Node $ LabelledNode (Just "c") "Car" M.empty]
             Return
-        it "parses match clause with extra spaces"
-          $ "  MATCH  (   : Person   )   -  [  o : OWNS  ] -> (car :Car )   RETURN    "
+        it "parses match clause with odd spacing"
+          $ "  MATCH  (   : Person{ name: ' D. A. V. E ' , age : 32 , height : 1.6 , delta : -10 , base  : -3.14  } )   -  [  o : OWNS  ] -> (car :Car )   RETURN    "
           `shouldParseQuery` Match
-            [ Node $ LabelledNode Nothing "Person" M.empty
+            [ Node
+                $ LabelledNode
+                  Nothing
+                  "Person"
+                  (M.fromList
+                     [ ("age", IntegerValue 32)
+                     , ("base", DoubleValue (-3.14))
+                     , ("delta", IntegerValue (-10))
+                     , ("height", DoubleValue 1.6)
+                     , ("name", TextValue " D. A. V. E ")])
             , ConnectorDirection NoDirection
-            , Relationship $ LabelledRelationship (Just "o") "OWNS"
+            , Relationship $ LabelledRelationship (Just "o") "OWNS" M.empty
             , ConnectorDirection RightDirection
             , Node $ LabelledNode (Just "car") "Car" M.empty]
             Return
