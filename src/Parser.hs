@@ -3,9 +3,8 @@ module Parser (parseQuery) where
 import           Types
 import           ParserCore
 import           Data.Text (Text)
-import qualified Data.Text as T
 import           Text.Megaparsec
-import           Text.Megaparsec.Char
+import qualified Data.Map as M
 
 parseQuery :: Parser QueryExpr
 parseQuery = sc
@@ -13,18 +12,6 @@ parseQuery = sc
     [ (parseMatch <*> parseQuery) <?> "match clause"
     , parseReturn <?> "return clause"]
   <* eof
-
-parens :: Parser a -> Parser a
-parens = between (symbol "(") (symbol ")")
-
-brackets :: Parser a -> Parser a
-brackets = between (symbol "[") (symbol "]")
-
-pKeyword' :: Text -> Parser Text
-pKeyword' keyword = lexeme (string' keyword <* notFollowedBy alphaNumChar)
-
-parseText :: Parser Text
-parseText = T.pack <$> lexeme (some letterChar)
 
 parseReturn :: Parser QueryExpr
 parseReturn = do
@@ -40,13 +27,16 @@ parseMatch = do
        , Relationship <$> parseRelationship <?> "valid relationship"
        , parseConnectorDirection <?> "connector"])
     -- Might need to update this lookahead to something more intelligent
-    (lookAhead . choice $ [pKeyword' "RETURN", pKeyword' "MATCH", symbol ","])
+    (lookAhead . choice $ [keyword' "RETURN", keyword' "MATCH", symbol ","])
   return $ Match node
 
 parseNode :: Parser Node
 parseNode = parens
   $ choice
-    [ try $ LabelledNode <$> optional parseText <*> (symbol ":" *> parseText)
+    [ try
+        $ LabelledNode <$> optional parseText
+        <*> (symbol ":" *> parseText)
+        <*> (parseProperties <?> "labels")
     , AnyNode <$> parseText
     , EmptyNode <$ symbol ""]
 
@@ -64,3 +54,11 @@ parseConnectorDirection = ConnectorDirection
     [ RightDirection <$ symbol "->"
     , NoDirection <$ symbol "-"
     , LeftDirection <$ symbol "<-"]
+
+parseProperties :: Parser (M.Map Text Text)
+parseProperties = do
+  props <- optional $ curlyBrackets $ parseProperty `sepBy` symbol ","
+  return $ M.unions (M.fromList <$> props)
+
+parseProperty :: Parser (Text, Text)
+parseProperty = (,) <$> parseText <*> (symbol ":" *> betweenQuotes)
