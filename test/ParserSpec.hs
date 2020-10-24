@@ -17,6 +17,7 @@ runParserTests = describe "Parser"
         context "with relationship" runParserMatchRelationshipTests
         context "with direction" runParserMatchDirectionTests
         context "with odd cases" runParserMatchOddTests
+        context "with error" runParserMatchErrorTests
 
 runParserMatchNodeTests = do
   it "parses match clause with node"
@@ -125,17 +126,23 @@ runParserMatchOddTests = do
       , ConnectorDirection RightDirection
       , Node $ LabelledNode (Just "car") "Car" M.empty]
       Return
-  --
-  -- it "fails on invalid clause producing correct error message"
-  --   $ parse parseQuery "" "MARCH"
-  --   `shouldFailWith` err
-  --     0
-  --     (utoks "MARCH" <> elabel "match clause or return clause")
   it "parses match clause followed by another match clause"
     $ "MATCH (n:Node) MATCH (n:Node) RETURN"
     `shouldParseQuery` Match
       [Node $ LabelledNode (Just "n") "Node" M.empty]
       (Match [Node $ LabelledNode (Just "n") "Node" M.empty] Return)
 
+runParserMatchErrorTests = do
+  it "fails on invalid clause producing correct error message"
+    $ "MARCH"
+    `shouldFailQuery` (utoks "MARCH"
+                       <> elabel "match clause"
+                       <> elabel "return clause")
+
 shouldParseQuery :: Text -> QueryExpr -> Expectation
-shouldParseQuery query result = parse parseQuery "" query `shouldParse` result
+shouldParseQuery query expectedResult =
+  parse parseQuery "" query `shouldParse` expectedResult
+
+shouldFailQuery :: Text -> ET Text -> Expectation
+shouldFailQuery query expectedError =
+  parse parseQuery "" query `shouldFailWith` err 0 expectedError
