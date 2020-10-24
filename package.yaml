@@ -27,10 +27,14 @@ dependencies:
 - hspec-megaparsec
 - containers
 - parser-combinators
+- template-haskell
 
 default-extensions:
   - OverloadedStrings
   - RecordWildCards
+  - TemplateHaskell
+  - QuasiQuotes
+  - DeriveDataTypeable
 
 library:
   source-dirs: src

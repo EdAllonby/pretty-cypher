@@ -1,17 +1,19 @@
+
 module Types where
 
 import           Data.Text (Text)
 import qualified Data.Map as M
+import           Data.Data (Data, Typeable)
 
 data ConnectorDirection = LeftDirection
                         | RightDirection
                         | NoDirection
-  deriving (Show, Eq)
+  deriving (Data, Typeable, Eq, Show)
 
 data PropertyValue = TextValue Text
                    | IntegerValue Integer
                    | DoubleValue Double
-  deriving (Show, Eq)
+  deriving (Data, Typeable, Eq, Show)
 
 type Properties = M.Map Text PropertyValue
 
@@ -21,7 +23,7 @@ data Node = LabelledNode { labelledNodeVariable :: Maybe Text
                          }
           | AnyNode { anyNodeVariable :: Text }
           | EmptyNode
-  deriving (Show, Eq)
+  deriving (Data, Typeable, Eq, Show)
 
 data Relationship =
     LabelledRelationship { labelledRelationshipVariable :: Maybe Text
@@ -29,13 +31,13 @@ data Relationship =
                          , labelledRelationshipProperties :: Properties
                          }
   | AnyRelationship { anyRelationshipVariable :: Text }
-  deriving (Show, Eq)
+  deriving (Data, Typeable, Eq, Show)
 
 data MatchSection = Node Node
                   | Relationship Relationship
                   | ConnectorDirection ConnectorDirection
-  deriving (Show, Eq)
+  deriving (Data, Typeable, Eq, Show)
 
 data QueryExpr = Match [MatchSection] QueryExpr
                | Return
-  deriving (Eq, Show)
+  deriving (Data, Typeable, Eq, Show)

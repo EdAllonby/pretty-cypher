@@ -15,12 +15,12 @@ parseQuery = sc
 
 parseReturn :: Parser QueryExpr
 parseReturn = do
-  symbol' "RETURN"
+  keyword' "RETURN"
   return Return
 
 parseMatch :: Parser (QueryExpr -> QueryExpr)
 parseMatch = do
-  symbol' "MATCH"
+  keyword' "MATCH"
   node <- manyTill
     (choice
        [ Node <$> parseNode <?> "valid node"

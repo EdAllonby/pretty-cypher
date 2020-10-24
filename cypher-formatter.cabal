@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 397d2e0ac082d48e3ad14e371c81f45ff6ddb894e18d58590449fd982098b2c2
+-- hash: 2dec7c6e79c21df0f45a9af581f2f8a801df3f3fdcd5fd96709d57d07bf6bd3c
 
 name:           cypher-formatter
 version:        0.1.0.0
@@ -29,12 +29,13 @@ library
   exposed-modules:
       Parser
       ParserCore
+      QuasiQuote
       Types
   other-modules:
       Paths_cypher_formatter
   hs-source-dirs:
       src
-  default-extensions: OverloadedStrings RecordWildCards
+  default-extensions: OverloadedStrings RecordWildCards TemplateHaskell QuasiQuotes DeriveDataTypeable
   build-depends:
       base >=4.7 && <5
     , containers
@@ -42,6 +43,7 @@ library
     , hspec-megaparsec
     , megaparsec
     , parser-combinators
+    , template-haskell
     , text
   default-language: Haskell2010
 
@@ -51,7 +53,7 @@ executable cypher-formatter-exe
       Paths_cypher_formatter
   hs-source-dirs:
       app
-  default-extensions: OverloadedStrings RecordWildCards
+  default-extensions: OverloadedStrings RecordWildCards TemplateHaskell QuasiQuotes DeriveDataTypeable
   ghc-options: -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       base >=4.7 && <5
@@ -61,6 +63,7 @@ executable cypher-formatter-exe
     , hspec-megaparsec
     , megaparsec
     , parser-combinators
+    , template-haskell
     , text
   default-language: Haskell2010
 
@@ -69,10 +72,11 @@ test-suite cypher-formatter-test
   main-is: Spec.hs
   other-modules:
       ParserSpec
+      QuasiQuoteSpec
       Paths_cypher_formatter
   hs-source-dirs:
       test
-  default-extensions: OverloadedStrings RecordWildCards
+  default-extensions: OverloadedStrings RecordWildCards TemplateHaskell QuasiQuotes DeriveDataTypeable
   ghc-options: -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       base >=4.7 && <5
@@ -82,5 +86,6 @@ test-suite cypher-formatter-test
     , hspec-megaparsec
     , megaparsec
     , parser-combinators
+    , template-haskell
     , text
   default-language: Haskell2010
