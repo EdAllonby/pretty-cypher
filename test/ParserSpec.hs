@@ -104,7 +104,7 @@ runParserOptionalMatchTests = do
   it "parses match with optional match clause"
     $ [r|
 MATCH (a:Movie { title: 'Wall Street' })
-OPTIONAL MATCH (a)-[r:ACTS]->()
+OPTIONAL MATCH (a)-[r:ACTS_IN]->()
 RETURN
     |]
     `shouldParseQuery` [ Match
@@ -121,7 +121,7 @@ RETURN
                                , Relationship
                                  (LabelledRelationship { labelledRelationshipVariable =
                                                            Just "r"
-                                                       , labelledRelationshipLabel = "ACTS"
+                                                       , labelledRelationshipLabel = "ACTS_IN"
                                                        })
                                  M.empty
                                , ConnectorDirection RightDirection
