@@ -43,7 +43,8 @@ parseRelationship = brackets
         $ LabelledRelationship <$> optional parseText
         <*> (symbol ":" *> parseText)
         <*> parseProperties
-    , AnyRelationship <$> parseText]
+    , AnyRelationship <$> parseText
+    , EmptyRelationship <$ symbol ""]
 
 parseConnectorDirection :: Parser ConnectorDirection
 parseConnectorDirection = choice

@@ -34,6 +34,7 @@ data Relationship =
                          , labelledRelationshipProperties :: Properties
                          }
   | AnyRelationship { anyRelationshipVariable :: Text }
+  | EmptyRelationship
   deriving (Data, Typeable, Eq, Show)
 
 data PatternComponent = Node NodeType Properties

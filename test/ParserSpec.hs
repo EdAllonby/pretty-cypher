@@ -113,6 +113,9 @@ runParserMatchRelationshipTests = do
   it "parses match clause with any relationship"
     $ "MATCH [a] RETURN"
     `shouldParseQuery` Match [Relationship $ AnyRelationship "a"] Return
+  it "parses match clause with empty relationship"
+    $ "MATCH [] RETURN"
+    `shouldParseQuery` Match [Relationship EmptyRelationship] Return
 
 runParserMatchDirectionTests = do
   it "parses match clause with right directionality"
