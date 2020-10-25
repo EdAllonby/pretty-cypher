@@ -1,9 +1,17 @@
 module Parser (parseQuery) where
 
-import           Types
-import           ParserCore
+import           Types (QueryExpr, Clause(..), Pattern
+                      , PatternComponent(ConnectorDirection, Node, Relationship)
+                      , RelationshipType(EmptyRelationship, LabelledRelationship,
+                 AnyRelationship)
+                      , NodeType(EmptyNode, LabelledNode, AnyNode)
+                      , PropertyValue(..), ConnectorDirection(..))
+import           ParserCore (Parser, sc, symbol, signedInteger, signedDouble
+                           , keyword', parens, brackets, curlyBrackets
+                           , parseText, betweenQuotes, sepByComma)
 import           Data.Text (Text)
-import           Text.Megaparsec
+import           Text.Megaparsec (optional, (<?>), choice, manyTill
+                                , MonadParsec(try, eof, lookAhead))
 import qualified Data.Map as M
 
 parseQuery :: Parser QueryExpr
@@ -20,15 +28,17 @@ parseReturn = do
 parseMatch :: Parser Clause
 parseMatch = do
   keyword' "MATCH"
-  node <- manyTill
-    (choice
-       [ parens (Node <$> parseNodeType <*> parseProperties) <?> "valid node"
-       , brackets (Relationship <$> parseRelationshipType <*> parseProperties)
-           <?> "valid relationship"
-       , ConnectorDirection <$> parseConnectorDirection <?> "connector"])
-    -- Might need to update this lookahead to something more intelligent
-    (lookAhead . choice $ [keyword' "RETURN", keyword' "MATCH", symbol ","])
-  return $ Match node
+  Match <$> sepByComma parsePattern
+
+parsePattern :: Parser Pattern
+parsePattern = manyTill
+  (choice
+     [ parens (Node <$> parseNodeType <*> parseProperties) <?> "valid node"
+     , brackets (Relationship <$> parseRelationshipType <*> parseProperties)
+         <?> "valid relationship"
+     , ConnectorDirection <$> parseConnectorDirection <?> "connector"])
+  -- Might need to update this lookahead to something more intelligent
+  (lookAhead . choice $ [keyword' "RETURN", keyword' "MATCH", symbol ","])
 
 parseNodeType :: Parser NodeType
 parseNodeType = choice
@@ -55,7 +65,7 @@ parseConnectorDirection = choice
 
 parseProperties :: Parser (M.Map Text PropertyValue)
 parseProperties = do
-  props <- optional $ curlyBrackets $ parseProperty `sepBy` symbol ","
+  props <- optional $ curlyBrackets $ sepByComma parseProperty
   return $ M.unions (M.fromList <$> props)
 
 parseProperty :: Parser (Text, PropertyValue)

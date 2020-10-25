@@ -43,7 +43,7 @@ data PatternComponent = Node NodeType Properties
 
 type Pattern = [PatternComponent]
 
-data Clause = Match Pattern
+data Clause = Match [Pattern] -- TODO: Move this to a non-empty list data type?
             | Return
   deriving (Data, Typeable, Eq, Show)
 

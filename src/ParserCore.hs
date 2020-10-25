@@ -14,11 +14,12 @@ module ParserCore
     , integer
     , double
     , signedInteger
-    , signedDouble) where
+    , signedDouble
+    , sepByComma) where
 
 import           Data.Text (Text)
 import           Data.Void (Void)
-import           Text.Megaparsec (lookAhead, manyTill, some, between
+import           Text.Megaparsec (sepBy, lookAhead, manyTill, some, between
                                 , notFollowedBy, empty, Parsec)
 import           Text.Megaparsec.Char (latin1Char, char, letterChar
                                      , alphaNumChar, space1, string')
@@ -71,3 +72,6 @@ betweenQuotes = T.pack
   <$> lexeme (between pQuote pQuote (manyTill latin1Char (lookAhead pQuote)))
   where
     pQuote = char '\''
+
+sepByComma :: Parser a -> Parser [a]
+sepByComma p = p `sepBy` symbol ","
