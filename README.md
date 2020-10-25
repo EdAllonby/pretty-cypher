@@ -30,4 +30,6 @@ It currently supports a small subset of cypher language parsing, along with a ru
 
 ### Quasiquotes
 
+* ✔️ Basic quasiquote support. i.e. `data = [cypher|(p:Person {age: 30} RETURN p)]`
+
 * Support metavariables. i.e.: `data x = [cypher|(p:Person {age: x} RETURN p)]`.  [This is a good starting point](https://www.well-typed.com/blog/2014/10/quasi-quoting-dsls/), however there are some functions that aren't available in the latest megaparsec library. More study required.
