@@ -1,3 +1,5 @@
+{-# LANGUAGE QuasiQuotes #-}
+
 module ParserSpec where
 
 import           Types
@@ -7,6 +9,7 @@ import           Test.Hspec.Megaparsec
 import           Text.Megaparsec
 import           Data.Text as T
 import qualified Data.Map as M
+import           Text.RawString.QQ (r)
 
 runParserTests :: SpecWith ()
 runParserTests = describe "Parser"
@@ -18,6 +21,9 @@ runParserTests = describe "Parser"
         context "with direction" runParserMatchDirectionTests
         context "with odd cases" runParserMatchOddTests
         context "with error" runParserMatchErrorTests
+    context "when parsing optional match only query"
+      $ do
+        runParserOptionalMatchTests
 
 runParserMatchNodeTests = do
   it "parses match clause with node"
@@ -85,6 +91,41 @@ runParserMatchNodeTests = do
                                     , ("delta", IntegerValue (-10))
                                     , ("height", DoubleValue 1.6)
                                     , ("name", TextValue " D. A. V. E ")])]]
+                       , Return]
+
+runParserOptionalMatchTests = do
+  it "parses optional match clause with node"
+    $ "OPTIONAL MATCH (per:Person) RETURN"
+    `shouldParseQuery` [ OptionalMatch
+                           [ [ Node
+                                 (LabelledNode (Just "per") ["Person"])
+                                 M.empty]]
+                       , Return]
+  it "parses match with optional match clause"
+    $ [r|
+MATCH (a:Movie { title: 'Wall Street' })
+OPTIONAL MATCH (a)-[r:ACTS]->()
+RETURN
+    |]
+    `shouldParseQuery` [ Match
+                           [ [ Node
+                                 (LabelledNode { labelledNodeVariable =
+                                                   Just "a"
+                                               , labelledNodeLabels = ["Movie"]
+                                               })
+                                 (M.fromList
+                                    [("title", TextValue "Wall Street")])]]
+                       , OptionalMatch
+                           [ [ Node (AnyNode { anyNodeVariable = "a" }) M.empty
+                               , ConnectorDirection NoDirection
+                               , Relationship
+                                 (LabelledRelationship { labelledRelationshipVariable =
+                                                           Just "r"
+                                                       , labelledRelationshipLabel = "ACTS"
+                                                       })
+                                 M.empty
+                               , ConnectorDirection RightDirection
+                               , Node EmptyNode M.empty]]
                        , Return]
 
 runParserMatchRelationshipTests = do
@@ -277,6 +318,7 @@ runParserMatchErrorTests = do
     $ "MARCH"
     `shouldFailQuery` (utoks "MARCH"
                        <> elabel "match clause"
+                       <> elabel "optional match clause"
                        <> elabel "return clause"
                        <> eeof)
 

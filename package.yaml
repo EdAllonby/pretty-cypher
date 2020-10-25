@@ -60,3 +60,4 @@ tests:
     - -with-rtsopts=-N
     dependencies:
     - pretty-cypher
+    - raw-strings-qq 

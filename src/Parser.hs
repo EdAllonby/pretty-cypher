@@ -17,7 +17,10 @@ import qualified Data.Map as M
 parseQuery :: Parser QueryExpr
 parseQuery = sc
   *> manyTill
-    (choice [parseMatch <?> "match clause", parseReturn <?> "return clause"])
+    (choice
+       [ parseMatch <?> "match clause"
+       , parseOptionalMatch <?> "optional match clause"
+       , parseReturn <?> "return clause"])
     eof
 
 parseReturn :: Parser Clause
@@ -30,6 +33,11 @@ parseMatch = do
   keyword' "MATCH"
   Match <$> commaSep parsePattern
 
+parseOptionalMatch :: Parser Clause
+parseOptionalMatch = do
+  keyword' "OPTIONAL MATCH"
+  OptionalMatch <$> commaSep parsePattern
+
 parsePattern :: Parser Pattern
 parsePattern = manyTill
   (choice
@@ -38,7 +46,11 @@ parsePattern = manyTill
          <?> "valid relationship"
      , ConnectorDirection <$> parseConnectorDirection <?> "connector"])
   -- Might need to update this lookahead to something more intelligent
-  (lookAhead . choice $ [keyword' "RETURN", keyword' "MATCH", symbol ","])
+  (lookAhead . choice
+   $ [ keyword' "RETURN"
+     , keyword' "MATCH"
+     , keyword' "OPTIONAL MATCH"
+     , symbol ","])
 
 parseNodeType :: Parser NodeType
 parseNodeType = choice
