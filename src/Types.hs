@@ -43,6 +43,8 @@ data PatternComponent = Node NodeType Properties
 
 type Pattern = [PatternComponent]
 
-data QueryExpr = Match Pattern QueryExpr
-               | Return
+data Clause = Match Pattern
+            | Return
   deriving (Data, Typeable, Eq, Show)
+
+type QueryExpr = [Clause]

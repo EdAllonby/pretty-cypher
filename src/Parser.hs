@@ -8,17 +8,16 @@ import qualified Data.Map as M
 
 parseQuery :: Parser QueryExpr
 parseQuery = sc
-  *> choice
-    [ (parseMatch <*> parseQuery) <?> "match clause"
-    , parseReturn <?> "return clause"]
-  <* eof
+  *> manyTill
+    (choice [(parseMatch) <?> "match clause", parseReturn <?> "return clause"])
+    eof
 
-parseReturn :: Parser QueryExpr
+parseReturn :: Parser Clause
 parseReturn = do
   keyword' "RETURN"
   return Return
 
-parseMatch :: Parser (QueryExpr -> QueryExpr)
+parseMatch :: Parser Clause
 parseMatch = do
   keyword' "MATCH"
   node <- manyTill
