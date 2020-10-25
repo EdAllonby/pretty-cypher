@@ -46,7 +46,7 @@ parsePattern = manyTill
      , brackets (Relationship <$> parseRelationshipType <*> parseProperties)
          <?> "valid relationship"
      , ConnectorDirection <$> parseConnectorDirection <?> "connector"])
-  -- Might need to update this lookahead to something more intelligent
+  -- Can we unify these lookahead tokens with those specified in the above parseQuery table?
   (lookAhead . choice
    $ [ keyword' "RETURN"
      , keyword' "MATCH"
