@@ -33,11 +33,11 @@ data Relationship =
   | AnyRelationship { anyRelationshipVariable :: Text }
   deriving (Data, Typeable, Eq, Show)
 
-data MatchSection = Node Node
-                  | Relationship Relationship
-                  | ConnectorDirection ConnectorDirection
+data Pattern = Node Node
+             | Relationship Relationship
+             | ConnectorDirection ConnectorDirection
   deriving (Data, Typeable, Eq, Show)
 
-data QueryExpr = Match [MatchSection] QueryExpr
+data QueryExpr = Match [Pattern] QueryExpr
                | Return
   deriving (Data, Typeable, Eq, Show)

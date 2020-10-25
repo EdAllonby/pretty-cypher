@@ -25,7 +25,7 @@ parseMatch = do
     (choice
        [ Node <$> parseNode <?> "valid node"
        , Relationship <$> parseRelationship <?> "valid relationship"
-       , parseConnectorDirection <?> "connector"])
+       , ConnectorDirection <$> parseConnectorDirection <?> "connector"])
     -- Might need to update this lookahead to something more intelligent
     (lookAhead . choice $ [keyword' "RETURN", keyword' "MATCH", symbol ","])
   return $ Match node
@@ -49,12 +49,11 @@ parseRelationship = brackets
         <*> parseProperties
     , AnyRelationship <$> parseText]
 
-parseConnectorDirection :: Parser MatchSection
-parseConnectorDirection = ConnectorDirection
-  <$> choice
-    [ RightDirection <$ symbol "->"
-    , NoDirection <$ symbol "-"
-    , LeftDirection <$ symbol "<-"]
+parseConnectorDirection :: Parser ConnectorDirection
+parseConnectorDirection = choice
+  [ RightDirection <$ symbol "->"
+  , NoDirection <$ symbol "-"
+  , LeftDirection <$ symbol "<-"]
 
 parseProperties :: Parser (M.Map Text PropertyValue)
 parseProperties = do
