@@ -1,8 +1,8 @@
-# cypher-formatter
+# pretty-cypher
 
 ## What this is
 
-This is currently a Neo4j Cypher language parser. This will eventually be used to format cypher queries to a standard format.
+This is currently a Neo4j Cypher language parser written in Haskell. This will eventually be used to format cypher queries to a standard format.
 
 It currently supports a small subset of cypher language parsing, along with a rudimentary quasiquoter.
 

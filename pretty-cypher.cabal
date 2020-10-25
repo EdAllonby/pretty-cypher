@@ -4,13 +4,13 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 2dec7c6e79c21df0f45a9af581f2f8a801df3f3fdcd5fd96709d57d07bf6bd3c
+-- hash: ce3b8e763818a567803dfae382039f0944a0a6aba3eee0d6d2fa4fd9d04b6fb4
 
-name:           cypher-formatter
+name:           pretty-cypher
 version:        0.1.0.0
-description:    Please see the README on GitHub at <https://github.com/EdAllonby/cypher-formatter#readme>
-homepage:       https://github.com/EdAllonby/cypher-formatter#readme
-bug-reports:    https://github.com/EdAllonby/cypher-formatter/issues
+description:    Please see the README on GitHub at <https://github.com/EdAllonby/pretty-cypher#readme>
+homepage:       https://github.com/EdAllonby/pretty-cypher#readme
+bug-reports:    https://github.com/EdAllonby/pretty-cypher/issues
 author:         Ed Allonby
 maintainer:     edward.allonby@gmail.com
 copyright:      2020 Ed Allonby
@@ -23,7 +23,7 @@ extra-source-files:
 
 source-repository head
   type: git
-  location: https://github.com/EdAllonby/cypher-formatter
+  location: https://github.com/EdAllonby/pretty-cypher
 
 library
   exposed-modules:
@@ -32,7 +32,7 @@ library
       QuasiQuote
       Types
   other-modules:
-      Paths_cypher_formatter
+      Paths_pretty_cypher
   hs-source-dirs:
       src
   default-extensions: OverloadedStrings RecordWildCards TemplateHaskell QuasiQuotes DeriveDataTypeable
@@ -47,10 +47,10 @@ library
     , text
   default-language: Haskell2010
 
-executable cypher-formatter-exe
+executable pretty-cypher-exe
   main-is: Main.hs
   other-modules:
-      Paths_cypher_formatter
+      Paths_pretty_cypher
   hs-source-dirs:
       app
   default-extensions: OverloadedStrings RecordWildCards TemplateHaskell QuasiQuotes DeriveDataTypeable
@@ -58,22 +58,22 @@ executable cypher-formatter-exe
   build-depends:
       base >=4.7 && <5
     , containers
-    , cypher-formatter
     , hspec
     , hspec-megaparsec
     , megaparsec
     , parser-combinators
+    , pretty-cypher
     , template-haskell
     , text
   default-language: Haskell2010
 
-test-suite cypher-formatter-test
+test-suite pretty-cypher-test
   type: exitcode-stdio-1.0
   main-is: Spec.hs
   other-modules:
       ParserSpec
       QuasiQuoteSpec
-      Paths_cypher_formatter
+      Paths_pretty_cypher
   hs-source-dirs:
       test
   default-extensions: OverloadedStrings RecordWildCards TemplateHaskell QuasiQuotes DeriveDataTypeable
@@ -81,11 +81,11 @@ test-suite cypher-formatter-test
   build-depends:
       base >=4.7 && <5
     , containers
-    , cypher-formatter
     , hspec
     , hspec-megaparsec
     , megaparsec
     , parser-combinators
+    , pretty-cypher
     , template-haskell
     , text
   default-language: Haskell2010

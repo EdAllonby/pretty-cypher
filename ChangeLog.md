@@ -1,3 +1,3 @@
-# Changelog for cypher-formatter
+# Changelog for pretty-cypher
 
 ## Unreleased changes
