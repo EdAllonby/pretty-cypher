@@ -16,7 +16,7 @@ It currently supports a small subset of cypher language parsing, along with a ru
 
 * Equality checks, other predicates, such as dates?
 
-* Multiple 'grouped' matches, [see this](https://stackoverflow.com/questions/32742751/what-is-the-difference-between-multiple-match-clauses-and-a-comma-in-a-cypher-qu).
+* ✔️ Multiple 'grouped' matches, [see this](https://stackoverflow.com/questions/32742751/what-is-the-difference-between-multiple-match-clauses-and-a-comma-in-a-cypher-qu).
 
 * ✔️ Connectors with multiple dashes, '->' is the same as '-->' for example (I think)
 
