@@ -21,12 +21,11 @@ data PropertyValue = TextValue Text
 
 type Properties = M.Map Text PropertyValue
 
-data Node = LabelledNode { labelledNodeVariable :: Maybe Text
-                         , labelledNodeLabel :: Text
-                         , labelledNodeProperties :: Properties
-                         }
-          | AnyNode { anyNodeVariable :: Text }
-          | EmptyNode
+data NodeType = LabelledNode { labelledNodeVariable :: Maybe Text
+                             , labelledNodeLabel :: Text
+                             }
+              | AnyNode { anyNodeVariable :: Text }
+              | EmptyNode
   deriving (Data, Typeable, Eq, Show)
 
 data Relationship =
@@ -37,11 +36,13 @@ data Relationship =
   | AnyRelationship { anyRelationshipVariable :: Text }
   deriving (Data, Typeable, Eq, Show)
 
-data Pattern = Node Node
-             | Relationship Relationship
-             | ConnectorDirection ConnectorDirection
+data PatternComponent = Node NodeType Properties
+                      | Relationship Relationship
+                      | ConnectorDirection ConnectorDirection
   deriving (Data, Typeable, Eq, Show)
 
-data QueryExpr = Match [Pattern] QueryExpr
+type Pattern = [PatternComponent]
+
+data QueryExpr = Match Pattern QueryExpr
                | Return
   deriving (Data, Typeable, Eq, Show)

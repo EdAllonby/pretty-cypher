@@ -1,5 +1,3 @@
-{-# LANGUAGE NamedFieldPuns #-}
-
 module QuasiQuoteSpec where
 
 import           Test.Hspec
@@ -25,14 +23,14 @@ runQuasiQuoteTests = describe "QuasiQuote"
   $ do
     context "when running cypher quasiquote"
       $ do
-        it "parses match clause with node"
+        it "correctly parses the DSL"
           $ do
             cypherExpr
               `shouldBe` Match
                 [ Node
-                    $ LabelledNode
+                    (LabelledNode
                       (Just "per")
-                      "Person"
+                      "Person")
                       (M.fromList
                          [ ("age", IntegerValue 32)
                          , ("base", DoubleValue (-3.14))
