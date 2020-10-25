@@ -136,6 +136,13 @@ runParserMatchRelationshipTests = do
                                  (LabelledRelationship (Just "fo") "FOLLOWS")
                                  M.empty]]
                        , Return]
+  it "parses match clause with screaming snake case relationship"
+    $ "MATCH [i:IS_A_FAN_OF] RETURN"
+    `shouldParseQuery` [ Match
+                           [ [ Relationship
+                                 (LabelledRelationship (Just "i") "IS_A_FAN_OF")
+                                 M.empty]]
+                       , Return]
   it "parses match clause with relationship specifying properties"
     $ "MATCH [fo:FOLLOWS { name: ' D. A. V. E ', age: 32, height: 1.6, delta: -10, base: -3.14 }] RETURN"
     `shouldParseQuery` [ Match

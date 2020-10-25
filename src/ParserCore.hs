@@ -10,6 +10,7 @@ module ParserCore
     , brackets
     , curlyBrackets
     , parseText
+    , parseSnakeCaseText
     , betweenQuotes
     , integer
     , double
@@ -19,8 +20,8 @@ module ParserCore
 
 import           Data.Text (Text)
 import           Data.Void (Void)
-import           Text.Megaparsec (sepBy, lookAhead, manyTill, some, between
-                                , notFollowedBy, empty, Parsec)
+import           Text.Megaparsec ((<|>), sepBy, lookAhead, manyTill, some
+                                , between, notFollowedBy, empty, Parsec)
 import           Text.Megaparsec.Char (latin1Char, char, letterChar
                                      , alphaNumChar, space1, string')
 import qualified Text.Megaparsec.Char.Lexer as L
@@ -66,6 +67,9 @@ curlyBrackets = between (symbol "{") (symbol "}")
 
 parseText :: Parser Text
 parseText = T.pack <$> lexeme (some letterChar)
+
+parseSnakeCaseText :: Parser Text
+parseSnakeCaseText = T.pack <$> lexeme (some (letterChar <|> char '_'))
 
 betweenQuotes :: Parser Text
 betweenQuotes = T.pack

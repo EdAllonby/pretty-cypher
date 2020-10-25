@@ -6,9 +6,10 @@ import           Types (QueryExpr, Clause(..), Pattern
                  AnyRelationship)
                       , NodeType(EmptyNode, LabelledNode, AnyNode)
                       , PropertyValue(..), ConnectorDirection(..))
-import           ParserCore (Parser, sc, symbol, signedInteger, signedDouble
-                           , keyword', parens, brackets, curlyBrackets
-                           , parseText, betweenQuotes, commaSep)
+import           ParserCore (parseSnakeCaseText, Parser, sc, symbol
+                           , signedInteger, signedDouble, keyword', parens
+                           , brackets, curlyBrackets, parseText, betweenQuotes
+                           , commaSep)
 import           Data.Text (Text)
 import           Text.Megaparsec (sepBy1, optional, (<?>), choice, manyTill
                                 , MonadParsec(try, eof, lookAhead))
@@ -64,7 +65,7 @@ parseRelationshipType :: Parser RelationshipType
 parseRelationshipType = choice
   [ try
       $ LabelledRelationship <$> optional parseText
-      <*> (symbol ":" *> parseText)
+      <*> (symbol ":" *> parseSnakeCaseText)
   , AnyRelationship <$> parseText
   , EmptyRelationship <$ symbol ""]
 
