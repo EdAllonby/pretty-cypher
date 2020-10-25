@@ -106,6 +106,27 @@ runParserMatchDirectionTests = do
       , ConnectorDirection NoDirection
       , Node $ LabelledNode (Just "c") "Car" M.empty]
       Return
+  it "parses match clause with anonymous right directionality"
+    $ "MATCH (p:Person)-->(c:Car) RETURN"
+    `shouldParseQuery` Match
+      [ Node $ LabelledNode (Just "p") "Person" M.empty
+      , ConnectorDirection AnonymousRightDirection
+      , Node $ LabelledNode (Just "c") "Car" M.empty]
+      Return
+  it "parses match clause with anonymous left directionality"
+    $ "MATCH (p:Person)<--(c:Car) RETURN"
+    `shouldParseQuery` Match
+      [ Node $ LabelledNode (Just "p") "Person" M.empty
+      , ConnectorDirection AnonymousLeftDirection
+      , Node $ LabelledNode (Just "c") "Car" M.empty]
+      Return
+  it "parses match clause with anonymous no directionality"
+    $ "MATCH (p:Person)--(c:Car) RETURN"
+    `shouldParseQuery` Match
+      [ Node $ LabelledNode (Just "p") "Person" M.empty
+      , ConnectorDirection AnonymousNoDirection
+      , Node $ LabelledNode (Just "c") "Car" M.empty]
+      Return
 
 runParserMatchOddTests = do
   it "parses match clause with erratic spacing"

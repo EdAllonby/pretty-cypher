@@ -5,9 +5,13 @@ import           Data.Text (Text)
 import qualified Data.Map as M
 import           Data.Data (Data, Typeable)
 
-data ConnectorDirection = LeftDirection
-                        | RightDirection
-                        | NoDirection
+data ConnectorDirection =
+    LeftDirection
+  | AnonymousLeftDirection
+  | RightDirection
+  | AnonymousRightDirection
+  | NoDirection
+  | AnonymousNoDirection
   deriving (Data, Typeable, Eq, Show)
 
 data PropertyValue = TextValue Text

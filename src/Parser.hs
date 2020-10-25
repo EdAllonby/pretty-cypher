@@ -51,8 +51,11 @@ parseRelationship = brackets
 
 parseConnectorDirection :: Parser ConnectorDirection
 parseConnectorDirection = choice
-  [ RightDirection <$ symbol "->"
+  [ AnonymousRightDirection <$ symbol "-->"
+  , RightDirection <$ symbol "->"
+  , AnonymousNoDirection <$ symbol "--"
   , NoDirection <$ symbol "-"
+  , AnonymousLeftDirection <$ symbol "<--"
   , LeftDirection <$ symbol "<-"]
 
 parseProperties :: Parser (M.Map Text PropertyValue)
