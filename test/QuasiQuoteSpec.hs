@@ -14,7 +14,7 @@ cypherExpr = [cypher|
     age: 32, height: 1.6, 
     delta: -10, 
     base: -3.14 
-  }) 
+  })
   RETURN
 |]
 

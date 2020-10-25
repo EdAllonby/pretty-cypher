@@ -28,17 +28,16 @@ data NodeType = LabelledNode { labelledNodeVariable :: Maybe Text
               | EmptyNode
   deriving (Data, Typeable, Eq, Show)
 
-data Relationship =
+data RelationshipType =
     LabelledRelationship { labelledRelationshipVariable :: Maybe Text
                          , labelledRelationshipLabel :: Text
-                         , labelledRelationshipProperties :: Properties
                          }
   | AnyRelationship { anyRelationshipVariable :: Text }
   | EmptyRelationship
   deriving (Data, Typeable, Eq, Show)
 
 data PatternComponent = Node NodeType Properties
-                      | Relationship Relationship
+                      | Relationship RelationshipType Properties
                       | ConnectorDirection ConnectorDirection
   deriving (Data, Typeable, Eq, Show)
 

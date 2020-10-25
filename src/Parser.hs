@@ -24,7 +24,8 @@ parseMatch = do
   node <- manyTill
     (choice
        [ parens (Node <$> parseNodeType <*> parseProperties) <?> "valid node"
-       , Relationship <$> parseRelationship <?> "valid relationship"
+       , brackets (Relationship <$> parseRelationshipType <*> parseProperties)
+           <?> "valid relationship"
        , ConnectorDirection <$> parseConnectorDirection <?> "connector"])
     -- Might need to update this lookahead to something more intelligent
     (lookAhead . choice $ [keyword' "RETURN", keyword' "MATCH", symbol ","])
@@ -36,15 +37,13 @@ parseNodeType = choice
   , AnyNode <$> parseText
   , EmptyNode <$ symbol ""]
 
-parseRelationship :: Parser Relationship
-parseRelationship = brackets
-  $ choice
-    [ try
-        $ LabelledRelationship <$> optional parseText
-        <*> (symbol ":" *> parseText)
-        <*> parseProperties
-    , AnyRelationship <$> parseText
-    , EmptyRelationship <$ symbol ""]
+parseRelationshipType :: Parser RelationshipType
+parseRelationshipType = choice
+  [ try
+      $ LabelledRelationship <$> optional parseText
+      <*> (symbol ":" *> parseText)
+  , AnyRelationship <$> parseText
+  , EmptyRelationship <$ symbol ""]
 
 parseConnectorDirection :: Parser ConnectorDirection
 parseConnectorDirection = choice

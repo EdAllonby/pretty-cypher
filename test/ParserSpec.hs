@@ -89,33 +89,69 @@ runParserMatchRelationshipTests = do
   it "parses match clause with relationship"
     $ "MATCH [fo:FOLLOWS] RETURN"
     `shouldParseQuery` Match
-      [Relationship $ LabelledRelationship (Just "fo") "FOLLOWS" M.empty]
+      [Relationship (LabelledRelationship (Just "fo") "FOLLOWS") M.empty]
       Return
   it "parses match clause with relationship specifying properties"
     $ "MATCH [fo:FOLLOWS { name: ' D. A. V. E ', age: 32, height: 1.6, delta: -10, base: -3.14 }] RETURN"
     `shouldParseQuery` Match
       [ Relationship
-          $ LabelledRelationship
-            (Just "fo")
-            "FOLLOWS"
-            (M.fromList
-               [ ("age", IntegerValue 32)
-               , ("base", DoubleValue (-3.14))
-               , ("delta", IntegerValue (-10))
-               , ("height", DoubleValue 1.6)
-               , ("name", TextValue " D. A. V. E ")])]
+          (LabelledRelationship (Just "fo") "FOLLOWS")
+          (M.fromList
+             [ ("age", IntegerValue 32)
+             , ("base", DoubleValue (-3.14))
+             , ("delta", IntegerValue (-10))
+             , ("height", DoubleValue 1.6)
+             , ("name", TextValue " D. A. V. E ")])]
       Return
   it "parses match clause with anonymous relationship"
     $ "MATCH [:FOLLOWS] RETURN"
     `shouldParseQuery` Match
-      [Relationship $ LabelledRelationship Nothing "FOLLOWS" M.empty]
+      [Relationship (LabelledRelationship Nothing "FOLLOWS") M.empty]
+      Return
+  it "parses match clause with anonymous relationship specifying properties"
+    $ "MATCH [:FOLLOWS { name: ' D. A. V. E ', age: 32, height: 1.6, delta: -10, base: -3.14 }] RETURN"
+    `shouldParseQuery` Match
+      [ Relationship
+          (LabelledRelationship Nothing "FOLLOWS")
+          (M.fromList
+             [ ("age", IntegerValue 32)
+             , ("base", DoubleValue (-3.14))
+             , ("delta", IntegerValue (-10))
+             , ("height", DoubleValue 1.6)
+             , ("name", TextValue " D. A. V. E ")])]
       Return
   it "parses match clause with any relationship"
     $ "MATCH [a] RETURN"
-    `shouldParseQuery` Match [Relationship $ AnyRelationship "a"] Return
+    `shouldParseQuery` Match
+      [Relationship (AnyRelationship "a") M.empty]
+      Return
+  it "parses match clause with any relationship specifying properties"
+    $ "MATCH [a { name: ' D. A. V. E ', age: 32, height: 1.6, delta: -10, base: -3.14 }] RETURN"
+    `shouldParseQuery` Match
+      [ Relationship
+          (AnyRelationship "a")
+          (M.fromList
+             [ ("age", IntegerValue 32)
+             , ("base", DoubleValue (-3.14))
+             , ("delta", IntegerValue (-10))
+             , ("height", DoubleValue 1.6)
+             , ("name", TextValue " D. A. V. E ")])]
+      Return
   it "parses match clause with empty relationship"
     $ "MATCH [] RETURN"
-    `shouldParseQuery` Match [Relationship EmptyRelationship] Return
+    `shouldParseQuery` Match [Relationship EmptyRelationship M.empty] Return
+  it "parses match clause with empty relationship specifying properties"
+    $ "MATCH [{ name: ' D. A. V. E ', age: 32, height: 1.6, delta: -10, base: -3.14 }] RETURN"
+    `shouldParseQuery` Match
+      [ Relationship
+          EmptyRelationship
+          (M.fromList
+             [ ("age", IntegerValue 32)
+             , ("base", DoubleValue (-3.14))
+             , ("delta", IntegerValue (-10))
+             , ("height", DoubleValue 1.6)
+             , ("name", TextValue " D. A. V. E ")])]
+      Return
 
 runParserMatchDirectionTests = do
   it "parses match clause with right directionality"
@@ -123,7 +159,7 @@ runParserMatchDirectionTests = do
     `shouldParseQuery` Match
       [ Node (LabelledNode (Just "p") "Person") M.empty
       , ConnectorDirection NoDirection
-      , Relationship $ LabelledRelationship (Just "h") "HAS" M.empty
+      , Relationship (LabelledRelationship (Just "h") "HAS") M.empty
       , ConnectorDirection RightDirection
       , Node (LabelledNode (Just "c") "Car") M.empty]
       Return
@@ -132,7 +168,7 @@ runParserMatchDirectionTests = do
     `shouldParseQuery` Match
       [ Node (LabelledNode (Just "p") "Person") M.empty
       , ConnectorDirection LeftDirection
-      , Relationship $ LabelledRelationship (Just "h") "HAS" M.empty
+      , Relationship (LabelledRelationship (Just "h") "HAS") M.empty
       , ConnectorDirection NoDirection
       , Node (LabelledNode (Just "c") "Car") M.empty]
       Return
@@ -141,7 +177,7 @@ runParserMatchDirectionTests = do
     `shouldParseQuery` Match
       [ Node (LabelledNode (Just "p") "Person") M.empty
       , ConnectorDirection NoDirection
-      , Relationship $ LabelledRelationship (Just "h") "HAS" M.empty
+      , Relationship (LabelledRelationship (Just "h") "HAS") M.empty
       , ConnectorDirection NoDirection
       , Node (LabelledNode (Just "c") "Car") M.empty]
       Return
@@ -180,7 +216,7 @@ runParserMatchOddTests = do
              , ("height", DoubleValue 1.6)
              , ("name", TextValue " D. A. V. E ")])
       , ConnectorDirection NoDirection
-      , Relationship $ LabelledRelationship (Just "o") "OWNS" M.empty
+      , Relationship (LabelledRelationship (Just "o") "OWNS") M.empty
       , ConnectorDirection RightDirection
       , Node (LabelledNode (Just "car") "Car") M.empty]
       Return
