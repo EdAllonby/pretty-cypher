@@ -15,7 +15,7 @@ module ParserCore
     , double
     , signedInteger
     , signedDouble
-    , sepByComma) where
+    , commaSep) where
 
 import           Data.Text (Text)
 import           Data.Void (Void)
@@ -73,5 +73,5 @@ betweenQuotes = T.pack
   where
     pQuote = char '\''
 
-sepByComma :: Parser a -> Parser [a]
-sepByComma p = p `sepBy` symbol ","
+commaSep :: Parser a -> Parser [a]
+commaSep p = p `sepBy` symbol ","

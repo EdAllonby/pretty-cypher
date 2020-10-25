@@ -8,9 +8,9 @@ import           Types (QueryExpr, Clause(..), Pattern
                       , PropertyValue(..), ConnectorDirection(..))
 import           ParserCore (Parser, sc, symbol, signedInteger, signedDouble
                            , keyword', parens, brackets, curlyBrackets
-                           , parseText, betweenQuotes, sepByComma)
+                           , parseText, betweenQuotes, commaSep)
 import           Data.Text (Text)
-import           Text.Megaparsec (optional, (<?>), choice, manyTill
+import           Text.Megaparsec (sepBy1, optional, (<?>), choice, manyTill
                                 , MonadParsec(try, eof, lookAhead))
 import qualified Data.Map as M
 
@@ -28,7 +28,7 @@ parseReturn = do
 parseMatch :: Parser Clause
 parseMatch = do
   keyword' "MATCH"
-  Match <$> sepByComma parsePattern
+  Match <$> commaSep parsePattern
 
 parsePattern :: Parser Pattern
 parsePattern = manyTill
@@ -42,7 +42,9 @@ parsePattern = manyTill
 
 parseNodeType :: Parser NodeType
 parseNodeType = choice
-  [ try $ LabelledNode <$> optional parseText <*> (symbol ":" *> parseText)
+  [ try
+      $ LabelledNode <$> optional parseText
+      <*> (symbol ":" *> parseText `sepBy1` symbol ":")
   , AnyNode <$> parseText
   , EmptyNode <$ symbol ""]
 
@@ -65,7 +67,7 @@ parseConnectorDirection = choice
 
 parseProperties :: Parser (M.Map Text PropertyValue)
 parseProperties = do
-  props <- optional $ curlyBrackets $ sepByComma parseProperty
+  props <- optional $ curlyBrackets $ commaSep parseProperty
   return $ M.unions (M.fromList <$> props)
 
 parseProperty :: Parser (Text, PropertyValue)

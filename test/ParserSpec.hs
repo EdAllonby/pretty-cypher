@@ -24,14 +24,14 @@ runParserMatchNodeTests = do
     $ "MATCH (per:Person) RETURN"
     `shouldParseQuery` [ Match
                            [ [ Node
-                                 (LabelledNode (Just "per") "Person")
+                                 (LabelledNode (Just "per") ["Person"])
                                  M.empty]]
                        , Return]
   it "parses match clause with labelled node specifying properties"
     $ "MATCH (per:Person { name: ' D. A. V. E ', age: 32, height: 1.6, delta: -10, base: -3.14 }) RETURN"
     `shouldParseQuery` [ Match
                            [ [ Node
-                                 (LabelledNode (Just "per") "Person")
+                                 (LabelledNode (Just "per") ["Person"])
                                  (M.fromList
                                     [ ("age", IntegerValue 32)
                                     , ("base", DoubleValue (-3.14))
@@ -41,13 +41,14 @@ runParserMatchNodeTests = do
                        , Return]
   it "parses match clause with anonymous node"
     $ "MATCH (:Person) RETURN"
-    `shouldParseQuery` [ Match [[Node (LabelledNode Nothing "Person") M.empty]]
+    `shouldParseQuery` [ Match
+                           [[Node (LabelledNode Nothing ["Person"]) M.empty]]
                        , Return]
   it "parses match clause with anonymous node specifying properties"
     $ "MATCH (:Person { name: ' D. A. V. E ', age: 32, height: 1.6, delta: -10, base: -3.14 }) RETURN"
     `shouldParseQuery` [ Match
                            [ [ Node
-                                 (LabelledNode Nothing "Person")
+                                 (LabelledNode Nothing ["Person"])
                                  (M.fromList
                                     [ ("age", IntegerValue 32)
                                     , ("base", DoubleValue (-3.14))
@@ -162,56 +163,68 @@ runParserMatchDirectionTests = do
   it "parses match clause with right directionality"
     $ "MATCH (p:Person)-[h:HAS]->(c:Car) RETURN"
     `shouldParseQuery` [ Match
-                           [ [ Node (LabelledNode (Just "p") "Person") M.empty
+                           [ [ Node
+                                 (LabelledNode (Just "p") ["Person"])
+                                 M.empty
                                , ConnectorDirection NoDirection
                                , Relationship
                                  (LabelledRelationship (Just "h") "HAS")
                                  M.empty
                                , ConnectorDirection RightDirection
-                               , Node (LabelledNode (Just "c") "Car") M.empty]]
+                               , Node (LabelledNode (Just "c") ["Car"]) M.empty]]
                        , Return]
   it "parses match clause with left directionality"
     $ "MATCH (p:Person)<-[h:HAS]-(c:Car) RETURN"
     `shouldParseQuery` [ Match
-                           [ [ Node (LabelledNode (Just "p") "Person") M.empty
+                           [ [ Node
+                                 (LabelledNode (Just "p") ["Person"])
+                                 M.empty
                                , ConnectorDirection LeftDirection
                                , Relationship
                                  (LabelledRelationship (Just "h") "HAS")
                                  M.empty
                                , ConnectorDirection NoDirection
-                               , Node (LabelledNode (Just "c") "Car") M.empty]]
+                               , Node (LabelledNode (Just "c") ["Car"]) M.empty]]
                        , Return]
   it "parses match clause with no directionality"
     $ "MATCH (p:Person)-[h:HAS]-(c:Car) RETURN"
     `shouldParseQuery` [ Match
-                           [ [ Node (LabelledNode (Just "p") "Person") M.empty
+                           [ [ Node
+                                 (LabelledNode (Just "p") ["Person"])
+                                 M.empty
                                , ConnectorDirection NoDirection
                                , Relationship
                                  (LabelledRelationship (Just "h") "HAS")
                                  M.empty
                                , ConnectorDirection NoDirection
-                               , Node (LabelledNode (Just "c") "Car") M.empty]]
+                               , Node (LabelledNode (Just "c") ["Car"]) M.empty]]
                        , Return]
   it "parses match clause with anonymous right directionality"
     $ "MATCH (p:Person)-->(c:Car) RETURN"
     `shouldParseQuery` [ Match
-                           [ [ Node (LabelledNode (Just "p") "Person") M.empty
+                           [ [ Node
+                                 (LabelledNode (Just "p") ["Person"])
+                                 M.empty
                                , ConnectorDirection AnonymousRightDirection
-                               , Node (LabelledNode (Just "c") "Car") M.empty]]
+                               , Node (LabelledNode (Just "c") ["Car"]) M.empty]]
                        , Return]
   it "parses match clause with anonymous left directionality"
     $ "MATCH (p:Person)<--(c:Car) RETURN"
     `shouldParseQuery` [ Match
-                           [ [ Node (LabelledNode (Just "p") "Person") M.empty
+                           [ [ Node
+                                 (LabelledNode (Just "p") ["Person"])
+                                 M.empty
                                , ConnectorDirection AnonymousLeftDirection
-                               , Node (LabelledNode (Just "c") "Car") M.empty]]
+                               , Node (LabelledNode (Just "c") ["Car"]) M.empty]]
                        , Return]
   it "parses match clause with anonymous no directionality"
     $ "MATCH (p:Person)--(c:Car) RETURN"
     `shouldParseQuery` [ Match
-                           [ [ Node (LabelledNode (Just "p") "Person") M.empty
+                           [ [ Node
+                                 (LabelledNode (Just "p") ["Person"])
+                                 M.empty
                                , ConnectorDirection AnonymousNoDirection
-                               , Node (LabelledNode (Just "c") "Car") M.empty]]
+                               , Node (LabelledNode (Just "c") ["Car"]) M.empty]]
                        , Return]
 
 runParserMatchOddTests = do
@@ -219,7 +232,7 @@ runParserMatchOddTests = do
     $ "  MATCH  (   : Person{ name: ' D. A. V. E ' , age : 32 , height : 1.6 , delta : -10 , base  : -3.14  } )   -  [  o : OWNS  ] -> (car :Car )   RETURN    "
     `shouldParseQuery` [ Match
                            [ [ Node
-                                 (LabelledNode Nothing "Person")
+                                 (LabelledNode Nothing ["Person"])
                                  (M.fromList
                                     [ ("age", IntegerValue 32)
                                     , ("base", DoubleValue (-3.14))
@@ -231,26 +244,32 @@ runParserMatchOddTests = do
                                  (LabelledRelationship (Just "o") "OWNS")
                                  M.empty
                                , ConnectorDirection RightDirection
-                               , Node (LabelledNode (Just "car") "Car") M.empty]]
+                               , Node
+                                 (LabelledNode (Just "car") ["Car"])
+                                 M.empty]]
                        , Return]
   it "parses match clause followed by another match clause"
     $ "MATCH (p:Person)-[:HAS]->(c:Car) MATCH (cat:Cat) RETURN"
     `shouldParseQuery` [ Match
-                           [ [ Node (LabelledNode (Just "p") "Person") M.empty
+                           [ [ Node
+                                 (LabelledNode (Just "p") ["Person"])
+                                 M.empty
                                , ConnectorDirection NoDirection
                                , Relationship
                                  (LabelledRelationship Nothing "HAS")
                                  M.empty
                                , ConnectorDirection RightDirection
-                               , Node (LabelledNode (Just "c") "Car") M.empty]]
+                               , Node (LabelledNode (Just "c") ["Car"]) M.empty]]
                        , Match
-                           [[Node (LabelledNode (Just "cat") "Cat") M.empty]]
+                           [[Node (LabelledNode (Just "cat") ["Cat"]) M.empty]]
                        , Return]
   it "parses single match clause with multiple patterns"
     $ "MATCH (p:Person), (m:Movie) RETURN"
     `shouldParseQuery` [ Match
-                           [ [Node (LabelledNode (Just "p") "Person") M.empty]
-                           , [Node (LabelledNode (Just "m") "Movie") M.empty]]
+                           [ [ Node
+                                 (LabelledNode (Just "p") ["Person"])
+                                 M.empty]
+                           , [Node (LabelledNode (Just "m") ["Movie"]) M.empty]]
                        , Return]
 
 runParserMatchErrorTests = do

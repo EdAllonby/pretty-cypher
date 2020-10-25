@@ -22,7 +22,7 @@ data PropertyValue = TextValue Text
 type Properties = M.Map Text PropertyValue
 
 data NodeType = LabelledNode { labelledNodeVariable :: Maybe Text
-                             , labelledNodeLabel :: Text
+                             , labelledNodeLabels :: [Text]
                              }
               | AnyNode { anyNodeVariable :: Text }
               | EmptyNode

@@ -4,7 +4,6 @@ import           Test.Hspec
 import           QuasiQuote (cypher)
 import qualified Data.Map as M
 import           Types
-
 -- Just the fact that this quasi-quote compiles is enough to show the module is working, 
 -- but let's document this with a test.
 cypherExpr :: QueryExpr
@@ -17,7 +16,6 @@ cypherExpr = [cypher|
   })
   RETURN
 |]
-
 runQuasiQuoteTests :: SpecWith ()
 runQuasiQuoteTests = describe "QuasiQuote"
   $ do
@@ -28,7 +26,7 @@ runQuasiQuoteTests = describe "QuasiQuote"
             cypherExpr
               `shouldBe` [ Match
                              [[ Node
-                                 (LabelledNode (Just "per") "Person")
+                                 (LabelledNode (Just "per") ["Person"])
                                  (M.fromList
                                     [ ("age", IntegerValue 32)
                                     , ("base", DoubleValue (-3.14))
