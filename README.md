@@ -26,7 +26,7 @@ It currently supports a small subset of cypher language parsing, along with a ru
 
 ### Formatting
 
-* We eventually need to create a formmater for our parsed Cypher DSL. 
+* We eventually need to create a formatter for our parsed Cypher DSL. 
 
 ### Quasiquotes
 
