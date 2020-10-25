@@ -9,7 +9,7 @@ import qualified Data.Map as M
 parseQuery :: Parser QueryExpr
 parseQuery = sc
   *> manyTill
-    (choice [(parseMatch) <?> "match clause", parseReturn <?> "return clause"])
+    (choice [parseMatch <?> "match clause", parseReturn <?> "return clause"])
     eof
 
 parseReturn :: Parser Clause
