@@ -30,12 +30,14 @@ runQuasiQuoteTests = describe "QuasiQuote"
           $ do
             cypherExpr
               `shouldBe` [ Match
-                             [ [ Node
-                                   (LabelledNode (Just "per") ["Person"])
-                                   (M.fromList
-                                      [ ("age", IntegerValue 32)
-                                      , ("base", DoubleValue (-3.14))
-                                      , ("delta", IntegerValue (-10))
-                                      , ("height", DoubleValue 1.6)
-                                      , ("name", TextValue " D. A. V. E ")])]]
+                             [ Pattern
+                                 Nothing
+                                 [ Node
+                                     (LabelledNode (Just "per") ["Person"])
+                                     (M.fromList
+                                        [ ("age", IntegerValue 32)
+                                        , ("base", DoubleValue (-3.14))
+                                        , ("delta", IntegerValue (-10))
+                                        , ("height", DoubleValue 1.6)
+                                        , ("name", TextValue " D. A. V. E ")])]]
                          , Return]

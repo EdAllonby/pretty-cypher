@@ -1,15 +1,7 @@
 module Parser (parseQuery) where
 
-import           Types (QueryExpr, Clause(..), Pattern
-                      , PatternComponent(ConnectorDirection, Node, Relationship)
-                      , RelationshipType(EmptyRelationship, LabelledRelationship,
-                 AnyRelationship)
-                      , NodeType(EmptyNode, LabelledNode, AnyNode)
-                      , PropertyValue(..), ConnectorDirection(..))
-import           ParserCore (parseSnakeCaseText, Parser, sc, symbol
-                           , signedInteger, signedDouble, keyword', parens
-                           , brackets, curlyBrackets, parseText, betweenQuotes
-                           , commaSep)
+import           Types
+import           ParserCore
 import           Data.Text (Text)
 import           Text.Megaparsec (sepBy1, optional, (<?>), choice, manyTill
                                 , MonadParsec(try, eof, lookAhead))
@@ -40,18 +32,21 @@ parseOptionalMatch = do
   OptionalMatch <$> commaSep parsePattern
 
 parsePattern :: Parser Pattern
-parsePattern = manyTill
-  (choice
-     [ parens (Node <$> parseNodeType <*> parseProperties) <?> "valid node"
-     , brackets (Relationship <$> parseRelationshipType <*> parseProperties)
-         <?> "valid relationship"
-     , ConnectorDirection <$> parseConnectorDirection <?> "connector"])
-  -- Can we unify these lookahead tokens with those specified in the above parseQuery table?
-  (lookAhead . choice
-   $ [ keyword' "RETURN"
-     , keyword' "MATCH"
-     , keyword' "OPTIONAL MATCH"
-     , symbol ","])
+parsePattern = do
+  patternVariable <- optional $ parseText <* symbol "="
+  patternComponents <- manyTill
+    (choice
+       [ parens (Node <$> parseNodeType <*> parseProperties) <?> "valid node"
+       , brackets (Relationship <$> parseRelationshipType <*> parseProperties)
+           <?> "valid relationship"
+       , ConnectorDirection <$> parseConnectorDirection <?> "connector"])
+    -- Can we unify these lookahead tokens with those specified in the above parseQuery table?
+    (lookAhead . choice
+     $ [ keyword' "RETURN"
+       , keyword' "MATCH"
+       , keyword' "OPTIONAL MATCH"
+       , symbol ","])
+  return $ Pattern patternVariable patternComponents
 
 parseNodeType :: Parser NodeType
 parseNodeType = choice

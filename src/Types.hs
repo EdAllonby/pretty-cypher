@@ -41,7 +41,10 @@ data PatternComponent = Node NodeType Properties
                       | ConnectorDirection ConnectorDirection
   deriving (Data, Typeable, Eq, Show)
 
-type Pattern = [PatternComponent]
+data Pattern = Pattern { patternVariable :: Maybe Text
+                       , patternComponents :: [PatternComponent]
+                       }
+  deriving (Data, Typeable, Eq, Show)
 
 data Clause = Match [Pattern] -- TODO: Move this to a non-empty list data type?
             | OptionalMatch [Pattern]
