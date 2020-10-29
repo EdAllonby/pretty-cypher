@@ -11,8 +11,8 @@ import           Parser.ParserCore (Parser, symbol, signedInteger, signedDouble
                                   , parseText, parseSnakeCaseText, betweenQuotes
                                   , commaSep)
 import           Data.Text (Text)
-import           Text.Megaparsec (eof, sepBy1, optional, (<?>), choice, manyTill
-                                , MonadParsec(try, lookAhead))
+import           Text.Megaparsec ((<|>), eof, sepBy1, optional, (<?>), choice
+                                , manyTill, MonadParsec(try, lookAhead))
 import qualified Data.Map as M
 
 parseMatch :: Parser Clause
@@ -55,7 +55,8 @@ parseRelationshipType :: Parser RelationshipType
 parseRelationshipType = choice
   [ try
       $ LabelledRelationship <$> optional parseText
-      <*> (symbol ":" *> parseSnakeCaseText)
+      <*> (symbol ":"
+           *> parseSnakeCaseText `sepBy1` (symbol "|:" <|> symbol "|")) -- TODO: It doesn't really matter if this is snake case, we need a more general text parser.
   , AnyRelationship <$> parseText
   , EmptyRelationship <$ symbol ""]
 

@@ -30,7 +30,7 @@ data NodeType = LabelledNode { labelledNodeVariable :: Maybe Text
 
 data RelationshipType =
     LabelledRelationship { labelledRelationshipVariable :: Maybe Text
-                         , labelledRelationshipLabel :: Text
+                         , labelledRelationshipLabel :: [Text]
                          }
   | AnyRelationship { anyRelationshipVariable :: Text }
   | EmptyRelationship

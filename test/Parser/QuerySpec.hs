@@ -36,15 +36,10 @@ RETURN
                        , OptionalMatch
                            [ Pattern
                                Nothing
-                               [ Node
-                                   (AnyNode { anyNodeVariable = "a" })
-                                   M.empty
+                               [ Node (AnyNode "a") M.empty
                                , ConnectorDirection NoDirection
                                , Relationship
-                                   (LabelledRelationship { labelledRelationshipVariable =
-                                                             Just "r"
-                                                         , labelledRelationshipLabel = "ACTS_IN"
-                                                         })
+                                   (LabelledRelationship (Just "r") ["ACTS_IN"])
                                    M.empty
                                , ConnectorDirection RightDirection
                                , Node EmptyNode M.empty]]
@@ -64,7 +59,7 @@ RETURN
                                       , ("name", TextValue " D. A. V. E ")])
                                , ConnectorDirection NoDirection
                                , Relationship
-                                   (LabelledRelationship (Just "o") "OWNS")
+                                   (LabelledRelationship (Just "o") ["OWNS"])
                                    M.empty
                                , ConnectorDirection RightDirection
                                , Node
@@ -81,7 +76,7 @@ RETURN
                                    M.empty
                                , ConnectorDirection NoDirection
                                , Relationship
-                                   (LabelledRelationship Nothing "HAS")
+                                   (LabelledRelationship Nothing ["HAS"])
                                    M.empty
                                , ConnectorDirection RightDirection
                                , Node (LabelledNode (Just "c") ["Car"]) M.empty]]
