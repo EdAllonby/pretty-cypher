@@ -67,8 +67,11 @@ parseRelationshipType = choice
 parseRelationshipHops :: Parser RelationshipHops
 parseRelationshipHops = symbol "*"
   *> choice
-    [ try (VariableLength <$> integer <*> (symbol ".." *> integer))
-    , FixedLength <$> integer]
+    [ try (VariableHops <$> integer <*> (symbol ".." *> integer))
+    , try (MinHops <$> (integer <* symbol ".."))
+    , MaxHops <$> (symbol ".." *> integer)
+    , FixedHops <$> integer
+    , return AnyHops]
 
 parseConnectorDirection :: Parser ConnectorDirection
 parseConnectorDirection = choice

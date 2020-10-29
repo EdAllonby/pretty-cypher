@@ -15,6 +15,7 @@ runParserMatchTests = describe "Parser.Match"
       $ do
         context "with node" runParserMatchNodeTests
         context "with relationship" runParserMatchRelationshipTests
+        context "with relationship hops" runParserMatchRelationshipHopsTests
         context "with direction" runParserMatchDirectionTests
         context "with pattern cases" runParserMatchPatternTests
     context "when parsing optional match query"
@@ -132,7 +133,7 @@ runParserMatchRelationshipTests = do
           Nothing
           [ Relationship
               (LabelledRelationship (Just "fo") ["FOLLOWS"])
-              (Just (VariableLength 4 6))
+              (Just (VariableHops 4 6))
               M.empty]]
   it "parses match clause with fixed length relationship"
     $ "MATCH [fo:FOLLOWS*8]"
@@ -141,7 +142,7 @@ runParserMatchRelationshipTests = do
           Nothing
           [ Relationship
               (LabelledRelationship (Just "fo") ["FOLLOWS"])
-              (Just (FixedLength 8))
+              (Just (FixedHops 8))
               M.empty]]
   it "parses match clause with multi pipe labelled relationship"
     $ "MATCH [fo:FOLLOWS|UNFOLLOWS]"
@@ -229,12 +230,6 @@ runParserMatchRelationshipTests = do
     $ "MATCH []"
     `shouldParseMatchQuery` Match
       [Pattern Nothing [Relationship EmptyRelationship Nothing M.empty]]
-  it "parses match clause with empty relationship and variable length hops"
-    $ "MATCH [*2..4]"
-    `shouldParseMatchQuery` Match
-      [ Pattern
-          Nothing
-          [Relationship EmptyRelationship (Just (VariableLength 2 4)) M.empty]]
   it "parses match clause with empty relationship specifying properties"
     $ "MATCH [{ name: ' D. A. V. E ', age: 32, height: 1.6, delta: -10, base: -3.14 }]"
     `shouldParseMatchQuery` Match
@@ -257,13 +252,43 @@ runParserMatchRelationshipTests = do
           Nothing
           [ Relationship
               EmptyRelationship
-              (Just (VariableLength 1 3))
+              (Just (VariableHops 1 3))
               (M.fromList
                  [ ("age", IntegerValue 32)
                  , ("base", DoubleValue (-3.14))
                  , ("delta", IntegerValue (-10))
                  , ("height", DoubleValue 1.6)
                  , ("name", TextValue " D. A. V. E ")])]]
+
+runParserMatchRelationshipHopsTests = do
+  it "parses match clause with empty relationship and variable length hops"
+    $ "MATCH [*2..4]"
+    `shouldParseMatchQuery` Match
+      [ Pattern
+          Nothing
+          [Relationship EmptyRelationship (Just (VariableHops 2 4)) M.empty]]
+  it "parses match clause with empty relationship and min length hops"
+    $ "MATCH [*2..]"
+    `shouldParseMatchQuery` Match
+      [ Pattern
+          Nothing
+          [Relationship EmptyRelationship (Just (MinHops 2)) M.empty]]
+  it "parses match clause with empty relationship and max length hops"
+    $ "MATCH [*..2]"
+    `shouldParseMatchQuery` Match
+      [ Pattern
+          Nothing
+          [Relationship EmptyRelationship (Just (MaxHops 2)) M.empty]]
+  it "parses match clause with empty relationship and fixed length hops"
+    $ "MATCH [*2]"
+    `shouldParseMatchQuery` Match
+      [ Pattern
+          Nothing
+          [Relationship EmptyRelationship (Just (FixedHops 2)) M.empty]]
+  it "parses match clause with empty relationship and any length hops"
+    $ "MATCH [*]"
+    `shouldParseMatchQuery` Match
+      [Pattern Nothing [Relationship EmptyRelationship (Just AnyHops) M.empty]]
 
 runParserMatchDirectionTests = do
   it "parses match clause with right directionality"

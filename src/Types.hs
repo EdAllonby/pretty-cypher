@@ -21,8 +21,11 @@ data PropertyValue = TextValue Text
 
 type Properties = M.Map Text PropertyValue
 
-data RelationshipHops = VariableLength Integer Integer
-                      | FixedLength Integer
+data RelationshipHops = VariableHops Integer Integer
+                      | MinHops Integer
+                      | MaxHops Integer
+                      | FixedHops Integer
+                      | AnyHops
   deriving (Data, Typeable, Eq, Show)
 
 data NodeType = LabelledNode { labelledNodeVariable :: Maybe Text
