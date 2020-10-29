@@ -1,5 +1,5 @@
 -- This module houses the Parser type and the cypher language spacing rules that we use when parsing queries.
-module ParserCore
+module Parser.ParserCore
     ( Parser
     , sc
     , lexeme

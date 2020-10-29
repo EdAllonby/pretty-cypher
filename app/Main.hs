@@ -1,6 +1,6 @@
 module Main where
 
-import           Parser
+import           Parser.Query (parseQuery)
 import           Text.Megaparsec (parseTest)
 import qualified Data.Text as T
 

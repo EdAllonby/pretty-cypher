@@ -7,7 +7,7 @@ import           Language.Haskell.TH.Syntax (lift)
 import qualified Text.Megaparsec.Error as ME
 import qualified Text.Megaparsec as M
 import           Data.Data
-import           Parser (parseQuery)
+import           Parser.Query (parseQuery)
 
 cypher :: QuasiQuoter
 cypher =

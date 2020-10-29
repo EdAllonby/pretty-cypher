@@ -1,25 +1,19 @@
-module Parser (parseQuery) where
+module Parser.Match (parseMatch, parseOptionalMatch) where
 
-import           Types
-import           ParserCore
+import           Types (Clause(OptionalMatch, Match), Pattern(Pattern)
+                      , PatternComponent(ConnectorDirection, Node, Relationship)
+                      , RelationshipType(EmptyRelationship, LabelledRelationship,
+                 AnyRelationship)
+                      , NodeType(EmptyNode, LabelledNode, AnyNode)
+                      , PropertyValue(..), ConnectorDirection(..))
+import           Parser.ParserCore (Parser, symbol, signedInteger, signedDouble
+                                  , keyword', parens, brackets, curlyBrackets
+                                  , parseText, parseSnakeCaseText, betweenQuotes
+                                  , commaSep)
 import           Data.Text (Text)
-import           Text.Megaparsec (sepBy1, optional, (<?>), choice, manyTill
-                                , MonadParsec(try, eof, lookAhead))
+import           Text.Megaparsec (eof, sepBy1, optional, (<?>), choice, manyTill
+                                , MonadParsec(try, lookAhead))
 import qualified Data.Map as M
-
-parseQuery :: Parser QueryExpr
-parseQuery = sc
-  *> manyTill
-    (choice
-       [ parseMatch <?> "match clause"
-       , parseOptionalMatch <?> "optional match clause"
-       , parseReturn <?> "return clause"])
-    eof
-
-parseReturn :: Parser Clause
-parseReturn = do
-  keyword' "RETURN"
-  return Return
 
 parseMatch :: Parser Clause
 parseMatch = do
@@ -42,10 +36,11 @@ parsePattern = do
        , ConnectorDirection <$> parseConnectorDirection <?> "connector"])
     -- Can we unify these lookahead tokens with those specified in the above parseQuery table?
     (lookAhead . choice
-     $ [ keyword' "RETURN"
-       , keyword' "MATCH"
-       , keyword' "OPTIONAL MATCH"
-       , symbol ","])
+     $ [ () <$ keyword' "RETURN"
+       , () <$ keyword' "MATCH"
+       , () <$ keyword' "OPTIONAL MATCH"
+       , () <$ symbol ","
+       , eof])
   return $ Pattern patternVariable patternComponents
 
 parseNodeType :: Parser NodeType

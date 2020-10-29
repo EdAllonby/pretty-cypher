@@ -1,10 +1,12 @@
 
-import           Test.Hspec
-import           ParserSpec
-import           QuasiQuoteSpec
+import           Test.Hspec (hspec)
+import           Parser.QuerySpec (runParserQueryTests)
+import           Parser.MatchSpec (runParserMatchTests)
+import           QuasiQuoteSpec (runQuasiQuoteTests)
 
 main :: IO ()
 main = hspec
   $ do
-    runParserTests
+    runParserQueryTests
+    runParserMatchTests
     runQuasiQuoteTests
