@@ -35,6 +35,17 @@ runParserMatchNodeTests = do
                                    (LabelledNode (Just "per") ["Person"])
                                    M.empty]]
                        , Return]
+  it "parses match clause with multi labelled node"
+    $ "MATCH (per:Person:Actor) RETURN"
+    `shouldParseQuery` [ Match
+                           [ Pattern
+                               Nothing
+                               [ Node
+                                   (LabelledNode
+                                      (Just "per")
+                                      ["Person", "Actor"])
+                                   M.empty]]
+                       , Return]
   it "parses match clause with labelled node specifying properties"
     $ "MATCH (per:Person { name: ' D. A. V. E ', age: 32, height: 1.6, delta: -10, base: -3.14 }) RETURN"
     `shouldParseQuery` [ Match
@@ -127,11 +138,7 @@ RETURN
                            [ Pattern
                                Nothing
                                [ Node
-                                   (LabelledNode { labelledNodeVariable =
-                                                     Just "a"
-                                                 , labelledNodeLabels =
-                                                     ["Movie"]
-                                                 })
+                                   (LabelledNode (Just "a") ["Movie"])
                                    (M.fromList
                                       [("title", TextValue "Wall Street")])]]
                        , OptionalMatch
