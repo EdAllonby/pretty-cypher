@@ -40,7 +40,7 @@ parsePattern = do
        , () <$ keyword' "MATCH"
        , () <$ keyword' "OPTIONAL MATCH"
        , () <$ symbol ","
-       , eof])
+       , eof]) -- TODO: Really don't want to have this EOF, but we have it here otherwise we need to add RETURN statements to tests. Is there another option?
   return $ Pattern patternVariable patternComponents
 
 parseNodeType :: Parser NodeType
