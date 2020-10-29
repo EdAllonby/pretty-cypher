@@ -12,9 +12,10 @@ import           Types
 cypherExpr :: QueryExpr
 cypherExpr =
   [cypher|
-  MATCH (per:Person { 
+  // This is an example of a comment in cypher
+  MATCH (per:Person {
     name: ' D. A. V. E ', 
-    age: 32, height: 1.6, 
+    age: 32, height: 1.6, // This is a some more comments
     delta: -10, 
     base: -3.14 
   })
