@@ -40,6 +40,7 @@ RETURN
                                , ConnectorDirection NoDirection
                                , Relationship
                                    (LabelledRelationship (Just "r") ["ACTS_IN"])
+                                   Nothing
                                    M.empty
                                , ConnectorDirection RightDirection
                                , Node EmptyNode M.empty]]
@@ -60,6 +61,7 @@ RETURN
                                , ConnectorDirection NoDirection
                                , Relationship
                                    (LabelledRelationship (Just "o") ["OWNS"])
+                                   Nothing
                                    M.empty
                                , ConnectorDirection RightDirection
                                , Node
@@ -77,6 +79,7 @@ RETURN
                                , ConnectorDirection NoDirection
                                , Relationship
                                    (LabelledRelationship Nothing ["HAS"])
+                                   Nothing
                                    M.empty
                                , ConnectorDirection RightDirection
                                , Node (LabelledNode (Just "c") ["Car"]) M.empty]]

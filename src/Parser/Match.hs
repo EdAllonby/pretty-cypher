@@ -1,15 +1,16 @@
-module Parser.Match (parseMatch, parseOptionalMatch) where
+module Parser.Match (parseMatch, parseOptionalMatch, parseRelationshipHops) where
 
-import           Types (Clause(OptionalMatch, Match), Pattern(Pattern)
+import           Types (RelationshipHops(..), Clause(OptionalMatch, Match)
+                      , Pattern(Pattern)
                       , PatternComponent(ConnectorDirection, Node, Relationship)
                       , RelationshipType(EmptyRelationship, LabelledRelationship,
                  AnyRelationship)
                       , NodeType(EmptyNode, LabelledNode, AnyNode)
                       , PropertyValue(..), ConnectorDirection(..))
-import           Parser.ParserCore (Parser, symbol, signedInteger, signedDouble
-                                  , keyword', parens, brackets, curlyBrackets
-                                  , parseText, parseSnakeCaseText, betweenQuotes
-                                  , commaSep)
+import           Parser.ParserCore (integer, Parser, symbol, signedInteger
+                                  , signedDouble, keyword', parens, brackets
+                                  , curlyBrackets, parseText, parseSnakeCaseText
+                                  , betweenQuotes, commaSep)
 import           Data.Text (Text)
 import           Text.Megaparsec ((<|>), eof, sepBy1, optional, (<?>), choice
                                 , manyTill, MonadParsec(try, lookAhead))
@@ -31,7 +32,10 @@ parsePattern = do
   patternComponents <- manyTill
     (choice
        [ parens (Node <$> parseNodeType <*> parseProperties) <?> "valid node"
-       , brackets (Relationship <$> parseRelationshipType <*> parseProperties)
+       , brackets
+           (Relationship <$> parseRelationshipType
+            <*> optional parseRelationshipHops
+            <*> parseProperties)
            <?> "valid relationship"
        , ConnectorDirection <$> parseConnectorDirection <?> "connector"])
     -- Can we unify these lookahead tokens with those specified in the above parseQuery table?
@@ -59,6 +63,12 @@ parseRelationshipType = choice
            *> parseSnakeCaseText `sepBy1` (symbol "|:" <|> symbol "|")) -- TODO: It doesn't really matter if this is snake case, we need a more general text parser.
   , AnyRelationship <$> parseText
   , EmptyRelationship <$ symbol ""]
+
+parseRelationshipHops :: Parser RelationshipHops
+parseRelationshipHops = symbol "*"
+  *> choice
+    [ try (VariableLength <$> integer <*> (symbol ".." *> integer))
+    , FixedLength <$> integer]
 
 parseConnectorDirection :: Parser ConnectorDirection
 parseConnectorDirection = choice

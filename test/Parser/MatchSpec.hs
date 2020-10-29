@@ -108,7 +108,10 @@ runParserOptionalMatchTests = do
           Nothing
           [ Node (AnyNode "a") M.empty
           , ConnectorDirection NoDirection
-          , Relationship (LabelledRelationship (Just "r") ["ACTS_IN"]) M.empty
+          , Relationship
+              (LabelledRelationship (Just "r") ["ACTS_IN"])
+              Nothing
+              M.empty
           , ConnectorDirection RightDirection
           , Node EmptyNode M.empty]]
 
@@ -118,7 +121,28 @@ runParserMatchRelationshipTests = do
     `shouldParseMatchQuery` Match
       [ Pattern
           Nothing
-          [Relationship (LabelledRelationship (Just "fo") ["FOLLOWS"]) M.empty]]
+          [ Relationship
+              (LabelledRelationship (Just "fo") ["FOLLOWS"])
+              Nothing
+              M.empty]]
+  it "parses match clause with variable length relationship"
+    $ "MATCH [fo:FOLLOWS*4..6]"
+    `shouldParseMatchQuery` Match
+      [ Pattern
+          Nothing
+          [ Relationship
+              (LabelledRelationship (Just "fo") ["FOLLOWS"])
+              (Just (VariableLength 4 6))
+              M.empty]]
+  it "parses match clause with fixed length relationship"
+    $ "MATCH [fo:FOLLOWS*8]"
+    `shouldParseMatchQuery` Match
+      [ Pattern
+          Nothing
+          [ Relationship
+              (LabelledRelationship (Just "fo") ["FOLLOWS"])
+              (Just (FixedLength 8))
+              M.empty]]
   it "parses match clause with multi pipe labelled relationship"
     $ "MATCH [fo:FOLLOWS|UNFOLLOWS]"
     `shouldParseMatchQuery` Match
@@ -126,6 +150,7 @@ runParserMatchRelationshipTests = do
           Nothing
           [ Relationship
               (LabelledRelationship (Just "fo") ["FOLLOWS", "UNFOLLOWS"])
+              Nothing
               M.empty]]
   it "parses match clause with multi pipe with colon labelled relationship"
     $ "MATCH [fo:FOLLOWS|:UNFOLLOWS]"
@@ -134,6 +159,7 @@ runParserMatchRelationshipTests = do
           Nothing
           [ Relationship
               (LabelledRelationship (Just "fo") ["FOLLOWS", "UNFOLLOWS"])
+              Nothing
               M.empty]]
   it "parses match clause with screaming snake case relationship"
     $ "MATCH [i:IS_A_FAN_OF]"
@@ -142,6 +168,7 @@ runParserMatchRelationshipTests = do
           Nothing
           [ Relationship
               (LabelledRelationship (Just "i") ["IS_A_FAN_OF"])
+              Nothing
               M.empty]]
   it "parses match clause with relationship specifying properties"
     $ "MATCH [fo:FOLLOWS { name: ' D. A. V. E ', age: 32, height: 1.6, delta: -10, base: -3.14 }]"
@@ -150,6 +177,7 @@ runParserMatchRelationshipTests = do
           Nothing
           [ Relationship
               (LabelledRelationship (Just "fo") ["FOLLOWS"])
+              Nothing
               (M.fromList
                  [ ("age", IntegerValue 32)
                  , ("base", DoubleValue (-3.14))
@@ -161,7 +189,10 @@ runParserMatchRelationshipTests = do
     `shouldParseMatchQuery` Match
       [ Pattern
           Nothing
-          [Relationship (LabelledRelationship Nothing ["FOLLOWS"]) M.empty]]
+          [ Relationship
+              (LabelledRelationship Nothing ["FOLLOWS"])
+              Nothing
+              M.empty]]
   it "parses match clause with anonymous relationship specifying properties"
     $ "MATCH [:FOLLOWS { name: ' D. A. V. E ', age: 32, height: 1.6, delta: -10, base: -3.14 }]"
     `shouldParseMatchQuery` Match
@@ -169,6 +200,7 @@ runParserMatchRelationshipTests = do
           Nothing
           [ Relationship
               (LabelledRelationship Nothing ["FOLLOWS"])
+              Nothing
               (M.fromList
                  [ ("age", IntegerValue 32)
                  , ("base", DoubleValue (-3.14))
@@ -178,7 +210,7 @@ runParserMatchRelationshipTests = do
   it "parses match clause with any relationship"
     $ "MATCH [a]"
     `shouldParseMatchQuery` Match
-      [Pattern Nothing [Relationship (AnyRelationship "a") M.empty]]
+      [Pattern Nothing [Relationship (AnyRelationship "a") Nothing M.empty]]
   it "parses match clause with any relationship specifying properties"
     $ "MATCH [a { name: ' D. A. V. E ', age: 32, height: 1.6, delta: -10, base: -3.14 }]"
     `shouldParseMatchQuery` Match
@@ -186,6 +218,7 @@ runParserMatchRelationshipTests = do
           Nothing
           [ Relationship
               (AnyRelationship "a")
+              Nothing
               (M.fromList
                  [ ("age", IntegerValue 32)
                  , ("base", DoubleValue (-3.14))
@@ -195,7 +228,13 @@ runParserMatchRelationshipTests = do
   it "parses match clause with empty relationship"
     $ "MATCH []"
     `shouldParseMatchQuery` Match
-      [Pattern Nothing [Relationship EmptyRelationship M.empty]]
+      [Pattern Nothing [Relationship EmptyRelationship Nothing M.empty]]
+  it "parses match clause with empty relationship and variable length hops"
+    $ "MATCH [*2..4]"
+    `shouldParseMatchQuery` Match
+      [ Pattern
+          Nothing
+          [Relationship EmptyRelationship (Just (VariableLength 2 4)) M.empty]]
   it "parses match clause with empty relationship specifying properties"
     $ "MATCH [{ name: ' D. A. V. E ', age: 32, height: 1.6, delta: -10, base: -3.14 }]"
     `shouldParseMatchQuery` Match
@@ -203,6 +242,22 @@ runParserMatchRelationshipTests = do
           Nothing
           [ Relationship
               EmptyRelationship
+              Nothing
+              (M.fromList
+                 [ ("age", IntegerValue 32)
+                 , ("base", DoubleValue (-3.14))
+                 , ("delta", IntegerValue (-10))
+                 , ("height", DoubleValue 1.6)
+                 , ("name", TextValue " D. A. V. E ")])]]
+  it
+    "parses match clause with empty relationship specifying hops and properties"
+    $ "MATCH [*1..3{ name: ' D. A. V. E ', age: 32, height: 1.6, delta: -10, base: -3.14 }]"
+    `shouldParseMatchQuery` Match
+      [ Pattern
+          Nothing
+          [ Relationship
+              EmptyRelationship
+              (Just (VariableLength 1 3))
               (M.fromList
                  [ ("age", IntegerValue 32)
                  , ("base", DoubleValue (-3.14))
@@ -218,7 +273,10 @@ runParserMatchDirectionTests = do
           Nothing
           [ Node (LabelledNode (Just "p") ["Person"]) M.empty
           , ConnectorDirection NoDirection
-          , Relationship (LabelledRelationship (Just "h") ["HAS"]) M.empty
+          , Relationship
+              (LabelledRelationship (Just "h") ["HAS"])
+              Nothing
+              M.empty
           , ConnectorDirection RightDirection
           , Node (LabelledNode (Just "c") ["Car"]) M.empty]]
   it "parses match clause with left directionality"
@@ -228,7 +286,10 @@ runParserMatchDirectionTests = do
           Nothing
           [ Node (LabelledNode (Just "p") ["Person"]) M.empty
           , ConnectorDirection LeftDirection
-          , Relationship (LabelledRelationship (Just "h") ["HAS"]) M.empty
+          , Relationship
+              (LabelledRelationship (Just "h") ["HAS"])
+              Nothing
+              M.empty
           , ConnectorDirection NoDirection
           , Node (LabelledNode (Just "c") ["Car"]) M.empty]]
   it "parses match clause with no directionality"
@@ -238,7 +299,10 @@ runParserMatchDirectionTests = do
           Nothing
           [ Node (LabelledNode (Just "p") ["Person"]) M.empty
           , ConnectorDirection NoDirection
-          , Relationship (LabelledRelationship (Just "h") ["HAS"]) M.empty
+          , Relationship
+              (LabelledRelationship (Just "h") ["HAS"])
+              Nothing
+              M.empty
           , ConnectorDirection NoDirection
           , Node (LabelledNode (Just "c") ["Car"]) M.empty]]
   it "parses match clause with anonymous right directionality"
@@ -281,7 +345,10 @@ runParserMatchPatternTests = do
                  , ("height", DoubleValue 1.6)
                  , ("name", TextValue " D. A. V. E ")])
           , ConnectorDirection NoDirection
-          , Relationship (LabelledRelationship (Just "o") ["OWNS"]) M.empty
+          , Relationship
+              (LabelledRelationship (Just "o") ["OWNS"])
+              Nothing
+              M.empty
           , ConnectorDirection RightDirection
           , Node (LabelledNode (Just "car") ["Car"]) M.empty]]
   it "parses single match clause with multiple patterns"

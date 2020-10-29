@@ -21,6 +21,10 @@ data PropertyValue = TextValue Text
 
 type Properties = M.Map Text PropertyValue
 
+data RelationshipHops = VariableLength Integer Integer
+                      | FixedLength Integer
+  deriving (Data, Typeable, Eq, Show)
+
 data NodeType = LabelledNode { labelledNodeVariable :: Maybe Text
                              , labelledNodeLabels :: [Text]
                              }
@@ -36,9 +40,10 @@ data RelationshipType =
   | EmptyRelationship
   deriving (Data, Typeable, Eq, Show)
 
-data PatternComponent = Node NodeType Properties
-                      | Relationship RelationshipType Properties
-                      | ConnectorDirection ConnectorDirection
+data PatternComponent =
+    Node NodeType Properties
+  | Relationship RelationshipType (Maybe RelationshipHops) Properties
+  | ConnectorDirection ConnectorDirection
   deriving (Data, Typeable, Eq, Show)
 
 data Pattern = Pattern { patternVariable :: Maybe Text
