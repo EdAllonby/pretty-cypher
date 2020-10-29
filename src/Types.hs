@@ -17,6 +17,7 @@ data ConnectorDirection =
 data PropertyValue = TextValue Text
                    | IntegerValue Integer
                    | DoubleValue Double
+                   | BooleanValue Bool
   deriving (Data, Typeable, Eq, Show)
 
 type Properties = M.Map Text PropertyValue

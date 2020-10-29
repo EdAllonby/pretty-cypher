@@ -213,7 +213,7 @@ runParserMatchRelationshipTests = do
     `shouldParseMatchQuery` Match
       [Pattern Nothing [Relationship (AnyRelationship "a") Nothing M.empty]]
   it "parses match clause with any relationship specifying properties"
-    $ "MATCH [a { name: ' D. A. V. E ', age: 32, height: 1.6, delta: -10, base: -3.14 }]"
+    $ "MATCH [a { name: ' D. A. V. E ', age: 32, height: 1.6, delta: -10, base: -3.14, today: true, tomorrow: false }]"
     `shouldParseMatchQuery` Match
       [ Pattern
           Nothing
@@ -225,7 +225,9 @@ runParserMatchRelationshipTests = do
                  , ("base", DoubleValue (-3.14))
                  , ("delta", IntegerValue (-10))
                  , ("height", DoubleValue 1.6)
-                 , ("name", TextValue " D. A. V. E ")])]]
+                 , ("name", TextValue " D. A. V. E ")
+                 , ("today", BooleanValue True)
+                 , ("tomorrow", BooleanValue False)])]]
   it "parses match clause with empty relationship"
     $ "MATCH []"
     `shouldParseMatchQuery` Match

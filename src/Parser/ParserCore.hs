@@ -13,6 +13,7 @@ module Parser.ParserCore
     , parseSnakeCaseText
     , betweenQuotes
     , integer
+    , boolean
     , double
     , signedInteger
     , signedDouble
@@ -20,8 +21,8 @@ module Parser.ParserCore
 
 import           Data.Text (Text)
 import           Data.Void (Void)
-import           Text.Megaparsec ((<|>), sepBy, lookAhead, manyTill, some
-                                , between, notFollowedBy, empty, Parsec)
+import           Text.Megaparsec (choice, (<|>), sepBy, lookAhead, manyTill
+                                , some, between, notFollowedBy, empty, Parsec)
 import           Text.Megaparsec.Char (latin1Char, char, letterChar
                                      , alphaNumChar, space1, string')
 import qualified Text.Megaparsec.Char.Lexer as L
@@ -43,6 +44,9 @@ symbol' = L.symbol' sc
 
 integer :: Parser Integer
 integer = lexeme L.decimal
+
+boolean :: Parser Bool
+boolean = choice [True <$ symbol' "true", False <$ symbol' "false"]
 
 double :: Parser Double
 double = lexeme L.float

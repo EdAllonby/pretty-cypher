@@ -7,10 +7,10 @@ import           Types (RelationshipHops(..), Clause(OptionalMatch, Match)
                  AnyRelationship)
                       , NodeType(EmptyNode, LabelledNode, AnyNode)
                       , PropertyValue(..), ConnectorDirection(..))
-import           Parser.ParserCore (integer, Parser, symbol, signedInteger
-                                  , signedDouble, keyword', parens, brackets
-                                  , curlyBrackets, parseText, parseSnakeCaseText
-                                  , betweenQuotes, commaSep)
+import           Parser.ParserCore (boolean, integer, Parser, symbol
+                                  , signedInteger, signedDouble, keyword'
+                                  , parens, brackets, curlyBrackets, parseText
+                                  , parseSnakeCaseText, betweenQuotes, commaSep)
 import           Data.Text (Text)
 import           Text.Megaparsec ((<|>), eof, sepBy1, optional, (<?>), choice
                                 , manyTill, MonadParsec(try, lookAhead))
@@ -93,4 +93,5 @@ parseProperty = (,) <$> parseText
        *> choice
          [ DoubleValue <$> try signedDouble -- TODO: Not too sure why this one needs a try, shouldn't it be atomic? Investigate
          , IntegerValue <$> signedInteger
+         , BooleanValue <$> boolean
          , TextValue <$> betweenQuotes])
