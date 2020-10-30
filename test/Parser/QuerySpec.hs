@@ -25,7 +25,7 @@ runParserComplexQueryTests = do
     $ [r|
 MATCH (a:Movie { title: 'Wall Street' })
 OPTIONAL MATCH (a)-[r:ACTS_IN]->()
-RETURN a
+RETURN *
     |]
     `shouldParseQuery` [ Match
                            [ Pattern
@@ -53,9 +53,9 @@ RETURN a
                                    M.empty
                                , ConnectorDirection RightDirection
                                , Node EmptyNode M.empty]]
-                       , Return (Property (UnboundText "a"))]
+                       , Return AllElements]
   it "parses query with erratic spacing"
-    $ "  MATCH  (   : Person{ name: ' D. A. V. E ' , age : 32 , height : 1.6 , delta : -10 , base  : -3.14  } )   -  [  o : OWNS  ] -> (car :Car )   RETURN  car   "
+    $ "  MATCH  (   : Person{ name: ' D. A. V. E ' , age : 32 , height : 1.6 , delta : -10 , base  : -3.14  } )   -  [  o : OWNS  ] -> (car :Car )   RETURN  *   "
     `shouldParseQuery` [ Match
                            [ Pattern
                                Nothing
@@ -85,7 +85,7 @@ RETURN a
                                       (Just (UnboundText "car"))
                                       [UnboundText "Car"])
                                    M.empty]]
-                       , Return (Property (UnboundText "car"))]
+                       , Return AllElements]
   it "parses multi match clause"
     $ "MATCH (p:Person)-[:HAS]->(c:Car) MATCH (cat:Cat) RETURN c"
     `shouldParseQuery` [ Match
@@ -119,7 +119,8 @@ RETURN a
                                       (Just (UnboundText "cat"))
                                       [UnboundText "Cat"])
                                    M.empty]]
-                       , Return (Property (UnboundText "c"))]
+                       , Return
+                           (Property (NestedObject (UnboundText "c") ObjectEnd))]
 
 runParserQueryErrorTests = do
   it "fails on invalid clause producing correct error message"

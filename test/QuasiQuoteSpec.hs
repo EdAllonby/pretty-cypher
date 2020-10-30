@@ -19,7 +19,7 @@ cypherExpr =
     delta: -10, 
     base: -3.14 
   })
-  RETURN per
+  RETURN *
 |]
 
 runQuasiQuoteTests :: SpecWith ()
@@ -49,4 +49,4 @@ runQuasiQuoteTests = describe "QuasiQuote"
                                         , ( UnboundText "name"
                                             , TextValue
                                               (QuotedText " D. A. V. E "))])]]
-                         , Return (Property (UnboundText "per"))]
+                         , Return AllElements]

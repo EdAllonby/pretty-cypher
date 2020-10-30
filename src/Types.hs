@@ -61,7 +61,11 @@ data Pattern = Pattern { patternVariable :: Maybe Text
                        }
   deriving (Data, Typeable, Eq, Show)
 
-data ReturnValue = Property LiteralText
+data Object = NestedObject LiteralText Object
+            | ObjectEnd
+  deriving (Data, Typeable, Eq, Show)
+
+data ReturnValue = Property Object
                  | AllElements
   deriving (Data, Typeable, Eq, Show)
 
