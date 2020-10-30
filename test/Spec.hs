@@ -1,4 +1,3 @@
-
 import           Test.Hspec (hspec)
 import           Parser.QuerySpec (runParserQueryTests)
 import           Parser.MatchSpec (runParserMatchTests)

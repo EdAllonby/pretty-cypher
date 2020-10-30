@@ -120,7 +120,9 @@ RETURN *
                                       [UnboundText "Cat"])
                                    M.empty]]
                        , Return
-                           (Property (NestedObject (UnboundText "c") ObjectEnd))]
+                           (Property
+                              (NestedObject (UnboundText "c") ObjectEnd)
+                              Nothing)]
 
 runParserQueryErrorTests = do
   it "fails on invalid clause producing correct error message"

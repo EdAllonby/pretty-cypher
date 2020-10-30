@@ -65,8 +65,9 @@ data Object = NestedObject LiteralText Object
             | ObjectEnd
   deriving (Data, Typeable, Eq, Show)
 
-data ReturnValue = Property Object
-                 | AllElements
+data ReturnValue =
+    Property { propertyObject :: Object, propertyAlias :: Maybe LiteralText }
+  | AllElements
   deriving (Data, Typeable, Eq, Show)
 
 data Clause = Match [Pattern] -- TODO: Move this to a non-empty list data type?
