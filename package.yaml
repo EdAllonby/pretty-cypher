@@ -35,6 +35,7 @@ default-extensions:
   - TemplateHaskell
   - QuasiQuotes
   - DeriveDataTypeable
+  - TupleSections
 
 library:
   source-dirs: src

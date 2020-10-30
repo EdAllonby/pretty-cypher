@@ -26,17 +26,22 @@ runParserMatchNodeTests = do
   it "parses match clause with node"
     $ "MATCH (per:Person)"
     `shouldParseMatchQuery` Match
-      [Pattern Nothing [Node (LabelledNode (Just "per") ["Person"]) M.empty]]
+      [ Pattern
+          Nothing
+          Nothing
+          [Node (LabelledNode (Just "per") ["Person"]) M.empty]]
   it "parses match clause with multi labelled node"
     $ "MATCH (per:Person:Actor)"
     `shouldParseMatchQuery` Match
       [ Pattern
+          Nothing
           Nothing
           [Node (LabelledNode (Just "per") ["Person", "Actor"]) M.empty]]
   it "parses match clause with labelled node specifying properties"
     $ "MATCH (per:Person { name: ' D. A. V. E ', age: 32, height: 1.6, delta: -10, base: -3.14 })"
     `shouldParseMatchQuery` Match
       [ Pattern
+          Nothing
           Nothing
           [ Node
               (LabelledNode (Just "per") ["Person"])
@@ -49,11 +54,15 @@ runParserMatchNodeTests = do
   it "parses match clause with anonymous node"
     $ "MATCH (:Person)"
     `shouldParseMatchQuery` Match
-      [Pattern Nothing [Node (LabelledNode Nothing ["Person"]) M.empty]]
+      [ Pattern
+          Nothing
+          Nothing
+          [Node (LabelledNode Nothing ["Person"]) M.empty]]
   it "parses match clause with anonymous node specifying properties"
     $ "MATCH (:Person { name: ' D. A. V. E ', age: 32, height: 1.6, delta: -10, base: -3.14 })"
     `shouldParseMatchQuery` Match
       [ Pattern
+          Nothing
           Nothing
           [ Node
               (LabelledNode Nothing ["Person"])
@@ -65,11 +74,13 @@ runParserMatchNodeTests = do
                  , ("name", TextValue " D. A. V. E ")])]]
   it "parses match clause with empty node"
     $ "MATCH ()"
-    `shouldParseMatchQuery` Match [Pattern Nothing [Node EmptyNode M.empty]]
+    `shouldParseMatchQuery` Match
+      [Pattern Nothing Nothing [Node EmptyNode M.empty]]
   it "parses match clause with empty node specifying properties"
     $ "MATCH ({ name: ' D. A. V. E ', age: 32, height: 1.6, delta: -10, base: -3.14 })"
     `shouldParseMatchQuery` Match
       [ Pattern
+          Nothing
           Nothing
           [ Node
               EmptyNode
@@ -82,11 +93,12 @@ runParserMatchNodeTests = do
   it "parses match clause with any node"
     $ "MATCH (n)"
     `shouldParseMatchQuery` Match
-      [Pattern Nothing [Node (AnyNode "n") M.empty]]
+      [Pattern Nothing Nothing [Node (AnyNode "n") M.empty]]
   it "parses match clause with any node specifying properties"
     $ "MATCH (n{ name: ' D. A. V. E ', age: 32, height: 1.6, delta: -10, base: -3.14 })"
     `shouldParseMatchQuery` Match
       [ Pattern
+          Nothing
           Nothing
           [ Node
               (AnyNode "n")
@@ -101,11 +113,15 @@ runParserOptionalMatchTests = do
   it "parses optional match clause with node"
     $ "OPTIONAL MATCH (per:Person)"
     `shouldParseOptionalMatchQuery` OptionalMatch
-      [Pattern Nothing [Node (LabelledNode (Just "per") ["Person"]) M.empty]]
+      [ Pattern
+          Nothing
+          Nothing
+          [Node (LabelledNode (Just "per") ["Person"]) M.empty]]
   it "parses match with optional match clause"
     $ "OPTIONAL MATCH (a)-[r:ACTS_IN]->()"
     `shouldParseOptionalMatchQuery` OptionalMatch
       [ Pattern
+          Nothing
           Nothing
           [ Node (AnyNode "a") M.empty
           , ConnectorDirection NoDirection
@@ -122,6 +138,7 @@ runParserMatchRelationshipTests = do
     `shouldParseMatchQuery` Match
       [ Pattern
           Nothing
+          Nothing
           [ Relationship
               (LabelledRelationship (Just "fo") ["FOLLOWS"])
               Nothing
@@ -130,6 +147,7 @@ runParserMatchRelationshipTests = do
     $ "MATCH [fo:FOLLOWS*4..6]"
     `shouldParseMatchQuery` Match
       [ Pattern
+          Nothing
           Nothing
           [ Relationship
               (LabelledRelationship (Just "fo") ["FOLLOWS"])
@@ -140,6 +158,7 @@ runParserMatchRelationshipTests = do
     `shouldParseMatchQuery` Match
       [ Pattern
           Nothing
+          Nothing
           [ Relationship
               (LabelledRelationship (Just "fo") ["FOLLOWS"])
               (Just (FixedHops 8))
@@ -148,6 +167,7 @@ runParserMatchRelationshipTests = do
     $ "MATCH [fo:FOLLOWS|UNFOLLOWS]"
     `shouldParseMatchQuery` Match
       [ Pattern
+          Nothing
           Nothing
           [ Relationship
               (LabelledRelationship (Just "fo") ["FOLLOWS", "UNFOLLOWS"])
@@ -158,6 +178,7 @@ runParserMatchRelationshipTests = do
     `shouldParseMatchQuery` Match
       [ Pattern
           Nothing
+          Nothing
           [ Relationship
               (LabelledRelationship (Just "fo") ["FOLLOWS", "UNFOLLOWS"])
               Nothing
@@ -167,6 +188,7 @@ runParserMatchRelationshipTests = do
     `shouldParseMatchQuery` Match
       [ Pattern
           Nothing
+          Nothing
           [ Relationship
               (LabelledRelationship (Just "i") ["IS_A_FAN_OF"])
               Nothing
@@ -175,6 +197,7 @@ runParserMatchRelationshipTests = do
     $ "MATCH [fo:FOLLOWS { name: ' D. A. V. E ', age: 32, height: 1.6, delta: -10, base: -3.14 }]"
     `shouldParseMatchQuery` Match
       [ Pattern
+          Nothing
           Nothing
           [ Relationship
               (LabelledRelationship (Just "fo") ["FOLLOWS"])
@@ -190,6 +213,7 @@ runParserMatchRelationshipTests = do
     `shouldParseMatchQuery` Match
       [ Pattern
           Nothing
+          Nothing
           [ Relationship
               (LabelledRelationship Nothing ["FOLLOWS"])
               Nothing
@@ -198,6 +222,7 @@ runParserMatchRelationshipTests = do
     $ "MATCH [:FOLLOWS { name: ' D. A. V. E ', age: 32, height: 1.6, delta: -10, base: -3.14 }]"
     `shouldParseMatchQuery` Match
       [ Pattern
+          Nothing
           Nothing
           [ Relationship
               (LabelledRelationship Nothing ["FOLLOWS"])
@@ -211,11 +236,15 @@ runParserMatchRelationshipTests = do
   it "parses match clause with any relationship"
     $ "MATCH [a]"
     `shouldParseMatchQuery` Match
-      [Pattern Nothing [Relationship (AnyRelationship "a") Nothing M.empty]]
+      [ Pattern
+          Nothing
+          Nothing
+          [Relationship (AnyRelationship "a") Nothing M.empty]]
   it "parses match clause with any relationship specifying properties"
     $ "MATCH [a { name: ' D. A. V. E ', age: 32, height: 1.6, delta: -10, base: -3.14, today: true, tomorrow: false }]"
     `shouldParseMatchQuery` Match
       [ Pattern
+          Nothing
           Nothing
           [ Relationship
               (AnyRelationship "a")
@@ -231,11 +260,15 @@ runParserMatchRelationshipTests = do
   it "parses match clause with empty relationship"
     $ "MATCH []"
     `shouldParseMatchQuery` Match
-      [Pattern Nothing [Relationship EmptyRelationship Nothing M.empty]]
+      [ Pattern
+          Nothing
+          Nothing
+          [Relationship EmptyRelationship Nothing M.empty]]
   it "parses match clause with empty relationship specifying properties"
     $ "MATCH [{ name: ' D. A. V. E ', age: 32, height: 1.6, delta: -10, base: -3.14 }]"
     `shouldParseMatchQuery` Match
       [ Pattern
+          Nothing
           Nothing
           [ Relationship
               EmptyRelationship
@@ -251,6 +284,7 @@ runParserMatchRelationshipTests = do
     $ "MATCH [*1..3{ name: ' D. A. V. E ', age: 32, height: 1.6, delta: -10, base: -3.14 }]"
     `shouldParseMatchQuery` Match
       [ Pattern
+          Nothing
           Nothing
           [ Relationship
               EmptyRelationship
@@ -268,11 +302,13 @@ runParserMatchRelationshipHopsTests = do
     `shouldParseMatchQuery` Match
       [ Pattern
           Nothing
+          Nothing
           [Relationship EmptyRelationship (Just (VariableHops 2 4)) M.empty]]
   it "parses match clause with empty relationship and min length hops"
     $ "MATCH [*2..]"
     `shouldParseMatchQuery` Match
       [ Pattern
+          Nothing
           Nothing
           [Relationship EmptyRelationship (Just (MinHops 2)) M.empty]]
   it "parses match clause with empty relationship and max length hops"
@@ -280,23 +316,29 @@ runParserMatchRelationshipHopsTests = do
     `shouldParseMatchQuery` Match
       [ Pattern
           Nothing
+          Nothing
           [Relationship EmptyRelationship (Just (MaxHops 2)) M.empty]]
   it "parses match clause with empty relationship and fixed length hops"
     $ "MATCH [*2]"
     `shouldParseMatchQuery` Match
       [ Pattern
           Nothing
+          Nothing
           [Relationship EmptyRelationship (Just (FixedHops 2)) M.empty]]
   it "parses match clause with empty relationship and any length hops"
     $ "MATCH [*]"
     `shouldParseMatchQuery` Match
-      [Pattern Nothing [Relationship EmptyRelationship (Just AnyHops) M.empty]]
+      [ Pattern
+          Nothing
+          Nothing
+          [Relationship EmptyRelationship (Just AnyHops) M.empty]]
 
 runParserMatchDirectionTests = do
   it "parses match clause with right directionality"
     $ "MATCH (p:Person)-[h:HAS]->(c:Car)"
     `shouldParseMatchQuery` Match
       [ Pattern
+          Nothing
           Nothing
           [ Node (LabelledNode (Just "p") ["Person"]) M.empty
           , ConnectorDirection NoDirection
@@ -311,6 +353,7 @@ runParserMatchDirectionTests = do
     `shouldParseMatchQuery` Match
       [ Pattern
           Nothing
+          Nothing
           [ Node (LabelledNode (Just "p") ["Person"]) M.empty
           , ConnectorDirection LeftDirection
           , Relationship
@@ -323,6 +366,7 @@ runParserMatchDirectionTests = do
     $ "MATCH (p:Person)-[h:HAS]-(c:Car)"
     `shouldParseMatchQuery` Match
       [ Pattern
+          Nothing
           Nothing
           [ Node (LabelledNode (Just "p") ["Person"]) M.empty
           , ConnectorDirection NoDirection
@@ -337,6 +381,7 @@ runParserMatchDirectionTests = do
     `shouldParseMatchQuery` Match
       [ Pattern
           Nothing
+          Nothing
           [ Node (LabelledNode (Just "p") ["Person"]) M.empty
           , ConnectorDirection AnonymousRightDirection
           , Node (LabelledNode (Just "c") ["Car"]) M.empty]]
@@ -345,6 +390,7 @@ runParserMatchDirectionTests = do
     `shouldParseMatchQuery` Match
       [ Pattern
           Nothing
+          Nothing
           [ Node (LabelledNode (Just "p") ["Person"]) M.empty
           , ConnectorDirection AnonymousLeftDirection
           , Node (LabelledNode (Just "c") ["Car"]) M.empty]]
@@ -352,6 +398,7 @@ runParserMatchDirectionTests = do
     $ "MATCH (p:Person)--(c:Car)"
     `shouldParseMatchQuery` Match
       [ Pattern
+          Nothing
           Nothing
           [ Node (LabelledNode (Just "p") ["Person"]) M.empty
           , ConnectorDirection AnonymousNoDirection
@@ -362,6 +409,7 @@ runParserMatchPatternTests = do
     $ "MATCH  (   : Person{ name: ' D. A. V. E ' , age : 32 , height : 1.6 , delta : -10 , base  : -3.14  } )   -  [  o : OWNS  ] -> (car :Car )"
     `shouldParseMatchQuery` Match
       [ Pattern
+          Nothing
           Nothing
           [ Node
               (LabelledNode Nothing ["Person"])
@@ -381,13 +429,47 @@ runParserMatchPatternTests = do
   it "parses single match clause with multiple patterns"
     $ "MATCH (p:Person), (m:Movie)"
     `shouldParseMatchQuery` Match
-      [ Pattern Nothing [Node (LabelledNode (Just "p") ["Person"]) M.empty]
-      , Pattern Nothing [Node (LabelledNode (Just "m") ["Movie"]) M.empty]]
+      [ Pattern
+          Nothing
+          Nothing
+          [Node (LabelledNode (Just "p") ["Person"]) M.empty]
+      , Pattern
+          Nothing
+          Nothing
+          [Node (LabelledNode (Just "m") ["Movie"]) M.empty]]
   it "parses match clause with pattern variable"
     $ "MATCH p=(p:Person),q=(m:Movie) MATCH r=(a)--(b)"
     `shouldParseMatchQuery` Match
-      [ Pattern (Just "p") [Node (LabelledNode (Just "p") ["Person"]) M.empty]
-      , Pattern (Just "q") [Node (LabelledNode (Just "m") ["Movie"]) M.empty]]
+      [ Pattern
+          (Just "p")
+          Nothing
+          [Node (LabelledNode (Just "p") ["Person"]) M.empty]
+      , Pattern
+          (Just "q")
+          Nothing
+          [Node (LabelledNode (Just "m") ["Movie"]) M.empty]]
+  it "parses match clause wrapped in a function"
+    $ "MATCH shortestPath((p:Person)-[*]-(j:Job))"
+    `shouldParseMatchQuery` Match
+      [ Pattern
+          Nothing
+          (Just "shortestPath")
+          [ Node (LabelledNode (Just "p") ["Person"]) M.empty
+          , ConnectorDirection NoDirection
+          , Relationship EmptyRelationship (Just AnyHops) M.empty
+          , ConnectorDirection NoDirection
+          , Node (LabelledNode (Just "j") ["Job"]) M.empty]]
+  it "parses match clause with pattern variable wrapped in a function"
+    $ "MATCH x=shortestPath((p:Person)-[*]-(j:Job))"
+    `shouldParseMatchQuery` Match
+      [ Pattern
+          (Just "x")
+          (Just "shortestPath")
+          [ Node (LabelledNode (Just "p") ["Person"]) M.empty
+          , ConnectorDirection NoDirection
+          , Relationship EmptyRelationship (Just AnyHops) M.empty
+          , ConnectorDirection NoDirection
+          , Node (LabelledNode (Just "j") ["Job"]) M.empty]]
 
 shouldParseMatchQuery :: Text -> Clause -> Expectation
 shouldParseMatchQuery query expectedResult =

@@ -1,4 +1,9 @@
-module Parser.Match (parseMatch, parseOptionalMatch, parseRelationshipHops) where
+-- TODO: HLS / Floskell doesn't seem to respect the default-extensions in package.yaml. 
+-- Need to explicitely provide this at the top of file.
+-- See https://github.com/ennocramer/floskell/issues/39
+{-# LANGUAGE TupleSections #-}
+
+module Parser.Match (parseMatch, parseOptionalMatch) where
 
 import           Types (RelationshipHops(..), Clause(OptionalMatch, Match)
                       , Pattern(Pattern)
@@ -28,24 +33,33 @@ parseOptionalMatch = do
 
 parsePattern :: Parser Pattern
 parsePattern = do
-  patternVariable <- optional $ parseText <* symbol "="
-  patternComponents <- manyTill
-    (choice
-       [ parens (Node <$> parseNodeType <*> parseProperties) <?> "valid node"
-       , brackets
-           (Relationship <$> parseRelationshipType
-            <*> optional parseRelationshipHops
-            <*> parseProperties)
-           <?> "valid relationship"
-       , ConnectorDirection <$> parseConnectorDirection <?> "connector"])
-    -- Can we unify these lookahead tokens with those specified in the above parseQuery table?
-    (lookAhead . choice
-     $ [ () <$ keyword' "RETURN"
-       , () <$ keyword' "MATCH"
-       , () <$ keyword' "OPTIONAL MATCH"
-       , () <$ symbol ","
-       , eof]) -- TODO: Really don't want to have this EOF, but we have it here otherwise we need to add RETURN statements to tests. Is there another option?
-  return $ Pattern patternVariable patternComponents
+  patternVariable <- optional $ try $ parseText <* symbol "="
+  (fn, p) <- choice
+    [try parsePatternWrappedInFunction, (Nothing, ) <$> parsePatternComponents]
+  return $ Pattern patternVariable fn p
+
+parsePatternWrappedInFunction :: Parser (Maybe Text, [PatternComponent])
+parsePatternWrappedInFunction = (,) <$> (Just <$> parseText)
+  <*> parens parsePatternComponents
+
+parsePatternComponents :: Parser [PatternComponent]
+parsePatternComponents = manyTill
+  (choice
+     [ parens (Node <$> parseNodeType <*> parseProperties) <?> "valid node"
+     , brackets
+         (Relationship <$> parseRelationshipType
+          <*> optional parseRelationshipHops
+          <*> parseProperties)
+         <?> "valid relationship"
+     , ConnectorDirection <$> parseConnectorDirection <?> "connector"])
+  -- Can we unify these lookahead tokens with those specified in the above parseQuery table?
+  (lookAhead . choice
+   $ [ () <$ keyword' "RETURN"
+     , () <$ keyword' "MATCH"
+     , () <$ keyword' "OPTIONAL MATCH"
+     , () <$ symbol ","
+     , () <$ symbol ")"
+     , eof]) -- TODO: Really don't want to have this EOF, but we have it here otherwise we need to add RETURN statements to tests. Is there another option?
 
 parseNodeType :: Parser NodeType
 parseNodeType = choice

@@ -33,6 +33,7 @@ runQuasiQuoteTests = describe "QuasiQuote"
               `shouldBe` [ Match
                              [ Pattern
                                  Nothing
+                                 Nothing
                                  [ Node
                                      (LabelledNode (Just "per") ["Person"])
                                      (M.fromList

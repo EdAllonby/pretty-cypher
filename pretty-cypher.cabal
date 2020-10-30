@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: b083fe700d5f1ab881d40468c97ae329459227779b0d8e0c071c355736b7524d
+-- hash: d0c6b46692464f8e04b6fbd9a444cd2fdb946b39a6f5cc30055cc6b6f7cee72d
 
 name:           pretty-cypher
 version:        0.1.0.0
@@ -37,7 +37,7 @@ library
       Paths_pretty_cypher
   hs-source-dirs:
       src
-  default-extensions: OverloadedStrings RecordWildCards TemplateHaskell QuasiQuotes DeriveDataTypeable
+  default-extensions: OverloadedStrings RecordWildCards TemplateHaskell QuasiQuotes DeriveDataTypeable TupleSections
   build-depends:
       base >=4.7 && <5
     , containers
@@ -55,7 +55,7 @@ executable pretty-cypher-exe
       Paths_pretty_cypher
   hs-source-dirs:
       app
-  default-extensions: OverloadedStrings RecordWildCards TemplateHaskell QuasiQuotes DeriveDataTypeable
+  default-extensions: OverloadedStrings RecordWildCards TemplateHaskell QuasiQuotes DeriveDataTypeable TupleSections
   ghc-options: -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       base >=4.7 && <5
@@ -79,7 +79,7 @@ test-suite pretty-cypher-test
       Paths_pretty_cypher
   hs-source-dirs:
       test
-  default-extensions: OverloadedStrings RecordWildCards TemplateHaskell QuasiQuotes DeriveDataTypeable
+  default-extensions: OverloadedStrings RecordWildCards TemplateHaskell QuasiQuotes DeriveDataTypeable TupleSections
   ghc-options: -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       base >=4.7 && <5

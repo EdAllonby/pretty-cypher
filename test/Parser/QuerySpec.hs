@@ -29,12 +29,14 @@ RETURN
     `shouldParseQuery` [ Match
                            [ Pattern
                                Nothing
+                               Nothing
                                [ Node
                                    (LabelledNode (Just "a") ["Movie"])
                                    (M.fromList
                                       [("title", TextValue "Wall Street")])]]
                        , OptionalMatch
                            [ Pattern
+                               Nothing
                                Nothing
                                [ Node (AnyNode "a") M.empty
                                , ConnectorDirection NoDirection
@@ -49,6 +51,7 @@ RETURN
     $ "  MATCH  (   : Person{ name: ' D. A. V. E ' , age : 32 , height : 1.6 , delta : -10 , base  : -3.14  } )   -  [  o : OWNS  ] -> (car :Car )   RETURN    "
     `shouldParseQuery` [ Match
                            [ Pattern
+                               Nothing
                                Nothing
                                [ Node
                                    (LabelledNode Nothing ["Person"])
@@ -73,6 +76,7 @@ RETURN
     `shouldParseQuery` [ Match
                            [ Pattern
                                Nothing
+                               Nothing
                                [ Node
                                    (LabelledNode (Just "p") ["Person"])
                                    M.empty
@@ -85,6 +89,7 @@ RETURN
                                , Node (LabelledNode (Just "c") ["Car"]) M.empty]]
                        , Match
                            [ Pattern
+                               Nothing
                                Nothing
                                [ Node
                                    (LabelledNode (Just "cat") ["Cat"])

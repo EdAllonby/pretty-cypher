@@ -51,6 +51,7 @@ data PatternComponent =
   deriving (Data, Typeable, Eq, Show)
 
 data Pattern = Pattern { patternVariable :: Maybe Text
+                       , patternWrappingFunctionName :: Maybe Text
                        , patternComponents :: [PatternComponent]
                        }
   deriving (Data, Typeable, Eq, Show)
