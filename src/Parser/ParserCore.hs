@@ -18,7 +18,8 @@ module Parser.ParserCore
     , double
     , signedInteger
     , signedDouble
-    , commaSep) where
+    , commaSep
+    , parseLiteralText) where
 
 import           Data.Text (Text)
 import           Data.Void (Void)
@@ -28,6 +29,7 @@ import           Text.Megaparsec.Char (latin1Char, char, letterChar
                                      , alphaNumChar, space1, string')
 import qualified Text.Megaparsec.Char.Lexer as L
 import qualified Data.Text as T
+import           Types (LiteralText(..))
 
 type Parser = Parsec Void Text
 
@@ -91,3 +93,10 @@ betweenBackticks = T.pack
 
 commaSep :: Parser a -> Parser [a]
 commaSep p = p `sepBy` symbol ","
+
+parseLiteralText :: Parser LiteralText
+parseLiteralText = choice
+  [ QuotedText <$> betweenQuotes
+  , BacktickedText <$> betweenBackticks
+  , UnboundText <$> parseSnakeCaseText -- TODO: It doesn't really matter if this is snake case, we need a more general text parser.
+  , UnboundText <$> parseText]

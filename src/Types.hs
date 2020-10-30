@@ -63,7 +63,7 @@ data Pattern = Pattern { patternVariable :: Maybe Text
 
 data Clause = Match [Pattern] -- TODO: Move this to a non-empty list data type?
             | OptionalMatch [Pattern]
-            | Return
+            | Return LiteralText
   deriving (Data, Typeable, Eq, Show)
 
 type QueryExpr = [Clause]

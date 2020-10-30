@@ -12,11 +12,10 @@ import           Types (Clause(OptionalMatch, Match), Pattern(Pattern)
                       , NodeType(EmptyNode, LabelledNode, AnyNode)
                       , RelationshipHops(..), PropertyValue(..)
                       , ConnectorDirection(..), LiteralText(..))
-import           Parser.ParserCore (betweenBackticks, boolean, integer, Parser
+import           Parser.ParserCore (parseLiteralText, boolean, integer, Parser
                                   , symbol, signedInteger, signedDouble
                                   , keyword', parens, brackets, curlyBrackets
-                                  , parseText, parseSnakeCaseText, betweenQuotes
-                                  , commaSep)
+                                  , parseText, commaSep)
 import           Data.Text (Text)
 import           Text.Megaparsec ((<|>), eof, sepBy1, optional, (<?>), choice
                                 , manyTill, MonadParsec(try, lookAhead))
@@ -109,10 +108,3 @@ parseProperty = (,) <$> parseLiteralText
          , IntegerValue <$> signedInteger
          , BooleanValue <$> boolean
          , TextValue <$> parseLiteralText])
-
-parseLiteralText :: Parser LiteralText
-parseLiteralText = choice
-  [ QuotedText <$> betweenQuotes
-  , BacktickedText <$> betweenBackticks
-  , UnboundText <$> parseSnakeCaseText -- TODO: It doesn't really matter if this is snake case, we need a more general text parser.
-  , UnboundText <$> parseText]

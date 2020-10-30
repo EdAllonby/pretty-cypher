@@ -24,7 +24,7 @@ runParserComplexQueryTests = do
     $ [r|
 MATCH (a:Movie { title: 'Wall Street' })
 OPTIONAL MATCH (a)-[r:ACTS_IN]->()
-RETURN
+RETURN a
     |]
     `shouldParseQuery` [ Match
                            [ Pattern
@@ -52,9 +52,9 @@ RETURN
                                    M.empty
                                , ConnectorDirection RightDirection
                                , Node EmptyNode M.empty]]
-                       , Return]
+                       , Return (UnboundText "a")]
   it "parses query with erratic spacing"
-    $ "  MATCH  (   : Person{ name: ' D. A. V. E ' , age : 32 , height : 1.6 , delta : -10 , base  : -3.14  } )   -  [  o : OWNS  ] -> (car :Car )   RETURN    "
+    $ "  MATCH  (   : Person{ name: ' D. A. V. E ' , age : 32 , height : 1.6 , delta : -10 , base  : -3.14  } )   -  [  o : OWNS  ] -> (car :Car )   RETURN  car   "
     `shouldParseQuery` [ Match
                            [ Pattern
                                Nothing
@@ -84,9 +84,9 @@ RETURN
                                       (Just (UnboundText "car"))
                                       [UnboundText "Car"])
                                    M.empty]]
-                       , Return]
+                       , Return (UnboundText "car")]
   it "parses multi match clause"
-    $ "MATCH (p:Person)-[:HAS]->(c:Car) MATCH (cat:Cat) RETURN"
+    $ "MATCH (p:Person)-[:HAS]->(c:Car) MATCH (cat:Cat) RETURN c"
     `shouldParseQuery` [ Match
                            [ Pattern
                                Nothing
@@ -118,7 +118,7 @@ RETURN
                                       (Just (UnboundText "cat"))
                                       [UnboundText "Cat"])
                                    M.empty]]
-                       , Return]
+                       , Return (UnboundText "c")]
 
 runParserQueryErrorTests = do
   it "fails on invalid clause producing correct error message"
