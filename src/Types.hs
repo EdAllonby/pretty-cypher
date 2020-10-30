@@ -5,6 +5,11 @@ import           Data.Text (Text)
 import qualified Data.Map as M
 import           Data.Data (Data, Typeable)
 
+data LiteralText = QuotedText Text
+                 | BacktickedText Text
+                 | UnboundText Text
+  deriving (Data, Ord, Typeable, Eq, Show)
+
 data ConnectorDirection =
     LeftDirection
   | AnonymousLeftDirection
@@ -14,13 +19,13 @@ data ConnectorDirection =
   | AnonymousNoDirection
   deriving (Data, Typeable, Eq, Show)
 
-data PropertyValue = TextValue Text
+data PropertyValue = TextValue LiteralText
                    | IntegerValue Integer
                    | DoubleValue Double
                    | BooleanValue Bool
   deriving (Data, Typeable, Eq, Show)
 
-type Properties = M.Map Text PropertyValue
+type Properties = M.Map LiteralText PropertyValue
 
 data RelationshipHops = VariableHops Integer Integer
                       | MinHops Integer
@@ -29,18 +34,18 @@ data RelationshipHops = VariableHops Integer Integer
                       | AnyHops
   deriving (Data, Typeable, Eq, Show)
 
-data NodeType = LabelledNode { labelledNodeVariable :: Maybe Text
-                             , labelledNodeLabels :: [Text]
+data NodeType = LabelledNode { labelledNodeVariable :: Maybe LiteralText
+                             , labelledNodeLabels :: [LiteralText]
                              }
-              | AnyNode { anyNodeVariable :: Text }
+              | AnyNode { anyNodeVariable :: LiteralText }
               | EmptyNode
   deriving (Data, Typeable, Eq, Show)
 
 data RelationshipType =
-    LabelledRelationship { labelledRelationshipVariable :: Maybe Text
-                         , labelledRelationshipLabel :: [Text]
+    LabelledRelationship { labelledRelationshipVariable :: Maybe LiteralText
+                         , labelledRelationshipLabel :: [LiteralText]
                          }
-  | AnyRelationship { anyRelationshipVariable :: Text }
+  | AnyRelationship { anyRelationshipVariable :: LiteralText }
   | EmptyRelationship
   deriving (Data, Typeable, Eq, Show)
 

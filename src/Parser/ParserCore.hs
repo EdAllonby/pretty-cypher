@@ -12,6 +12,7 @@ module Parser.ParserCore
     , parseText
     , parseSnakeCaseText
     , betweenQuotes
+    , betweenBackticks
     , integer
     , boolean
     , double
@@ -80,6 +81,13 @@ betweenQuotes = T.pack
   <$> lexeme (between pQuote pQuote (manyTill latin1Char (lookAhead pQuote)))
   where
     pQuote = char '\''
+
+betweenBackticks :: Parser Text
+betweenBackticks = T.pack
+  <$> lexeme
+    (between pBacktick pBacktick (manyTill latin1Char (lookAhead pBacktick)))
+  where
+    pBacktick = char '`'
 
 commaSep :: Parser a -> Parser [a]
 commaSep p = p `sepBy` symbol ","

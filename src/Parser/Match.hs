@@ -5,17 +5,18 @@
 
 module Parser.Match (parseMatch, parseOptionalMatch) where
 
-import           Types (RelationshipHops(..), Clause(OptionalMatch, Match)
-                      , Pattern(Pattern)
-                      , PatternComponent(ConnectorDirection, Node, Relationship)
+import           Types (Clause(OptionalMatch, Match), Pattern(Pattern)
+                      , PatternComponent(..)
                       , RelationshipType(EmptyRelationship, LabelledRelationship,
                  AnyRelationship)
                       , NodeType(EmptyNode, LabelledNode, AnyNode)
-                      , PropertyValue(..), ConnectorDirection(..))
-import           Parser.ParserCore (boolean, integer, Parser, symbol
-                                  , signedInteger, signedDouble, keyword'
-                                  , parens, brackets, curlyBrackets, parseText
-                                  , parseSnakeCaseText, betweenQuotes, commaSep)
+                      , RelationshipHops(..), PropertyValue(..)
+                      , ConnectorDirection(..), LiteralText(..))
+import           Parser.ParserCore (betweenBackticks, boolean, integer, Parser
+                                  , symbol, signedInteger, signedDouble
+                                  , keyword', parens, brackets, curlyBrackets
+                                  , parseText, parseSnakeCaseText, betweenQuotes
+                                  , commaSep)
 import           Data.Text (Text)
 import           Text.Megaparsec ((<|>), eof, sepBy1, optional, (<?>), choice
                                 , manyTill, MonadParsec(try, lookAhead))
@@ -64,18 +65,17 @@ parsePatternComponents = manyTill
 parseNodeType :: Parser NodeType
 parseNodeType = choice
   [ try
-      $ LabelledNode <$> optional parseText
-      <*> (symbol ":" *> parseText `sepBy1` symbol ":")
-  , AnyNode <$> parseText
+      $ LabelledNode <$> optional parseLiteralText
+      <*> (symbol ":" *> parseLiteralText `sepBy1` symbol ":")
+  , AnyNode <$> parseLiteralText
   , EmptyNode <$ symbol ""]
 
 parseRelationshipType :: Parser RelationshipType
 parseRelationshipType = choice
   [ try
-      $ LabelledRelationship <$> optional parseText
-      <*> (symbol ":"
-           *> parseSnakeCaseText `sepBy1` (symbol "|:" <|> symbol "|")) -- TODO: It doesn't really matter if this is snake case, we need a more general text parser.
-  , AnyRelationship <$> parseText
+      $ LabelledRelationship <$> optional parseLiteralText
+      <*> (symbol ":" *> parseLiteralText `sepBy1` (symbol "|:" <|> symbol "|"))
+  , AnyRelationship <$> parseLiteralText
   , EmptyRelationship <$ symbol ""]
 
 parseRelationshipHops :: Parser RelationshipHops
@@ -96,16 +96,23 @@ parseConnectorDirection = choice
   , AnonymousLeftDirection <$ symbol "<--"
   , LeftDirection <$ symbol "<-"]
 
-parseProperties :: Parser (M.Map Text PropertyValue)
+parseProperties :: Parser (M.Map LiteralText PropertyValue)
 parseProperties = do
   props <- optional $ curlyBrackets $ commaSep parseProperty
   return $ M.unions (M.fromList <$> props)
 
-parseProperty :: Parser (Text, PropertyValue)
-parseProperty = (,) <$> parseText
+parseProperty :: Parser (LiteralText, PropertyValue)
+parseProperty = (,) <$> parseLiteralText
   <*> (symbol ":"
        *> choice
          [ DoubleValue <$> try signedDouble -- TODO: Not too sure why this one needs a try, shouldn't it be atomic? Investigate
          , IntegerValue <$> signedInteger
          , BooleanValue <$> boolean
-         , TextValue <$> betweenQuotes])
+         , TextValue <$> parseLiteralText])
+
+parseLiteralText :: Parser LiteralText
+parseLiteralText = choice
+  [ QuotedText <$> betweenQuotes
+  , BacktickedText <$> betweenBackticks
+  , UnboundText <$> parseSnakeCaseText -- TODO: It doesn't really matter if this is snake case, we need a more general text parser.
+  , UnboundText <$> parseText]

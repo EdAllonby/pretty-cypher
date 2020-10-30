@@ -35,11 +35,18 @@ runQuasiQuoteTests = describe "QuasiQuote"
                                  Nothing
                                  Nothing
                                  [ Node
-                                     (LabelledNode (Just "per") ["Person"])
+                                     (LabelledNode
+                                        (Just (UnboundText "per"))
+                                        [UnboundText "Person"])
                                      (M.fromList
-                                        [ ("age", IntegerValue 32)
-                                        , ("base", DoubleValue (-3.14))
-                                        , ("delta", IntegerValue (-10))
-                                        , ("height", DoubleValue 1.6)
-                                        , ("name", TextValue " D. A. V. E ")])]]
+                                        [ (UnboundText "age", IntegerValue 32)
+                                        , ( UnboundText "base"
+                                            , DoubleValue (-3.14))
+                                        , ( UnboundText "delta"
+                                            , IntegerValue (-10))
+                                        , ( UnboundText "height"
+                                            , DoubleValue 1.6)
+                                        , ( UnboundText "name"
+                                            , TextValue
+                                              (QuotedText " D. A. V. E "))])]]
                          , Return]

@@ -31,17 +31,23 @@ RETURN
                                Nothing
                                Nothing
                                [ Node
-                                   (LabelledNode (Just "a") ["Movie"])
+                                   (LabelledNode
+                                      (Just (UnboundText "a"))
+                                      [UnboundText "Movie"])
                                    (M.fromList
-                                      [("title", TextValue "Wall Street")])]]
+                                      [ ( UnboundText "title"
+                                          , TextValue
+                                            (QuotedText "Wall Street"))])]]
                        , OptionalMatch
                            [ Pattern
                                Nothing
                                Nothing
-                               [ Node (AnyNode "a") M.empty
+                               [ Node (AnyNode (UnboundText "a")) M.empty
                                , ConnectorDirection NoDirection
                                , Relationship
-                                   (LabelledRelationship (Just "r") ["ACTS_IN"])
+                                   (LabelledRelationship
+                                      (Just (UnboundText "r"))
+                                      [UnboundText "ACTS_IN"])
                                    Nothing
                                    M.empty
                                , ConnectorDirection RightDirection
@@ -54,21 +60,29 @@ RETURN
                                Nothing
                                Nothing
                                [ Node
-                                   (LabelledNode Nothing ["Person"])
+                                   (LabelledNode Nothing [UnboundText "Person"])
                                    (M.fromList
-                                      [ ("age", IntegerValue 32)
-                                      , ("base", DoubleValue (-3.14))
-                                      , ("delta", IntegerValue (-10))
-                                      , ("height", DoubleValue 1.6)
-                                      , ("name", TextValue " D. A. V. E ")])
+                                      [ (UnboundText "age", IntegerValue 32)
+                                      , ( UnboundText "base"
+                                          , DoubleValue (-3.14))
+                                      , ( UnboundText "delta"
+                                          , IntegerValue (-10))
+                                      , (UnboundText "height", DoubleValue 1.6)
+                                      , ( UnboundText "name"
+                                          , TextValue
+                                            (QuotedText " D. A. V. E "))])
                                , ConnectorDirection NoDirection
                                , Relationship
-                                   (LabelledRelationship (Just "o") ["OWNS"])
+                                   (LabelledRelationship
+                                      (Just (UnboundText "o"))
+                                      [UnboundText "OWNS"])
                                    Nothing
                                    M.empty
                                , ConnectorDirection RightDirection
                                , Node
-                                   (LabelledNode (Just "car") ["Car"])
+                                   (LabelledNode
+                                      (Just (UnboundText "car"))
+                                      [UnboundText "Car"])
                                    M.empty]]
                        , Return]
   it "parses multi match clause"
@@ -78,21 +92,31 @@ RETURN
                                Nothing
                                Nothing
                                [ Node
-                                   (LabelledNode (Just "p") ["Person"])
+                                   (LabelledNode
+                                      (Just (UnboundText "p"))
+                                      [UnboundText "Person"])
                                    M.empty
                                , ConnectorDirection NoDirection
                                , Relationship
-                                   (LabelledRelationship Nothing ["HAS"])
+                                   (LabelledRelationship
+                                      Nothing
+                                      [UnboundText "HAS"])
                                    Nothing
                                    M.empty
                                , ConnectorDirection RightDirection
-                               , Node (LabelledNode (Just "c") ["Car"]) M.empty]]
+                               , Node
+                                   (LabelledNode
+                                      (Just (UnboundText "c"))
+                                      [UnboundText "Car"])
+                                   M.empty]]
                        , Match
                            [ Pattern
                                Nothing
                                Nothing
                                [ Node
-                                   (LabelledNode (Just "cat") ["Cat"])
+                                   (LabelledNode
+                                      (Just (UnboundText "cat"))
+                                      [UnboundText "Cat"])
                                    M.empty]]
                        , Return]
 
