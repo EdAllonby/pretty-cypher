@@ -61,9 +61,13 @@ data Pattern = Pattern { patternVariable :: Maybe Text
                        }
   deriving (Data, Typeable, Eq, Show)
 
+data ReturnValue = Property LiteralText
+                 | AllElements
+  deriving (Data, Typeable, Eq, Show)
+
 data Clause = Match [Pattern] -- TODO: Move this to a non-empty list data type?
             | OptionalMatch [Pattern]
-            | Return LiteralText
+            | Return ReturnValue
   deriving (Data, Typeable, Eq, Show)
 
 type QueryExpr = [Clause]

@@ -49,4 +49,4 @@ runQuasiQuoteTests = describe "QuasiQuote"
                                         , ( UnboundText "name"
                                             , TextValue
                                               (QuotedText " D. A. V. E "))])]]
-                         , Return (UnboundText "per")]
+                         , Return (Property (UnboundText "per"))]

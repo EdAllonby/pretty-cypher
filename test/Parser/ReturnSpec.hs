@@ -15,8 +15,10 @@ runParserReturnTests = describe "Parser.Return"
         context "with standard clause" runStandardParserReturnTests
 
 runStandardParserReturnTests = do
-  it "parses return clause"
-    $ "RETURN n" `shouldParseReturnQuery` Return (UnboundText "n")
+  it "parses return clause with single property"
+    $ "RETURN n" `shouldParseReturnQuery` Return (Property (UnboundText "n"))
+  it "parses return clause with all elements"
+    $ "RETURN *" `shouldParseReturnQuery` Return AllElements
 
 shouldParseReturnQuery :: Text -> Clause -> Expectation
 shouldParseReturnQuery query expectedResult =
