@@ -44,19 +44,14 @@ runParserMatchNodeTests = do
                  [UnboundText "Person", UnboundText "Actor"])
               M.empty]]
   it "parses match clause with labelled node specifying properties"
-    $ "MATCH (per:Person { name: ' D. A. V. E ', age: 32, height: 1.6, delta: -10, base: -3.14 })"
+    $ "MATCH (per:Person { name: ' D. A. V. E ', age: 32, height: 1.6, delta: -10, base: -3.14, today: true, tomorrow: false })"
     `shouldParseMatchQuery` Match
       [ Pattern
           Nothing
           Nothing
           [ Node
               (LabelledNode (Just (UnboundText "per")) [UnboundText "Person"])
-              (M.fromList
-                 [ (UnboundText "age", IntegerValue 32)
-                 , (UnboundText "base", DoubleValue (-3.14))
-                 , (UnboundText "delta", IntegerValue (-10))
-                 , (UnboundText "height", DoubleValue 1.6)
-                 , (UnboundText "name", TextValue (QuotedText " D. A. V. E "))])]]
+              standardProperties]]
   it "parses match clause with anonymous node"
     $ "MATCH (:Person)"
     `shouldParseMatchQuery` Match
@@ -65,55 +60,33 @@ runParserMatchNodeTests = do
           Nothing
           [Node (LabelledNode Nothing [UnboundText "Person"]) M.empty]]
   it "parses match clause with anonymous node specifying properties"
-    $ "MATCH (:Person { name: ' D. A. V. E ', age: 32, height: 1.6, delta: -10, base: -3.14 })"
+    $ "MATCH (:Person { name: ' D. A. V. E ', age: 32, height: 1.6, delta: -10, base: -3.14, today: true, tomorrow: false })"
     `shouldParseMatchQuery` Match
       [ Pattern
           Nothing
           Nothing
           [ Node
               (LabelledNode Nothing [UnboundText "Person"])
-              (M.fromList
-                 [ (UnboundText "age", IntegerValue 32)
-                 , (UnboundText "base", DoubleValue (-3.14))
-                 , (UnboundText "delta", IntegerValue (-10))
-                 , (UnboundText "height", DoubleValue 1.6)
-                 , (UnboundText "name", TextValue (QuotedText " D. A. V. E "))])]]
+              standardProperties]]
   it "parses match clause with empty node"
     $ "MATCH ()"
     `shouldParseMatchQuery` Match
       [Pattern Nothing Nothing [Node EmptyNode M.empty]]
   it "parses match clause with empty node specifying properties"
-    $ "MATCH ({ name: ' D. A. V. E ', age: 32, height: 1.6, delta: -10, base: -3.14 })"
+    $ "MATCH ({ name: ' D. A. V. E ', age: 32, height: 1.6, delta: -10, base: -3.14, today: true, tomorrow: false  })"
     `shouldParseMatchQuery` Match
-      [ Pattern
-          Nothing
-          Nothing
-          [ Node
-              EmptyNode
-              (M.fromList
-                 [ (UnboundText "age", IntegerValue 32)
-                 , (UnboundText "base", DoubleValue (-3.14))
-                 , (UnboundText "delta", IntegerValue (-10))
-                 , (UnboundText "height", DoubleValue 1.6)
-                 , (UnboundText "name", TextValue (QuotedText " D. A. V. E "))])]]
+      [Pattern Nothing Nothing [Node EmptyNode standardProperties]]
   it "parses match clause with any node"
     $ "MATCH (n)"
     `shouldParseMatchQuery` Match
       [Pattern Nothing Nothing [Node (AnyNode (UnboundText "n")) M.empty]]
   it "parses match clause with any node specifying properties"
-    $ "MATCH (n{ name: ' D. A. V. E ', age: 32, height: 1.6, delta: -10, base: -3.14 })"
+    $ "MATCH (n{ name: ' D. A. V. E ', age: 32, height: 1.6, delta: -10, base: -3.14, today: true, tomorrow: false })"
     `shouldParseMatchQuery` Match
       [ Pattern
           Nothing
           Nothing
-          [ Node
-              (AnyNode (UnboundText "n"))
-              (M.fromList
-                 [ (UnboundText "age", IntegerValue 32)
-                 , (UnboundText "base", DoubleValue (-3.14))
-                 , (UnboundText "delta", IntegerValue (-10))
-                 , (UnboundText "height", DoubleValue 1.6)
-                 , (UnboundText "name", TextValue (QuotedText " D. A. V. E "))])]]
+          [Node (AnyNode (UnboundText "n")) standardProperties]]
 
 runParserOptionalMatchTests = do
   it "parses optional match clause with node"
@@ -216,7 +189,7 @@ runParserMatchRelationshipTests = do
               Nothing
               M.empty]]
   it "parses match clause with relationship specifying properties"
-    $ "MATCH [fo:FOLLOWS { name: ' D. A. V. E ', age: 32, height: 1.6, delta: -10, base: -3.14 }]"
+    $ "MATCH [fo:FOLLOWS { name: ' D. A. V. E ', age: 32, height: 1.6, delta: -10, base: -3.14, today: true, tomorrow: false }]"
     `shouldParseMatchQuery` Match
       [ Pattern
           Nothing
@@ -226,12 +199,7 @@ runParserMatchRelationshipTests = do
                  (Just (UnboundText "fo"))
                  [UnboundText "FOLLOWS"])
               Nothing
-              (M.fromList
-                 [ (UnboundText "age", IntegerValue 32)
-                 , (UnboundText "base", DoubleValue (-3.14))
-                 , (UnboundText "delta", IntegerValue (-10))
-                 , (UnboundText "height", DoubleValue 1.6)
-                 , (UnboundText "name", TextValue (QuotedText " D. A. V. E "))])]]
+              standardProperties]]
   it "parses match clause with anonymous relationship"
     $ "MATCH [:FOLLOWS]"
     `shouldParseMatchQuery` Match
@@ -243,7 +211,7 @@ runParserMatchRelationshipTests = do
               Nothing
               M.empty]]
   it "parses match clause with anonymous relationship specifying properties"
-    $ "MATCH [:FOLLOWS { name: ' D. A. V. E ', age: 32, height: 1.6, delta: -10, base: -3.14 }]"
+    $ "MATCH [:FOLLOWS { name: ' D. A. V. E ', age: 32, height: 1.6, delta: -10, base: -3.14, today: true, tomorrow: false }]"
     `shouldParseMatchQuery` Match
       [ Pattern
           Nothing
@@ -251,12 +219,7 @@ runParserMatchRelationshipTests = do
           [ Relationship
               (LabelledRelationship Nothing [UnboundText "FOLLOWS"])
               Nothing
-              (M.fromList
-                 [ (UnboundText "age", IntegerValue 32)
-                 , (UnboundText "base", DoubleValue (-3.14))
-                 , (UnboundText "delta", IntegerValue (-10))
-                 , (UnboundText "height", DoubleValue 1.6)
-                 , (UnboundText "name", TextValue (QuotedText " D. A. V. E "))])]]
+              standardProperties]]
   it "parses match clause with any relationship"
     $ "MATCH [a]"
     `shouldParseMatchQuery` Match
@@ -273,14 +236,7 @@ runParserMatchRelationshipTests = do
           [ Relationship
               (AnyRelationship (UnboundText "a"))
               Nothing
-              (M.fromList
-                 [ (UnboundText "age", IntegerValue 32)
-                 , (UnboundText "base", DoubleValue (-3.14))
-                 , (UnboundText "delta", IntegerValue (-10))
-                 , (UnboundText "height", DoubleValue 1.6)
-                 , (UnboundText "name", TextValue (QuotedText " D. A. V. E "))
-                 , (UnboundText "today", BooleanValue True)
-                 , (UnboundText "tomorrow", BooleanValue False)])]]
+              standardProperties]]
   it "parses match clause with empty relationship"
     $ "MATCH []"
     `shouldParseMatchQuery` Match
@@ -289,23 +245,15 @@ runParserMatchRelationshipTests = do
           Nothing
           [Relationship EmptyRelationship Nothing M.empty]]
   it "parses match clause with empty relationship specifying properties"
-    $ "MATCH [{ name: ' D. A. V. E ', age: 32, height: 1.6, delta: -10, base: -3.14 }]"
+    $ "MATCH [{ name: ' D. A. V. E ', age: 32, height: 1.6, delta: -10, base: -3.14, today: true, tomorrow: false }]"
     `shouldParseMatchQuery` Match
       [ Pattern
           Nothing
           Nothing
-          [ Relationship
-              EmptyRelationship
-              Nothing
-              (M.fromList
-                 [ (UnboundText "age", IntegerValue 32)
-                 , (UnboundText "base", DoubleValue (-3.14))
-                 , (UnboundText "delta", IntegerValue (-10))
-                 , (UnboundText "height", DoubleValue 1.6)
-                 , (UnboundText "name", TextValue (QuotedText " D. A. V. E "))])]]
+          [Relationship EmptyRelationship Nothing standardProperties]]
   it
     "parses match clause with empty relationship specifying hops and properties"
-    $ "MATCH [*1..3{ name: ' D. A. V. E ', age: 32, height: 1.6, delta: -10, base: -3.14 }]"
+    $ "MATCH [*1..3{ name: ' D. A. V. E ', age: 32, height: 1.6, delta: -10, base: -3.14, today: true, tomorrow: false }]"
     `shouldParseMatchQuery` Match
       [ Pattern
           Nothing
@@ -313,12 +261,7 @@ runParserMatchRelationshipTests = do
           [ Relationship
               EmptyRelationship
               (Just (VariableHops 1 3))
-              (M.fromList
-                 [ (UnboundText "age", IntegerValue 32)
-                 , (UnboundText "base", DoubleValue (-3.14))
-                 , (UnboundText "delta", IntegerValue (-10))
-                 , (UnboundText "height", DoubleValue 1.6)
-                 , (UnboundText "name", TextValue (QuotedText " D. A. V. E "))])]]
+              standardProperties]]
 
 runParserMatchRelationshipHopsTests = do
   it "parses match clause with empty relationship and variable length hops"
@@ -364,122 +307,73 @@ runParserMatchDirectionTests = do
       [ Pattern
           Nothing
           Nothing
-          [ Node
-              (LabelledNode (Just (UnboundText "p")) [UnboundText "Person"])
-              M.empty
+          [ Node personLabelledNode M.empty
           , ConnectorDirection NoDirection
-          , Relationship
-              (LabelledRelationship
-                 (Just (UnboundText "h"))
-                 [UnboundText "HAS"])
-              Nothing
-              M.empty
+          , Relationship hasLabelledRelationship Nothing M.empty
           , ConnectorDirection RightDirection
-          , Node
-              (LabelledNode (Just (UnboundText "c")) [UnboundText "Car"])
-              M.empty]]
+          , Node carLabelledNode M.empty]]
   it "parses match clause with left directionality"
     $ "MATCH (p:Person)<-[h:HAS]-(c:Car)"
     `shouldParseMatchQuery` Match
       [ Pattern
           Nothing
           Nothing
-          [ Node
-              (LabelledNode (Just (UnboundText "p")) [UnboundText "Person"])
-              M.empty
+          [ Node personLabelledNode M.empty
           , ConnectorDirection LeftDirection
-          , Relationship
-              (LabelledRelationship
-                 (Just (UnboundText "h"))
-                 [UnboundText "HAS"])
-              Nothing
-              M.empty
+          , Relationship hasLabelledRelationship Nothing M.empty
           , ConnectorDirection NoDirection
-          , Node
-              (LabelledNode (Just (UnboundText "c")) [UnboundText "Car"])
-              M.empty]]
+          , Node carLabelledNode M.empty]]
   it "parses match clause with no directionality"
     $ "MATCH (p:Person)-[h:HAS]-(c:Car)"
     `shouldParseMatchQuery` Match
       [ Pattern
           Nothing
           Nothing
-          [ Node
-              (LabelledNode (Just (UnboundText "p")) [UnboundText "Person"])
-              M.empty
+          [ Node personLabelledNode M.empty
           , ConnectorDirection NoDirection
-          , Relationship
-              (LabelledRelationship
-                 (Just (UnboundText "h"))
-                 [UnboundText "HAS"])
-              Nothing
-              M.empty
+          , Relationship hasLabelledRelationship Nothing M.empty
           , ConnectorDirection NoDirection
-          , Node
-              (LabelledNode (Just (UnboundText "c")) [UnboundText "Car"])
-              M.empty]]
+          , Node carLabelledNode M.empty]]
   it "parses match clause with anonymous right directionality"
     $ "MATCH (p:Person)-->(c:Car)"
     `shouldParseMatchQuery` Match
       [ Pattern
           Nothing
           Nothing
-          [ Node
-              (LabelledNode (Just (UnboundText "p")) [UnboundText "Person"])
-              M.empty
+          [ Node personLabelledNode M.empty
           , ConnectorDirection AnonymousRightDirection
-          , Node
-              (LabelledNode (Just (UnboundText "c")) [UnboundText "Car"])
-              M.empty]]
+          , Node carLabelledNode M.empty]]
   it "parses match clause with anonymous left directionality"
     $ "MATCH (p:Person)<--(c:Car)"
     `shouldParseMatchQuery` Match
       [ Pattern
           Nothing
           Nothing
-          [ Node
-              (LabelledNode (Just (UnboundText "p")) [UnboundText "Person"])
-              M.empty
+          [ Node personLabelledNode M.empty
           , ConnectorDirection AnonymousLeftDirection
-          , Node
-              (LabelledNode (Just (UnboundText "c")) [UnboundText "Car"])
-              M.empty]]
+          , Node carLabelledNode M.empty]]
   it "parses match clause with anonymous no directionality"
     $ "MATCH (p:Person)--(c:Car)"
     `shouldParseMatchQuery` Match
       [ Pattern
           Nothing
           Nothing
-          [ Node
-              (LabelledNode (Just (UnboundText "p")) [UnboundText "Person"])
-              M.empty
+          [ Node personLabelledNode M.empty
           , ConnectorDirection AnonymousNoDirection
-          , Node
-              (LabelledNode (Just (UnboundText "c")) [UnboundText "Car"])
-              M.empty]]
+          , Node carLabelledNode M.empty]]
 
 runParserMatchPatternTests = do
   it "parses match clause with erratic spacing"
-    $ "MATCH  (   : Person{ name: ' D. A. V. E ' , age : 32 , height : 1.6 , delta : -10 , base  : -3.14  } )   -  [  o : OWNS  ] -> (car :Car )"
+    $ "MATCH  (   : Person{ name: ' D. A. V. E ' , age : 32 , height : 1.6 , delta : -10 , base  : -3.14 , today: true, tomorrow: false } )   -  [  h : HAS  ] -> (car :Car )"
     `shouldParseMatchQuery` Match
       [ Pattern
           Nothing
           Nothing
           [ Node
               (LabelledNode Nothing [UnboundText "Person"])
-              (M.fromList
-                 [ (UnboundText "age", IntegerValue 32)
-                 , (UnboundText "base", DoubleValue (-3.14))
-                 , (UnboundText "delta", IntegerValue (-10))
-                 , (UnboundText "height", DoubleValue 1.6)
-                 , (UnboundText "name", TextValue (QuotedText " D. A. V. E "))])
+              standardProperties
           , ConnectorDirection NoDirection
-          , Relationship
-              (LabelledRelationship
-                 (Just (UnboundText "o"))
-                 [UnboundText "OWNS"])
-              Nothing
-              M.empty
+          , Relationship hasLabelledRelationship Nothing M.empty
           , ConnectorDirection RightDirection
           , Node
               (LabelledNode (Just (UnboundText "car")) [UnboundText "Car"])
@@ -487,29 +381,9 @@ runParserMatchPatternTests = do
   it "parses single match clause with multiple patterns"
     $ "MATCH (p:Person), (m:Movie)"
     `shouldParseMatchQuery` Match
-      [ Pattern
-          Nothing
-          Nothing
-          [ Node
-              (LabelledNode (Just (UnboundText "p")) [UnboundText "Person"])
-              M.empty]
+      [ Pattern Nothing Nothing [Node personLabelledNode M.empty]
       , Pattern
           Nothing
-          Nothing
-          [ Node
-              (LabelledNode (Just (UnboundText "m")) [UnboundText "Movie"])
-              M.empty]]
-  it "parses match clause with pattern variable"
-    $ "MATCH p=(p:Person),q=(m:Movie) MATCH r=(a)--(b)"
-    `shouldParseMatchQuery` Match
-      [ Pattern
-          (Just "p")
-          Nothing
-          [ Node
-              (LabelledNode (Just (UnboundText "p")) [UnboundText "Person"])
-              M.empty]
-      , Pattern
-          (Just "q")
           Nothing
           [ Node
               (LabelledNode (Just (UnboundText "m")) [UnboundText "Movie"])
@@ -520,9 +394,7 @@ runParserMatchPatternTests = do
       [ Pattern
           Nothing
           (Just "shortestPath")
-          [ Node
-              (LabelledNode (Just (UnboundText "p")) [UnboundText "Person"])
-              M.empty
+          [ Node personLabelledNode M.empty
           , ConnectorDirection NoDirection
           , Relationship EmptyRelationship (Just AnyHops) M.empty
           , ConnectorDirection NoDirection
@@ -530,20 +402,16 @@ runParserMatchPatternTests = do
               (LabelledNode (Just (UnboundText "j")) [UnboundText "Job"])
               M.empty]]
   it "parses match clause with pattern variable wrapped in a function"
-    $ "MATCH x=shortestPath((p:Person)-[*]-(j:Job))"
+    $ "MATCH x=shortestPath((p:Person)-[*]-(c:Car))"
     `shouldParseMatchQuery` Match
       [ Pattern
           (Just "x")
           (Just "shortestPath")
-          [ Node
-              (LabelledNode (Just (UnboundText "p")) [UnboundText "Person"])
-              M.empty
+          [ Node personLabelledNode M.empty
           , ConnectorDirection NoDirection
           , Relationship EmptyRelationship (Just AnyHops) M.empty
           , ConnectorDirection NoDirection
-          , Node
-              (LabelledNode (Just (UnboundText "j")) [UnboundText "Job"])
-              M.empty]]
+          , Node carLabelledNode M.empty]]
   it "parses strings wrapped in backticks and quotes"
     $ "MATCH (`odd-ch@racter$`:`Spaced Label` {`&property`: 42})-['j':'A Job']"
     `shouldParseMatchQuery` Match
@@ -561,7 +429,7 @@ runParserMatchPatternTests = do
                  (Just (QuotedText "j"))
                  [QuotedText "A Job"])
               Nothing
-              (M.empty)]]
+              M.empty]]
 
 shouldParseMatchQuery :: Text -> Clause -> Expectation
 shouldParseMatchQuery query expectedResult =
@@ -570,3 +438,23 @@ shouldParseMatchQuery query expectedResult =
 shouldParseOptionalMatchQuery :: Text -> Clause -> Expectation
 shouldParseOptionalMatchQuery query expectedResult =
   parse parseOptionalMatch "" query `shouldParse` expectedResult
+
+standardProperties :: M.Map LiteralText PropertyValue
+standardProperties = M.fromList
+  [ (UnboundText "age", IntegerValue 32)
+  , (UnboundText "base", DoubleValue (-3.14))
+  , (UnboundText "delta", IntegerValue (-10))
+  , (UnboundText "height", DoubleValue 1.6)
+  , (UnboundText "name", TextValue (QuotedText " D. A. V. E "))
+  , (UnboundText "today", BooleanValue True)
+  , (UnboundText "tomorrow", BooleanValue False)]
+
+personLabelledNode :: NodeType
+personLabelledNode =
+  LabelledNode (Just (UnboundText "p")) [UnboundText "Person"]
+
+carLabelledNode :: NodeType
+carLabelledNode = LabelledNode (Just (UnboundText "c")) [UnboundText "Car"]
+
+hasLabelledRelationship =
+  LabelledRelationship (Just (UnboundText "h")) [UnboundText "HAS"]
