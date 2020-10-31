@@ -25,8 +25,8 @@ import           Data.Text (Text)
 import           Data.Void (Void)
 import           Text.Megaparsec (choice, (<|>), sepBy, lookAhead, manyTill
                                 , some, between, notFollowedBy, empty, Parsec)
-import           Text.Megaparsec.Char (latin1Char, char, letterChar
-                                     , alphaNumChar, space1, string')
+import           Text.Megaparsec.Char (latin1Char, char, alphaNumChar, space1
+                                     , string')
 import qualified Text.Megaparsec.Char.Lexer as L
 import qualified Data.Text as T
 import           Types (LiteralText(..))
@@ -73,10 +73,10 @@ curlyBrackets :: Parser a -> Parser a
 curlyBrackets = between (symbol "{") (symbol "}")
 
 parseText :: Parser Text
-parseText = T.pack <$> lexeme (some letterChar)
+parseText = T.pack <$> lexeme (some alphaNumChar)
 
 parseSnakeCaseText :: Parser Text
-parseSnakeCaseText = T.pack <$> lexeme (some (letterChar <|> char '_'))
+parseSnakeCaseText = T.pack <$> lexeme (some (alphaNumChar <|> char '_'))
 
 betweenQuotes :: Parser Text
 betweenQuotes = T.pack

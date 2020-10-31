@@ -10,7 +10,6 @@ import           Text.Megaparsec
 import           Data.Text as T
 import qualified Data.Map as M
 import           Text.RawString.QQ (r)
-import           Types
 
 runParserQueryTests :: SpecWith ()
 runParserQueryTests = describe "Parser.Query"
@@ -53,7 +52,7 @@ RETURN *
                                    M.empty
                                , ConnectorDirection RightDirection
                                , Node EmptyNode M.empty]]
-                       , Return AllElements]
+                       , Return ReturnAllElements]
   it "parses query with erratic spacing"
     $ "  MATCH  (   : Person{ name: ' D. A. V. E ' , age : 32 , height : 1.6 , delta : -10 , base  : -3.14  } )   -  [  o : OWNS  ] -> (car :Car )   RETURN  *   "
     `shouldParseQuery` [ Match
@@ -85,7 +84,7 @@ RETURN *
                                       (Just (UnboundText "car"))
                                       [UnboundText "Car"])
                                    M.empty]]
-                       , Return AllElements]
+                       , Return ReturnAllElements]
   it "parses multi match clause"
     $ "MATCH (p:Person)-[:HAS]->(c:Car) MATCH (cat:Cat) RETURN c"
     `shouldParseQuery` [ Match
@@ -120,9 +119,10 @@ RETURN *
                                       [UnboundText "Cat"])
                                    M.empty]]
                        , Return
-                           (Property
-                              (NestedObject (UnboundText "c") ObjectEnd)
-                              Nothing)]
+                           (ReturnProperties
+                              [ Property
+                                  (NestedObject (UnboundText "c") ObjectEnd)
+                                  Nothing])]
 
 runParserQueryErrorTests = do
   it "fails on invalid clause producing correct error message"

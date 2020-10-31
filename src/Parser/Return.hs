@@ -1,8 +1,10 @@
 module Parser.Return (parseReturn) where
 
-import           Types (Clause(Return), ReturnValue(..), Object(..))
-import           Parser.ParserCore (Parser, symbol', keyword', parseLiteralText)
-import           Text.Megaparsec (optional, choice, MonadParsec(try))
+import           Types (Clause(Return), ReturnValue(..), Object(..)
+                      , ReturnProperty(Property))
+import           Parser.ParserCore (commaSep, Parser, symbol', keyword'
+                                  , parseLiteralText)
+import           Text.Megaparsec
 
 parseReturn :: Parser Clause
 parseReturn = do
@@ -10,10 +12,12 @@ parseReturn = do
   Return <$> parseReturnValue
 
 parseReturnValue :: Parser ReturnValue
-parseReturnValue = choice [AllElements <$ symbol' "*", parseProperty]
+parseReturnValue = choice
+  [ ReturnAllElements <$ symbol' "*"
+  , ReturnProperties <$> commaSep parseReturnProperty]
 
-parseProperty :: Parser ReturnValue
-parseProperty = Property <$> parseObject
+parseReturnProperty :: Parser ReturnProperty
+parseReturnProperty = Property <$> parseObject
   <*> optional (symbol' "AS" *> parseLiteralText)
 
 parseObject :: Parser Object
