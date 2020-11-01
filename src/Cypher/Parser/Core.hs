@@ -75,8 +75,8 @@ parseText = T.pack <$> lexeme (some alphaNumChar)
 parseSnakeCaseText :: Parser Text
 parseSnakeCaseText = T.pack <$> lexeme (some (alphaNumChar <|> char '_'))
 
-betweenCharacter :: Char -> Parser Text
-betweenCharacter boundingCharacter = T.pack
+textBetweenCharacter :: Char -> Parser Text
+textBetweenCharacter boundingCharacter = T.pack
   <$> lexeme
     (between pCharacter pCharacter (manyTill latin1Char (lookAhead pCharacter)))
   where
@@ -87,7 +87,7 @@ commaSep p = p `sepBy` symbol ","
 
 parseLiteralText :: Parser LiteralText
 parseLiteralText = choice
-  [ QuotedText <$> (betweenCharacter '\'' <|> betweenCharacter '"')
-  , BacktickedText <$> betweenCharacter '`'
+  [ QuotedText <$> (textBetweenCharacter '\'' <|> textBetweenCharacter '"')
+  , BacktickedText <$> textBetweenCharacter '`'
   , UnboundText <$> parseSnakeCaseText -- TODO: It doesn't really matter if this is snake case, we need a more general text parser.
   , UnboundText <$> parseText]
