@@ -114,7 +114,7 @@ runStandardParserReturnTests = do
                    (BacktickedText "f.g")
                    (NestedObject (UnboundText "h") ObjectEnd)))
              (Just (UnboundText "EFGH"))])
-  it "parses return clause with literal item in single quotes"
+  it "parses return clause with literal item in double quotes"
     $ "RETURN \"I'm a literal\""
     `shouldParseReturnQuery` Return
       (ReturnProperties
