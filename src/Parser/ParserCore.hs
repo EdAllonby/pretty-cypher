@@ -10,9 +10,6 @@ module Parser.ParserCore
     , brackets
     , curlyBrackets
     , parseText
-    , parseSnakeCaseText
-    , betweenQuotes
-    , betweenBackticks
     , integer
     , boolean
     , double
@@ -78,25 +75,19 @@ parseText = T.pack <$> lexeme (some alphaNumChar)
 parseSnakeCaseText :: Parser Text
 parseSnakeCaseText = T.pack <$> lexeme (some (alphaNumChar <|> char '_'))
 
-betweenQuotes :: Parser Text
-betweenQuotes = T.pack
-  <$> lexeme (between pQuote pQuote (manyTill latin1Char (lookAhead pQuote)))
-  where
-    pQuote = char '\''
-
-betweenBackticks :: Parser Text
-betweenBackticks = T.pack
+betweenCharacter :: Char -> Parser Text
+betweenCharacter boundingCharacter = T.pack
   <$> lexeme
-    (between pBacktick pBacktick (manyTill latin1Char (lookAhead pBacktick)))
+    (between pCharacter pCharacter (manyTill latin1Char (lookAhead pCharacter)))
   where
-    pBacktick = char '`'
+    pCharacter = char boundingCharacter
 
 commaSep :: Parser a -> Parser [a]
 commaSep p = p `sepBy` symbol ","
 
 parseLiteralText :: Parser LiteralText
 parseLiteralText = choice
-  [ QuotedText <$> betweenQuotes
-  , BacktickedText <$> betweenBackticks
+  [ QuotedText <$> (betweenCharacter '\'' <|> betweenCharacter '"')
+  , BacktickedText <$> betweenCharacter '`'
   , UnboundText <$> parseSnakeCaseText -- TODO: It doesn't really matter if this is snake case, we need a more general text parser.
   , UnboundText <$> parseText]
