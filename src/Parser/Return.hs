@@ -2,8 +2,8 @@ module Parser.Return (parseReturn) where
 
 import           Types (Clause(Return), ReturnValue(..), Object(..)
                       , ReturnProperty(Property))
-import           Parser.ParserCore (commaSep, Parser, symbol', keyword'
-                                  , parseLiteralText)
+import           Parser.Core (commaSep, Parser, symbol', keyword'
+                            , parseLiteralText)
 import           Text.Megaparsec
 import           Control.Monad (void)
 

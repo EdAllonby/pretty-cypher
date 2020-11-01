@@ -12,10 +12,9 @@ import           Types (Clause(OptionalMatch, Match), Pattern(Pattern)
                       , NodeType(EmptyNode, LabelledNode, AnyNode)
                       , RelationshipHops(..), PropertyValue(..)
                       , ConnectorDirection(..), LiteralText(..))
-import           Parser.ParserCore (parseLiteralText, boolean, integer, Parser
-                                  , symbol, signedInteger, signedDouble
-                                  , keyword', parens, brackets, curlyBrackets
-                                  , parseText, commaSep)
+import           Parser.Core (parseLiteralText, boolean, integer, Parser, symbol
+                            , signedInteger, signedDouble, keyword', parens
+                            , brackets, curlyBrackets, parseText, commaSep)
 import           Data.Text (Text)
 import           Text.Megaparsec ((<|>), eof, sepBy1, optional, (<?>), choice
                                 , manyTill, MonadParsec(try, lookAhead))
