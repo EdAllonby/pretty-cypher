@@ -1,9 +1,9 @@
 {-# LANGUAGE QuasiQuotes #-}
 
-module Parser.QuerySpec where
+module Cypher.Parser.QuerySpec where
 
-import           Types
-import           Parser.Query
+import           Cypher.Types
+import           Cypher.Parser.Query
 import           Test.Hspec
 import           Test.Hspec.Megaparsec
 import           Text.Megaparsec

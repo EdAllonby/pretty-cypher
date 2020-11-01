@@ -3,18 +3,19 @@
 -- See https://github.com/ennocramer/floskell/issues/39
 {-# LANGUAGE TupleSections #-}
 
-module Parser.Match (parseMatch, parseOptionalMatch) where
+module Cypher.Parser.Match (parseMatch, parseOptionalMatch) where
 
-import           Types (Clause(OptionalMatch, Match), Pattern(Pattern)
-                      , PatternComponent(..)
-                      , RelationshipType(EmptyRelationship, LabelledRelationship,
+import           Cypher.Types (Clause(OptionalMatch, Match), Pattern(Pattern)
+                             , PatternComponent(..)
+                             , RelationshipType(EmptyRelationship, LabelledRelationship,
                  AnyRelationship)
-                      , NodeType(EmptyNode, LabelledNode, AnyNode)
-                      , RelationshipHops(..), PropertyValue(..)
-                      , ConnectorDirection(..), LiteralText(..))
-import           Parser.Core (parseLiteralText, boolean, integer, Parser, symbol
-                            , signedInteger, signedDouble, keyword', parens
-                            , brackets, curlyBrackets, parseText, commaSep)
+                             , NodeType(EmptyNode, LabelledNode, AnyNode)
+                             , RelationshipHops(..), PropertyValue(..)
+                             , ConnectorDirection(..), LiteralText(..))
+import           Cypher.Parser.Core (parseLiteralText, boolean, integer, Parser
+                                   , symbol, signedInteger, signedDouble
+                                   , keyword', parens, brackets, curlyBrackets
+                                   , parseText, commaSep)
 import           Data.Text (Text)
 import           Text.Megaparsec ((<|>), eof, sepBy1, optional, (<?>), choice
                                 , manyTill, MonadParsec(try, lookAhead))

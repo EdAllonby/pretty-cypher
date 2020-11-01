@@ -1,5 +1,5 @@
 
-module Types where
+module Cypher.Types where
 
 import           Data.Text (Text)
 import qualified Data.Map as M

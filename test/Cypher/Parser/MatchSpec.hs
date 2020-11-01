@@ -1,7 +1,7 @@
-module Parser.MatchSpec where
+module Cypher.Parser.MatchSpec where
 
-import           Types
-import           Parser.Match
+import           Cypher.Types
+import           Cypher.Parser.Match
 import           Test.Hspec
 import           Test.Hspec.Megaparsec
 import           Text.Megaparsec

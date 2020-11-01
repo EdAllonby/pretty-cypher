@@ -1,7 +1,7 @@
-module Parser.ReturnSpec where
+module Cypher.Parser.ReturnSpec where
 
-import           Types
-import           Parser.Return
+import           Cypher.Types
+import           Cypher.Parser.Return
 import           Test.Hspec
 import           Test.Hspec.Megaparsec
 import           Text.Megaparsec

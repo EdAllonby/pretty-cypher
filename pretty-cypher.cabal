@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: f5336040f9b4a5475604a2b9fce50a0eea0411b01041bba199e874fa17966189
+-- hash: 78bccac64f32c7f08b351df1c2c6dd15d8a34a2446cc1812ec5ba62a49f7aaa6
 
 name:           pretty-cypher
 version:        0.1.0.0
@@ -27,12 +27,12 @@ source-repository head
 
 library
   exposed-modules:
-      Parser.Core
-      Parser.Match
-      Parser.Query
-      Parser.Return
-      QuasiQuote
-      Types
+      Cypher.Parser.Core
+      Cypher.Parser.Match
+      Cypher.Parser.Query
+      Cypher.Parser.Return
+      Cypher.QuasiQuote
+      Cypher.Types
   other-modules:
       Paths_pretty_cypher
   hs-source-dirs:
@@ -74,10 +74,10 @@ test-suite pretty-cypher-test
   type: exitcode-stdio-1.0
   main-is: Spec.hs
   other-modules:
-      Parser.MatchSpec
-      Parser.QuerySpec
-      Parser.ReturnSpec
-      QuasiQuoteSpec
+      Cypher.Parser.MatchSpec
+      Cypher.Parser.QuerySpec
+      Cypher.Parser.ReturnSpec
+      Cypher.QuasiQuoteSpec
       Paths_pretty_cypher
   hs-source-dirs:
       test

@@ -1,9 +1,9 @@
-module Parser.Return (parseReturn) where
+module Cypher.Parser.Return (parseReturn) where
 
-import           Types (Clause(Return), ReturnValue(..), Object(..)
-                      , ReturnProperty(Property))
-import           Parser.Core (commaSep, Parser, symbol', keyword'
-                            , parseLiteralText)
+import           Cypher.Types (Clause(Return), ReturnValue(..), Object(..)
+                             , ReturnProperty(Property))
+import           Cypher.Parser.Core (commaSep, Parser, symbol', keyword'
+                                   , parseLiteralText)
 import           Text.Megaparsec
 import           Control.Monad (void)
 

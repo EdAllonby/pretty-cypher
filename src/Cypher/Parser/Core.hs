@@ -1,5 +1,5 @@
 -- This module houses the Parser type and the cypher language spacing rules that we use when parsing queries.
-module Parser.Core
+module Cypher.Parser.Core
     ( Parser
     , sc
     , lexeme
@@ -26,7 +26,7 @@ import           Text.Megaparsec.Char (latin1Char, char, alphaNumChar, space1
                                      , string')
 import qualified Text.Megaparsec.Char.Lexer as L
 import qualified Data.Text as T
-import           Types (LiteralText(..))
+import           Cypher.Types (LiteralText(..))
 
 type Parser = Parsec Void Text
 

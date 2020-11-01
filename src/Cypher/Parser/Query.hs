@@ -1,10 +1,10 @@
-module Parser.Query (parseQuery) where
+module Cypher.Parser.Query (parseQuery) where
 
-import           Types (QueryExpr)
-import           Parser.Core (Parser, sc)
+import           Cypher.Types (QueryExpr)
+import           Cypher.Parser.Core (Parser, sc)
 import           Text.Megaparsec ((<?>), choice, manyTill, MonadParsec(eof))
-import           Parser.Match (parseMatch, parseOptionalMatch)
-import           Parser.Return (parseReturn)
+import           Cypher.Parser.Match (parseMatch, parseOptionalMatch)
+import           Cypher.Parser.Return (parseReturn)
 
 parseQuery :: Parser QueryExpr
 parseQuery = sc

@@ -1,11 +1,11 @@
 {-# LANGUAGE QuasiQuotes #-}
 
-module QuasiQuoteSpec where
+module Cypher.QuasiQuoteSpec where
 
 import           Test.Hspec
-import           QuasiQuote (cypher)
+import           Cypher.QuasiQuote (cypher)
 import qualified Data.Map as M
-import           Types
+import           Cypher.Types
 
 -- Just the fact that this quasi-quote compiles is enough to show the module is working, 
 -- but let's document this with a test.

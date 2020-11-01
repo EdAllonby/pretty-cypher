@@ -1,8 +1,8 @@
 import           Test.Hspec (hspec)
-import           Parser.QuerySpec (runParserQueryTests)
-import           Parser.MatchSpec (runParserMatchTests)
-import           Parser.ReturnSpec (runParserReturnTests)
-import           QuasiQuoteSpec (runQuasiQuoteTests)
+import           Cypher.Parser.QuerySpec (runParserQueryTests)
+import           Cypher.Parser.MatchSpec (runParserMatchTests)
+import           Cypher.Parser.ReturnSpec (runParserReturnTests)
+import           Cypher.QuasiQuoteSpec (runQuasiQuoteTests)
 
 main :: IO ()
 main = hspec
