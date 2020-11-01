@@ -1,6 +1,6 @@
 {-# LANGUAGE QuasiQuotes #-}
 
-module Cypher.QuasiQuoteSpec where
+module Cypher.QuasiQuoteSpec (runQuasiQuoteTests) where
 
 import           Test.Hspec
 import           Cypher.QuasiQuote (cypher)
@@ -23,7 +23,7 @@ cypherExpr =
 |]
 
 runQuasiQuoteTests :: SpecWith ()
-runQuasiQuoteTests = describe "QuasiQuote"
+runQuasiQuoteTests = describe "Cypher.QuasiQuote"
   $ do
     context "when running cypher quasiquote"
       $ do

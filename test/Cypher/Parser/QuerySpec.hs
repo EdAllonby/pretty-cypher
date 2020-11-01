@@ -1,6 +1,6 @@
 {-# LANGUAGE QuasiQuotes #-}
 
-module Cypher.Parser.QuerySpec where
+module Cypher.Parser.QuerySpec (runParserQueryTests) where
 
 import           Cypher.Types
 import           Cypher.Parser.Query
@@ -12,7 +12,7 @@ import qualified Data.Map as M
 import           Text.RawString.QQ (r)
 
 runParserQueryTests :: SpecWith ()
-runParserQueryTests = describe "Parser.Query"
+runParserQueryTests = describe "Cypher.Parser.Query"
   $ do
     context "when parsing queries"
       $ do

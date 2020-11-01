@@ -1,4 +1,4 @@
-module Cypher.Parser.ReturnSpec where
+module Cypher.Parser.ReturnSpec (runParserReturnTests) where
 
 import           Cypher.Types
 import           Cypher.Parser.Return
@@ -9,7 +9,7 @@ import           Data.Text as T
 import qualified Data.Map as M
 
 runParserReturnTests :: SpecWith ()
-runParserReturnTests = describe "Parser.Return"
+runParserReturnTests = describe "Cypher.Parser.Return"
   $ context "when parsing return query"
   $ do
     context "with standard clause" runStandardParserReturnTests
