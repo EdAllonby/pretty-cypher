@@ -17,16 +17,18 @@ runParserReturnTests = describe "Cypher.Parser.Return"
 runStandardParserReturnTests :: Spec
 runStandardParserReturnTests = do
   it "parses return clause with all elements"
-    $ "RETURN *" `shouldParseReturnQuery` Return ReturnAllElements
+    $ "RETURN *" `shouldParseReturnQuery` Return False ReturnAllElements
   it "parses return clause with single property"
     $ "RETURN n"
     `shouldParseReturnQuery` Return
+      False
       (ReturnExpressions
          [ ReturnProperty
              (Property (NestedObject (UnboundText "n") ObjectEnd) Nothing)])
   it "parses return clause with multiple properties"
     $ "RETURN a AS Alias1, b AS Alias2, c"
     `shouldParseReturnQuery` Return
+      False
       (ReturnExpressions
          [ ReturnProperty
              (Property
@@ -41,6 +43,7 @@ runStandardParserReturnTests = do
   it "parses return clause with nested properties"
     $ "RETURN a.b.c.d"
     `shouldParseReturnQuery` Return
+      False
       (ReturnExpressions
          [ ReturnProperty
              (Property
@@ -55,6 +58,7 @@ runStandardParserReturnTests = do
   it "parses return clause with multiple nested properties"
     $ "RETURN a.b.c.d, e.f.g.h"
     `shouldParseReturnQuery` Return
+      False
       (ReturnExpressions
          [ ReturnProperty
              (Property
@@ -79,6 +83,7 @@ runStandardParserReturnTests = do
   it "parses return clause with nested escaped properties"
     $ "RETURN `some object`.`@ n$st$d 0bject!`.unescapedText"
     `shouldParseReturnQuery` Return
+      False
       (ReturnExpressions
          [ ReturnProperty
              (Property
@@ -91,6 +96,7 @@ runStandardParserReturnTests = do
   it "parses return clause with aliased property"
     $ "RETURN n AS NumberOfEggs"
     `shouldParseReturnQuery` Return
+      False
       (ReturnExpressions
          [ ReturnProperty
              (Property
@@ -99,6 +105,7 @@ runStandardParserReturnTests = do
   it "parses return clause with aliased literal property"
     $ "RETURN n AS `Number Of Eggs`"
     `shouldParseReturnQuery` Return
+      False
       (ReturnExpressions
          [ ReturnProperty
              (Property
@@ -108,6 +115,7 @@ runStandardParserReturnTests = do
     "parses return clause with multiple nested properties and aliases and odd casing"
     $ "ReTuRn a.b.`c$$`.d aS ABCD, e.`f.g`.h As EFGH"
     `shouldParseReturnQuery` Return
+      False
       (ReturnExpressions
          [ ReturnProperty
              (Property
@@ -130,6 +138,7 @@ runStandardParserReturnTests = do
   it "parses return clause with literal item in double quotes"
     $ "RETURN \"I'm a literal\""
     `shouldParseReturnQuery` Return
+      False
       (ReturnExpressions
          [ ReturnProperty
              (Property
@@ -138,8 +147,25 @@ runStandardParserReturnTests = do
   it "parses return clause with pattern"
     $ "RETURN (a)-->()"
     `shouldParseReturnQuery` Return
+      False
       (ReturnExpressions
          [ ReturnPattern
+             (Pattern
+                Nothing
+                Nothing
+                [ Node (AnyNode (UnboundText "a")) M.empty
+                , ConnectorDirection AnonymousRightDirection
+                , Node EmptyNode M.empty])])
+  it "parses return clause capturing DISTINCT keyword as first parameter"
+    $ "RETURN DISTINCT 'something', (a)-->()"
+    `shouldParseReturnQuery` Return
+      True
+      (ReturnExpressions
+         [ ReturnProperty
+             (Property
+                (NestedObject (QuotedText "something") ObjectEnd)
+                Nothing)
+         , ReturnPattern
              (Pattern
                 Nothing
                 Nothing

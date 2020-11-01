@@ -49,4 +49,4 @@ runQuasiQuoteTests = describe "Cypher.QuasiQuote"
                                         , ( UnboundText "name"
                                             , TextValue
                                               (QuotedText " D. A. V. E "))])]]
-                         , Return ReturnAllElements]
+                         , Return False ReturnAllElements]

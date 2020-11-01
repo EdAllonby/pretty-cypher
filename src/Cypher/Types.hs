@@ -79,7 +79,7 @@ data ReturnValue = ReturnExpressions [ReturnExpression]
 
 data Clause = Match [Pattern] -- TODO: Move this to a non-empty list data type?
             | OptionalMatch [Pattern]
-            | Return ReturnValue
+            | Return { isDistinct :: Bool, returnValue :: ReturnValue }
   deriving (Data, Typeable, Eq, Show)
 
 type QueryExpr = [Clause]

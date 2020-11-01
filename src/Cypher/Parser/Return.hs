@@ -8,11 +8,15 @@ import           Cypher.Parser.Core (commaSep, Parser, symbol', keyword'
                                    , parseLiteralText)
 import           Text.Megaparsec (optional, choice, MonadParsec(try))
 import           Control.Monad (void)
+import           Data.Maybe (isJust)
 
 parseReturn :: Parser Clause
 parseReturn = do
   void (keyword' "RETURN")
-  Return <$> parseReturnValue
+  Return <$> parseHasDistinct <*> parseReturnValue
+
+parseHasDistinct :: Parser Bool
+parseHasDistinct = isJust <$> (optional . symbol' $ "DISTINCT")
 
 parseReturnValue :: Parser ReturnValue
 parseReturnValue = choice

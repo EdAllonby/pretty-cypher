@@ -53,7 +53,7 @@ RETURN *
                                    M.empty
                                , ConnectorDirection RightDirection
                                , Node EmptyNode M.empty]]
-                       , Return ReturnAllElements]
+                       , Return False ReturnAllElements]
   it "parses query with erratic spacing"
     $ "  MATCH  (   : Person{ name: ' D. A. V. E ' , age : 32 , height : 1.6 , delta : -10 , base  : -3.14  } )   -  [  o : OWNS  ] -> (car :Car )   RETURN  *   "
     `shouldParseQuery` [ Match
@@ -85,7 +85,7 @@ RETURN *
                                       (Just (UnboundText "car"))
                                       [UnboundText "Car"])
                                    M.empty]]
-                       , Return ReturnAllElements]
+                       , Return False ReturnAllElements]
   it "parses multi match clause"
     $ "MATCH (p:Person)-[:HAS]->(c:Car) MATCH (cat:Cat) RETURN c"
     `shouldParseQuery` [ Match
@@ -120,6 +120,7 @@ RETURN *
                                       [UnboundText "Cat"])
                                    M.empty]]
                        , Return
+                           False
                            (ReturnExpressions
                               [ ReturnProperty
                                   (Property
