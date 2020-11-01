@@ -69,7 +69,11 @@ data ReturnProperty =
   Property { propertyObject :: Object, propertyAlias :: Maybe LiteralText }
   deriving (Data, Typeable, Eq, Show)
 
-data ReturnValue = ReturnProperties [ReturnProperty]
+data ReturnExpression = ReturnProperty ReturnProperty
+                      | ReturnPattern Pattern
+  deriving (Data, Typeable, Eq, Show)
+
+data ReturnValue = ReturnExpressions [ReturnExpression]
                  | ReturnAllElements
   deriving (Data, Typeable, Eq, Show)
 

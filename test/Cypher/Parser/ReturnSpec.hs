@@ -6,13 +6,13 @@ import           Test.Hspec
 import           Test.Hspec.Megaparsec
 import           Text.Megaparsec
 import           Data.Text as T
+import qualified Data.Map as M
 
 runParserReturnTests :: SpecWith ()
 runParserReturnTests = describe "Parser.Return"
+  $ context "when parsing return query"
   $ do
-    context "when parsing return query"
-      $ do
-        context "with standard clause" runStandardParserReturnTests
+    context "with standard clause" runStandardParserReturnTests
 
 runStandardParserReturnTests :: Spec
 runStandardParserReturnTests = do
@@ -21,107 +21,131 @@ runStandardParserReturnTests = do
   it "parses return clause with single property"
     $ "RETURN n"
     `shouldParseReturnQuery` Return
-      (ReturnProperties
-         [Property (NestedObject (UnboundText "n") ObjectEnd) Nothing])
+      (ReturnExpressions
+         [ ReturnProperty
+             (Property (NestedObject (UnboundText "n") ObjectEnd) Nothing)])
   it "parses return clause with multiple properties"
     $ "RETURN a AS Alias1, b AS Alias2, c"
     `shouldParseReturnQuery` Return
-      (ReturnProperties
-         [ Property
-             (NestedObject (UnboundText "a") ObjectEnd)
-             (Just (UnboundText "Alias1"))
-         , Property
-             (NestedObject (UnboundText "b") ObjectEnd)
-             (Just (UnboundText "Alias2"))
-         , Property (NestedObject (UnboundText "c") ObjectEnd) Nothing])
+      (ReturnExpressions
+         [ ReturnProperty
+             (Property
+                (NestedObject (UnboundText "a") ObjectEnd)
+                (Just (UnboundText "Alias1")))
+         , ReturnProperty
+             (Property
+                (NestedObject (UnboundText "b") ObjectEnd)
+                (Just (UnboundText "Alias2")))
+         , ReturnProperty
+             (Property (NestedObject (UnboundText "c") ObjectEnd) Nothing)])
   it "parses return clause with nested properties"
     $ "RETURN a.b.c.d"
     `shouldParseReturnQuery` Return
-      (ReturnProperties
-         [ Property
-             (NestedObject
-                (UnboundText "a")
+      (ReturnExpressions
+         [ ReturnProperty
+             (Property
                 (NestedObject
-                   (UnboundText "b")
+                   (UnboundText "a")
                    (NestedObject
-                      (UnboundText "c")
-                      (NestedObject (UnboundText "d") ObjectEnd))))
-             Nothing])
+                      (UnboundText "b")
+                      (NestedObject
+                         (UnboundText "c")
+                         (NestedObject (UnboundText "d") ObjectEnd))))
+                Nothing)])
   it "parses return clause with multiple nested properties"
     $ "RETURN a.b.c.d, e.f.g.h"
     `shouldParseReturnQuery` Return
-      (ReturnProperties
-         [ Property
-             (NestedObject
-                (UnboundText "a")
+      (ReturnExpressions
+         [ ReturnProperty
+             (Property
                 (NestedObject
-                   (UnboundText "b")
+                   (UnboundText "a")
                    (NestedObject
-                      (UnboundText "c")
-                      (NestedObject (UnboundText "d") ObjectEnd))))
-             Nothing
-         , Property
-             (NestedObject
-                (UnboundText "e")
+                      (UnboundText "b")
+                      (NestedObject
+                         (UnboundText "c")
+                         (NestedObject (UnboundText "d") ObjectEnd))))
+                Nothing)
+         , ReturnProperty
+             (Property
                 (NestedObject
-                   (UnboundText "f")
+                   (UnboundText "e")
                    (NestedObject
-                      (UnboundText "g")
-                      (NestedObject (UnboundText "h") ObjectEnd))))
-             Nothing])
+                      (UnboundText "f")
+                      (NestedObject
+                         (UnboundText "g")
+                         (NestedObject (UnboundText "h") ObjectEnd))))
+                Nothing)])
   it "parses return clause with nested escaped properties"
     $ "RETURN `some object`.`@ n$st$d 0bject!`.unescapedText"
     `shouldParseReturnQuery` Return
-      (ReturnProperties
-         [ Property
-             (NestedObject
-                (BacktickedText "some object")
+      (ReturnExpressions
+         [ ReturnProperty
+             (Property
                 (NestedObject
-                   (BacktickedText "@ n$st$d 0bject!")
-                   (NestedObject (UnboundText "unescapedText") ObjectEnd)))
-             Nothing])
+                   (BacktickedText "some object")
+                   (NestedObject
+                      (BacktickedText "@ n$st$d 0bject!")
+                      (NestedObject (UnboundText "unescapedText") ObjectEnd)))
+                Nothing)])
   it "parses return clause with aliased property"
     $ "RETURN n AS NumberOfEggs"
     `shouldParseReturnQuery` Return
-      (ReturnProperties
-         [ Property
-             (NestedObject (UnboundText "n") ObjectEnd)
-             (Just (UnboundText "NumberOfEggs"))])
+      (ReturnExpressions
+         [ ReturnProperty
+             (Property
+                (NestedObject (UnboundText "n") ObjectEnd)
+                (Just (UnboundText "NumberOfEggs")))])
   it "parses return clause with aliased literal property"
     $ "RETURN n AS `Number Of Eggs`"
     `shouldParseReturnQuery` Return
-      (ReturnProperties
-         [ Property
-             (NestedObject (UnboundText "n") ObjectEnd)
-             (Just (BacktickedText "Number Of Eggs"))])
+      (ReturnExpressions
+         [ ReturnProperty
+             (Property
+                (NestedObject (UnboundText "n") ObjectEnd)
+                (Just (BacktickedText "Number Of Eggs")))])
   it
     "parses return clause with multiple nested properties and aliases and odd casing"
     $ "ReTuRn a.b.`c$$`.d aS ABCD, e.`f.g`.h As EFGH"
     `shouldParseReturnQuery` Return
-      (ReturnProperties
-         [ Property
-             (NestedObject
-                (UnboundText "a")
+      (ReturnExpressions
+         [ ReturnProperty
+             (Property
                 (NestedObject
-                   (UnboundText "b")
+                   (UnboundText "a")
                    (NestedObject
-                      (BacktickedText "c$$")
-                      (NestedObject (UnboundText "d") ObjectEnd))))
-             (Just (UnboundText "ABCD"))
-         , Property
-             (NestedObject
-                (UnboundText "e")
+                      (UnboundText "b")
+                      (NestedObject
+                         (BacktickedText "c$$")
+                         (NestedObject (UnboundText "d") ObjectEnd))))
+                (Just (UnboundText "ABCD")))
+         , ReturnProperty
+             (Property
                 (NestedObject
-                   (BacktickedText "f.g")
-                   (NestedObject (UnboundText "h") ObjectEnd)))
-             (Just (UnboundText "EFGH"))])
+                   (UnboundText "e")
+                   (NestedObject
+                      (BacktickedText "f.g")
+                      (NestedObject (UnboundText "h") ObjectEnd)))
+                (Just (UnboundText "EFGH")))])
   it "parses return clause with literal item in double quotes"
     $ "RETURN \"I'm a literal\""
     `shouldParseReturnQuery` Return
-      (ReturnProperties
-         [ Property
-             (NestedObject (QuotedText "I'm a literal") ObjectEnd)
-             Nothing])
+      (ReturnExpressions
+         [ ReturnProperty
+             (Property
+                (NestedObject (QuotedText "I'm a literal") ObjectEnd)
+                Nothing)])
+  it "parses return clause with pattern"
+    $ "RETURN (a)-->()"
+    `shouldParseReturnQuery` Return
+      (ReturnExpressions
+         [ ReturnPattern
+             (Pattern
+                Nothing
+                Nothing
+                [ Node (AnyNode (UnboundText "a")) M.empty
+                , ConnectorDirection AnonymousRightDirection
+                , Node EmptyNode M.empty])])
 
 shouldParseReturnQuery :: Text -> Clause -> Expectation
 shouldParseReturnQuery query expectedResult =

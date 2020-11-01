@@ -120,10 +120,11 @@ RETURN *
                                       [UnboundText "Cat"])
                                    M.empty]]
                        , Return
-                           (ReturnProperties
-                              [ Property
-                                  (NestedObject (UnboundText "c") ObjectEnd)
-                                  Nothing])]
+                           (ReturnExpressions
+                              [ ReturnProperty
+                                  (Property
+                                     (NestedObject (UnboundText "c") ObjectEnd)
+                                     Nothing)])]
 
 runParserQueryErrorTests :: SpecWith ()
 runParserQueryErrorTests = do

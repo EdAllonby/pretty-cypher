@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 78bccac64f32c7f08b351df1c2c6dd15d8a34a2446cc1812ec5ba62a49f7aaa6
+-- hash: 512f46ea25b58364ef2d22d3c298c3aa4abd1704778db9444753652ff687cca0
 
 name:           pretty-cypher
 version:        0.1.0.0
@@ -29,6 +29,7 @@ library
   exposed-modules:
       Cypher.Parser.Core
       Cypher.Parser.Match
+      Cypher.Parser.Pattern
       Cypher.Parser.Query
       Cypher.Parser.Return
       Cypher.QuasiQuote
