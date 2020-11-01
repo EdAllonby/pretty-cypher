@@ -70,6 +70,7 @@ data ReturnProperty =
 
 data ReturnExpression = ReturnProperty ReturnProperty
                       | ReturnPattern Pattern
+                      | ReturnFunctionWrappedPattern (Function Pattern)
   deriving (Data, Typeable, Eq, Show)
 
 data ReturnValue = ReturnExpressions [ReturnExpression]

@@ -54,11 +54,11 @@ runParserMatchTests = describe "Cypher.Parser.Match"
       $ "OPTIONAL MATCH (p:Person), (m:Movie)"
       `shouldParseOptionalMatchQuery` OptionalMatch
         [ MatchPattern Nothing [Node personLabelledNode M.empty]
-        , (MatchPattern
-             Nothing
-             [ Node
-                 (LabelledNode (Just (UnboundText "m")) [UnboundText "Movie"])
-                 M.empty])]
+        , MatchPattern
+            Nothing
+            [ Node
+                (LabelledNode (Just (UnboundText "m")) [UnboundText "Movie"])
+                M.empty]]
     it "parses pattern clause wrapped in a function"
       $ "MATCH shortestPath((p:Person)-[*]-(j:Job))"
       `shouldParseMatchQuery` Match

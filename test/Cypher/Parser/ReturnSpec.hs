@@ -153,6 +153,17 @@ runStandardParserReturnTests = do
              [ Node (AnyNode (UnboundText "a")) M.empty
              , ConnectorDirection AnonymousRightDirection
              , Node EmptyNode M.empty]])
+  it "parses return clause with function wrapped pattern"
+    $ "RETURN count((a)-->())"
+    `shouldParseReturnQuery` Return
+      False
+      (ReturnExpressions
+         [ ReturnFunctionWrappedPattern
+             (Function
+                "count"
+                [ Node (AnyNode (UnboundText "a")) M.empty
+                , ConnectorDirection AnonymousRightDirection
+                , Node EmptyNode M.empty])])
   it "parses return clause capturing DISTINCT keyword as first parameter"
     $ "RETURN DISTINCT 'something', (a)-->()"
     `shouldParseReturnQuery` Return
@@ -163,9 +174,9 @@ runStandardParserReturnTests = do
                 (NestedObject (QuotedText "something") ObjectEnd)
                 Nothing)
          , ReturnPattern
-             ([ Node (AnyNode (UnboundText "a")) M.empty
-              , ConnectorDirection AnonymousRightDirection
-              , Node EmptyNode M.empty])])
+             [ Node (AnyNode (UnboundText "a")) M.empty
+             , ConnectorDirection AnonymousRightDirection
+             , Node EmptyNode M.empty]])
 
 shouldParseReturnQuery :: Text -> Clause -> Expectation
 shouldParseReturnQuery query expectedResult =
