@@ -31,8 +31,7 @@ runQuasiQuoteTests = describe "Cypher.QuasiQuote"
           $ do
             cypherExpr
               `shouldBe` [ Match
-                             [ Pattern
-                                 Nothing
+                             [ MatchPattern
                                  Nothing
                                  [ Node
                                      (LabelledNode

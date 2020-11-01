@@ -28,8 +28,7 @@ OPTIONAL MATCH (a)-[r:ACTS_IN]->()
 RETURN *
     |]
     `shouldParseQuery` [ Match
-                           [ Pattern
-                               Nothing
+                           [ MatchPattern
                                Nothing
                                [ Node
                                    (LabelledNode
@@ -40,8 +39,7 @@ RETURN *
                                           , TextValue
                                             (QuotedText "Wall Street"))])]]
                        , OptionalMatch
-                           [ Pattern
-                               Nothing
+                           [ MatchPattern
                                Nothing
                                [ Node (AnyNode (UnboundText "a")) M.empty
                                , ConnectorDirection NoDirection
@@ -57,8 +55,7 @@ RETURN *
   it "parses query with erratic spacing"
     $ "  MATCH  (   : Person{ name: ' D. A. V. E ' , age : 32 , height : 1.6 , delta : -10 , base  : -3.14  } )   -  [  o : OWNS  ] -> (car :Car )   RETURN  *   "
     `shouldParseQuery` [ Match
-                           [ Pattern
-                               Nothing
+                           [ MatchPattern
                                Nothing
                                [ Node
                                    (LabelledNode Nothing [UnboundText "Person"])
@@ -89,8 +86,7 @@ RETURN *
   it "parses multi match clause"
     $ "MATCH (p:Person)-[:HAS]->(c:Car) MATCH (cat:Cat) RETURN c"
     `shouldParseQuery` [ Match
-                           [ Pattern
-                               Nothing
+                           [ MatchPattern
                                Nothing
                                [ Node
                                    (LabelledNode
@@ -111,8 +107,7 @@ RETURN *
                                       [UnboundText "Car"])
                                    M.empty]]
                        , Match
-                           [ Pattern
-                               Nothing
+                           [ MatchPattern
                                Nothing
                                [ Node
                                    (LabelledNode

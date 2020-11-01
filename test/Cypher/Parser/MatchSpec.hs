@@ -14,8 +14,7 @@ runParserMatchTests = describe "Cypher.Parser.Match"
     it "parses match clause"
       $ "OPTIONAL MATCH (a)-[r:ACTS_IN]->()"
       `shouldParseOptionalMatchQuery` OptionalMatch
-        [ Pattern
-            Nothing
+        [ MatchPattern
             Nothing
             [ Node (AnyNode (UnboundText "a")) M.empty
             , ConnectorDirection NoDirection
@@ -30,8 +29,7 @@ runParserMatchTests = describe "Cypher.Parser.Match"
     it "parses match with optional match clause"
       $ "OPTIONAL MATCH (a)-[r:ACTS_IN]->()"
       `shouldParseOptionalMatchQuery` OptionalMatch
-        [ Pattern
-            Nothing
+        [ MatchPattern
             Nothing
             [ Node (AnyNode (UnboundText "a")) M.empty
             , ConnectorDirection NoDirection
@@ -46,9 +44,8 @@ runParserMatchTests = describe "Cypher.Parser.Match"
     it "parses single match clause with multiple patterns"
       $ "MATCH (p:Person), (m:Movie)"
       `shouldParseMatchQuery` Match
-        [ Pattern Nothing Nothing [Node personLabelledNode M.empty]
-        , Pattern
-            Nothing
+        [ MatchPattern Nothing [Node personLabelledNode M.empty]
+        , MatchPattern
             Nothing
             [ Node
                 (LabelledNode (Just (UnboundText "m")) [UnboundText "Movie"])
@@ -56,13 +53,40 @@ runParserMatchTests = describe "Cypher.Parser.Match"
     it "parses single match clause with multiple patterns"
       $ "OPTIONAL MATCH (p:Person), (m:Movie)"
       `shouldParseOptionalMatchQuery` OptionalMatch
-        [ Pattern Nothing Nothing [Node personLabelledNode M.empty]
-        , Pattern
+        [ MatchPattern Nothing [Node personLabelledNode M.empty]
+        , (MatchPattern
+             Nothing
+             [ Node
+                 (LabelledNode (Just (UnboundText "m")) [UnboundText "Movie"])
+                 M.empty])]
+    it "parses pattern clause wrapped in a function"
+      $ "MATCH shortestPath((p:Person)-[*]-(j:Job))"
+      `shouldParseMatchQuery` Match
+        [ MatchFunctionWrappedPattern
             Nothing
-            Nothing
-            [ Node
-                (LabelledNode (Just (UnboundText "m")) [UnboundText "Movie"])
-                M.empty]]
+            (Function
+               "shortestPath"
+               [ Node personLabelledNode M.empty
+               , ConnectorDirection NoDirection
+               , Relationship EmptyRelationship (Just AnyHops) M.empty
+               , ConnectorDirection NoDirection
+               , Node
+                   (LabelledNode (Just (UnboundText "j")) [UnboundText "Job"])
+                   M.empty])]
+    it "parses pattern with pattern variable wrapped in a function"
+      $ "MATCH x=shortestPath((p:Person)-[*]-(j:Job))"
+      `shouldParseMatchQuery` Match
+        [ MatchFunctionWrappedPattern
+            (Just "x")
+            (Function
+               "shortestPath"
+               [ Node personLabelledNode M.empty
+               , ConnectorDirection NoDirection
+               , Relationship EmptyRelationship (Just AnyHops) M.empty
+               , ConnectorDirection NoDirection
+               , Node
+                   (LabelledNode (Just (UnboundText "j")) [UnboundText "Job"])
+                   M.empty])]
 
 shouldParseMatchQuery :: Text -> Clause -> Expectation
 shouldParseMatchQuery query expectedResult =

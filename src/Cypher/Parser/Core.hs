@@ -16,7 +16,8 @@ module Cypher.Parser.Core
     , signedInteger
     , signedDouble
     , commaSep
-    , parseLiteralText) where
+    , parseLiteralText
+    , parseWrappedInFunction) where
 
 import           Data.Text (Text)
 import           Data.Void (Void)
@@ -26,7 +27,7 @@ import           Text.Megaparsec.Char (latin1Char, char, alphaNumChar, space1
                                      , string')
 import qualified Text.Megaparsec.Char.Lexer as L
 import qualified Data.Text as T
-import           Cypher.Types (LiteralText(..))
+import           Cypher.Types (Function(..), LiteralText(..))
 
 type Parser = Parsec Void Text
 
@@ -91,3 +92,7 @@ parseLiteralText = choice
   , BacktickedText <$> textBetweenCharacter '`'
   , UnboundText <$> parseSnakeCaseText -- TODO: It doesn't really matter if this is snake case, we need a more general text parser.
   , UnboundText <$> parseText]
+
+parseWrappedInFunction :: Parser a -> Parser (Function a)
+parseWrappedInFunction
+  wrappedParser = Function <$> parseText <*> parens wrappedParser

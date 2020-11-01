@@ -150,12 +150,9 @@ runStandardParserReturnTests = do
       False
       (ReturnExpressions
          [ ReturnPattern
-             (Pattern
-                Nothing
-                Nothing
-                [ Node (AnyNode (UnboundText "a")) M.empty
-                , ConnectorDirection AnonymousRightDirection
-                , Node EmptyNode M.empty])])
+             [ Node (AnyNode (UnboundText "a")) M.empty
+             , ConnectorDirection AnonymousRightDirection
+             , Node EmptyNode M.empty]])
   it "parses return clause capturing DISTINCT keyword as first parameter"
     $ "RETURN DISTINCT 'something', (a)-->()"
     `shouldParseReturnQuery` Return
@@ -166,12 +163,9 @@ runStandardParserReturnTests = do
                 (NestedObject (QuotedText "something") ObjectEnd)
                 Nothing)
          , ReturnPattern
-             (Pattern
-                Nothing
-                Nothing
-                [ Node (AnyNode (UnboundText "a")) M.empty
-                , ConnectorDirection AnonymousRightDirection
-                , Node EmptyNode M.empty])])
+             ([ Node (AnyNode (UnboundText "a")) M.empty
+              , ConnectorDirection AnonymousRightDirection
+              , Node EmptyNode M.empty])])
 
 shouldParseReturnQuery :: Text -> Clause -> Expectation
 shouldParseReturnQuery query expectedResult =

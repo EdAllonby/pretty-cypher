@@ -5,34 +5,22 @@
 
 module Cypher.Parser.Pattern (parsePattern) where
 
-import           Cypher.Types (Pattern(Pattern), PatternComponent(..)
+import           Cypher.Types (Pattern, PatternComponent(ConnectorDirection, Node, Relationship)
                              , RelationshipType(EmptyRelationship, LabelledRelationship,
                  AnyRelationship)
                              , NodeType(EmptyNode, LabelledNode, AnyNode)
                              , RelationshipHops(..), PropertyValue(..)
-                             , ConnectorDirection(..), LiteralText(..))
+                             , ConnectorDirection(..), LiteralText)
 import           Cypher.Parser.Core (parseLiteralText, boolean, integer, Parser
                                    , symbol, signedInteger, signedDouble
                                    , keyword', parens, brackets, curlyBrackets
-                                   , parseText, commaSep)
-import           Data.Text (Text)
+                                   , commaSep)
 import           Text.Megaparsec ((<|>), eof, sepBy1, optional, (<?>), choice
                                 , manyTill, MonadParsec(try, lookAhead))
 import qualified Data.Map as M
 
 parsePattern :: Parser Pattern
-parsePattern = do
-  patternVariable <- optional $ try $ parseText <* symbol "="
-  (fn, p) <- choice
-    [try parsePatternWrappedInFunction, (Nothing, ) <$> parsePatternComponents]
-  return $ Pattern patternVariable fn p
-
-parsePatternWrappedInFunction :: Parser (Maybe Text, [PatternComponent])
-parsePatternWrappedInFunction = (,) <$> (Just <$> parseText)
-  <*> parens parsePatternComponents
-
-parsePatternComponents :: Parser [PatternComponent]
-parsePatternComponents = manyTill
+parsePattern = manyTill
   (choice
      [ parens (Node <$> parseNodeType <*> parseProperties) <?> "valid node"
      , brackets

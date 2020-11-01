@@ -55,11 +55,10 @@ data PatternComponent =
   | ConnectorDirection ConnectorDirection
   deriving (Data, Typeable, Eq, Show)
 
-data Pattern = Pattern { patternVariable :: Maybe Text
-                       , patternWrappingFunctionName :: Maybe Text
-                       , patternComponents :: [PatternComponent]
-                       }
+data Function a = Function { functionName :: Text, functionContents :: a }
   deriving (Data, Typeable, Eq, Show)
+
+type Pattern = [PatternComponent]
 
 data Object = NestedObject LiteralText Object
             | ObjectEnd
@@ -77,9 +76,19 @@ data ReturnValue = ReturnExpressions [ReturnExpression]
                  | ReturnAllElements
   deriving (Data, Typeable, Eq, Show)
 
-data Clause = Match [Pattern] -- TODO: Move this to a non-empty list data type?
-            | OptionalMatch [Pattern]
-            | Return { isDistinct :: Bool, returnValue :: ReturnValue }
+data MatchValue =
+    MatchFunctionWrappedPattern { functionWrappedPatternVariable :: Maybe Text
+                                , functionWrappedPattern :: Function Pattern
+                                }
+  | MatchPattern { matchPatternVariable :: Maybe Text
+                 , matchPattern :: Pattern
+                 }
+  deriving (Data, Typeable, Eq, Show)
+
+data Clause =
+    Match [MatchValue] -- TODO: Move this to a non-empty list data type?
+  | OptionalMatch [MatchValue]
+  | Return { isDistinct :: Bool, returnValue :: ReturnValue }
   deriving (Data, Typeable, Eq, Show)
 
 type QueryExpr = [Clause]
