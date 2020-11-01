@@ -68,9 +68,11 @@ data ReturnProperty =
   Property { propertyObject :: Object, propertyAlias :: Maybe LiteralText }
   deriving (Data, Typeable, Eq, Show)
 
-data ReturnExpression = ReturnProperty ReturnProperty
-                      | ReturnPattern Pattern
-                      | ReturnFunctionWrappedPattern (Function Pattern)
+data ReturnExpression =
+    ReturnProperty ReturnProperty
+  | ReturnPattern Pattern
+  | ReturnFunctionWrappedPattern (Function Pattern)
+  | ReturnFunctionWrappedPropertyWithArity (Function [PropertyValue])
   deriving (Data, Typeable, Eq, Show)
 
 data ReturnValue = ReturnExpressions [ReturnExpression]

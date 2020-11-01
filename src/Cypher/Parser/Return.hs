@@ -4,8 +4,9 @@ import           Cypher.Types (Clause(Return), ReturnValue(..)
                              , ReturnExpression(..), ReturnProperty(Property)
                              , Object(..))
 import           Cypher.Parser.Pattern (parsePattern)
-import           Cypher.Parser.Core (parseWrappedInFunction, commaSep, Parser
-                                   , symbol', keyword', parseLiteralText)
+import           Cypher.Parser.Core (parsePropertyValue, parseWrappedInFunction
+                                   , commaSep, Parser, symbol', keyword'
+                                   , parseLiteralText)
 import           Text.Megaparsec (optional, choice, MonadParsec(try))
 import           Control.Monad (void)
 import           Data.Maybe (isJust)
@@ -26,6 +27,9 @@ parseReturnValue = choice
 parseReturnExpression :: Parser ReturnExpression
 parseReturnExpression = choice
   [ try $ ReturnFunctionWrappedPattern <$> parseWrappedInFunction parsePattern
+  , try
+      $ ReturnFunctionWrappedPropertyWithArity
+      <$> parseWrappedInFunction (commaSep parsePropertyValue)
   , ReturnPattern <$> parsePattern
   , ReturnProperty <$> parseReturnProperty]
 

@@ -17,17 +17,19 @@ module Cypher.Parser.Core
     , signedDouble
     , commaSep
     , parseLiteralText
-    , parseWrappedInFunction) where
+    , parseWrappedInFunction
+    , parsePropertyValue) where
 
 import           Data.Text (Text)
 import           Data.Void (Void)
-import           Text.Megaparsec (choice, (<|>), sepBy, lookAhead, manyTill
+import           Text.Megaparsec (try, choice, (<|>), sepBy, lookAhead, manyTill
                                 , some, between, notFollowedBy, empty, Parsec)
 import           Text.Megaparsec.Char (latin1Char, char, alphaNumChar, space1
                                      , string')
 import qualified Text.Megaparsec.Char.Lexer as L
 import qualified Data.Text as T
-import           Cypher.Types (Function(..), LiteralText(..))
+import           Cypher.Types (Function(Function), PropertyValue(..)
+                             , LiteralText(..))
 
 type Parser = Parsec Void Text
 
@@ -96,3 +98,10 @@ parseLiteralText = choice
 parseWrappedInFunction :: Parser a -> Parser (Function a)
 parseWrappedInFunction
   wrappedParser = Function <$> parseText <*> parens wrappedParser
+
+parsePropertyValue :: Parser PropertyValue
+parsePropertyValue = choice
+  [ DoubleValue <$> try signedDouble -- TODO: Not too sure why this one needs a try, shouldn't it be atomic? Investigate
+  , IntegerValue <$> signedInteger
+  , BooleanValue <$> boolean
+  , TextValue <$> parseLiteralText]

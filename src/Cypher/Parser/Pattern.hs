@@ -11,10 +11,9 @@ import           Cypher.Types (Pattern, PatternComponent(ConnectorDirection, Nod
                              , NodeType(EmptyNode, LabelledNode, AnyNode)
                              , RelationshipHops(..), PropertyValue(..)
                              , ConnectorDirection(..), LiteralText)
-import           Cypher.Parser.Core (parseLiteralText, boolean, integer, Parser
-                                   , symbol, signedInteger, signedDouble
-                                   , keyword', parens, brackets, curlyBrackets
-                                   , commaSep)
+import           Cypher.Parser.Core (parsePropertyValue, parseLiteralText
+                                   , integer, Parser, symbol, keyword', parens
+                                   , brackets, curlyBrackets, commaSep)
 import           Text.Megaparsec ((<|>), eof, sepBy1, optional, (<?>), choice
                                 , manyTill, MonadParsec(try, lookAhead))
 import qualified Data.Map as M
@@ -78,10 +77,4 @@ parseProperties = do
   return $ M.unions (M.fromList <$> props)
 
 parseProperty :: Parser (LiteralText, PropertyValue)
-parseProperty = (,) <$> parseLiteralText
-  <*> (symbol ":"
-       *> choice
-         [ DoubleValue <$> try signedDouble -- TODO: Not too sure why this one needs a try, shouldn't it be atomic? Investigate
-         , IntegerValue <$> signedInteger
-         , BooleanValue <$> boolean
-         , TextValue <$> parseLiteralText])
+parseProperty = (,) <$> parseLiteralText <*> (symbol ":" *> parsePropertyValue)

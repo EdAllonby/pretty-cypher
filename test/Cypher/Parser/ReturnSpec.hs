@@ -11,8 +11,7 @@ import qualified Data.Map as M
 runParserReturnTests :: SpecWith ()
 runParserReturnTests = describe "Cypher.Parser.Return"
   $ context "when parsing return query"
-  $ do
-    context "with standard clause" runStandardParserReturnTests
+  $ context "with standard clause" runStandardParserReturnTests
 
 runStandardParserReturnTests :: Spec
 runStandardParserReturnTests = do
@@ -164,6 +163,39 @@ runStandardParserReturnTests = do
                 [ Node (AnyNode (UnboundText "a")) M.empty
                 , ConnectorDirection AnonymousRightDirection
                 , Node EmptyNode M.empty])])
+  it "parses return clause with function wrapped double"
+    $ "RETURN float(0.9)"
+    `shouldParseReturnQuery` Return
+      False
+      (ReturnExpressions
+         [ ReturnFunctionWrappedPropertyWithArity
+             (Function "float" [DoubleValue 0.9])])
+  it "parses return clause with function wrapped integer"
+    $ "RETURN toFloat(3)"
+    `shouldParseReturnQuery` Return
+      False
+      (ReturnExpressions
+         [ ReturnFunctionWrappedPropertyWithArity
+             (Function "toFloat" [IntegerValue 3])])
+  it "parses return clause with function wrapped text"
+    $ "RETURN rTrim(BlahBlahBlah)"
+    `shouldParseReturnQuery` Return
+      False
+      (ReturnExpressions
+         [ ReturnFunctionWrappedPropertyWithArity
+             (Function "rTrim" [TextValue (UnboundText "BlahBlahBlah")])])
+  it "parses return clause with multi-arity function text"
+    $ "RETURN complexFunction(1,TRUE,3.4, Hi)"
+    `shouldParseReturnQuery` Return
+      False
+      (ReturnExpressions
+         [ ReturnFunctionWrappedPropertyWithArity
+             (Function
+                "complexFunction"
+                [ IntegerValue 1
+                , BooleanValue True
+                , DoubleValue 3.4
+                , TextValue (UnboundText "Hi")])])
   it "parses return clause capturing DISTINCT keyword as first parameter"
     $ "RETURN DISTINCT 'something', (a)-->()"
     `shouldParseReturnQuery` Return
