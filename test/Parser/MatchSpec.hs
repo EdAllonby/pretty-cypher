@@ -22,6 +22,7 @@ runParserMatchTests = describe "Parser.Match"
       $ do
         runParserOptionalMatchTests
 
+runParserMatchNodeTests :: Spec
 runParserMatchNodeTests = do
   it "parses match clause with node"
     $ "MATCH (per:Person)"
@@ -88,6 +89,7 @@ runParserMatchNodeTests = do
           Nothing
           [Node (AnyNode (UnboundText "n")) standardProperties]]
 
+runParserOptionalMatchTests :: Spec
 runParserOptionalMatchTests = do
   it "parses optional match clause with node"
     $ "OPTIONAL MATCH (per:Person)"
@@ -115,6 +117,7 @@ runParserOptionalMatchTests = do
           , ConnectorDirection RightDirection
           , Node EmptyNode M.empty]]
 
+runParserMatchRelationshipTests :: Spec
 runParserMatchRelationshipTests = do
   it "parses match clause with relationship"
     $ "MATCH [fo:FOLLOWS]"
@@ -263,6 +266,7 @@ runParserMatchRelationshipTests = do
               (Just (VariableHops 1 3))
               standardProperties]]
 
+runParserMatchRelationshipHopsTests :: Spec
 runParserMatchRelationshipHopsTests = do
   it "parses match clause with empty relationship and variable length hops"
     $ "MATCH [*2..4]"
@@ -300,6 +304,7 @@ runParserMatchRelationshipHopsTests = do
           Nothing
           [Relationship EmptyRelationship (Just AnyHops) M.empty]]
 
+runParserMatchDirectionTests :: Spec
 runParserMatchDirectionTests = do
   it "parses match clause with right directionality"
     $ "MATCH (p:Person)-[h:HAS]->(c:Car)"
@@ -362,6 +367,7 @@ runParserMatchDirectionTests = do
           , ConnectorDirection AnonymousNoDirection
           , Node carLabelledNode M.empty]]
 
+runParserMatchPatternTests :: Spec
 runParserMatchPatternTests = do
   it "parses match clause with erratic spacing"
     $ "MATCH  (   : Person{ name: ' D. A. V. E ' , age : 32 , height : 1.6 , delta : -10 , base  : -3.14 , today: true, tomorrow: false } )   -  [  h : HAS  ] -> (car :Car )"
@@ -456,5 +462,6 @@ personLabelledNode =
 carLabelledNode :: NodeType
 carLabelledNode = LabelledNode (Just (UnboundText "c")) [UnboundText "Car"]
 
+hasLabelledRelationship :: RelationshipType
 hasLabelledRelationship =
   LabelledRelationship (Just (UnboundText "h")) [UnboundText "HAS"]

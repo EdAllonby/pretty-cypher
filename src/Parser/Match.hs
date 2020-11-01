@@ -20,15 +20,16 @@ import           Data.Text (Text)
 import           Text.Megaparsec ((<|>), eof, sepBy1, optional, (<?>), choice
                                 , manyTill, MonadParsec(try, lookAhead))
 import qualified Data.Map as M
+import           Control.Monad (void)
 
 parseMatch :: Parser Clause
 parseMatch = do
-  keyword' "MATCH"
+  void (keyword' "MATCH")
   Match <$> commaSep parsePattern
 
 parseOptionalMatch :: Parser Clause
 parseOptionalMatch = do
-  keyword' "OPTIONAL MATCH"
+  void (keyword' "OPTIONAL MATCH")
   OptionalMatch <$> commaSep parsePattern
 
 parsePattern :: Parser Pattern

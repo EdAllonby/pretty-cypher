@@ -37,6 +37,9 @@ default-extensions:
   - DeriveDataTypeable
   - TupleSections
 
+ghc-options:
+- -Wall
+
 library:
   source-dirs: src
 

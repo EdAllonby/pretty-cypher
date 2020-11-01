@@ -19,6 +19,7 @@ runParserQueryTests = describe "Parser.Query"
         context "with complex query" runParserComplexQueryTests
         context "with error" runParserQueryErrorTests
 
+runParserComplexQueryTests :: Spec
 runParserComplexQueryTests = do
   it "parses match with optional match clause"
     $ [r|
@@ -124,6 +125,7 @@ RETURN *
                                   (NestedObject (UnboundText "c") ObjectEnd)
                                   Nothing])]
 
+runParserQueryErrorTests :: SpecWith ()
 runParserQueryErrorTests = do
   it "fails on invalid clause producing correct error message"
     $ "MARCH"

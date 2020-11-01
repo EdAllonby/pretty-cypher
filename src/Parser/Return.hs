@@ -5,10 +5,11 @@ import           Types (Clause(Return), ReturnValue(..), Object(..)
 import           Parser.ParserCore (commaSep, Parser, symbol', keyword'
                                   , parseLiteralText)
 import           Text.Megaparsec
+import           Control.Monad (void)
 
 parseReturn :: Parser Clause
 parseReturn = do
-  keyword' "RETURN"
+  void (keyword' "RETURN")
   Return <$> parseReturnValue
 
 parseReturnValue :: Parser ReturnValue

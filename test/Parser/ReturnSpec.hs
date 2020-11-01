@@ -14,6 +14,7 @@ runParserReturnTests = describe "Parser.Return"
       $ do
         context "with standard clause" runStandardParserReturnTests
 
+runStandardParserReturnTests :: Spec
 runStandardParserReturnTests = do
   it "parses return clause with all elements"
     $ "RETURN *" `shouldParseReturnQuery` Return ReturnAllElements
