@@ -129,6 +129,7 @@ runParserQueryErrorTests = do
     `shouldFailQuery` (utoks "MARCH"
                        <> elabel "match clause"
                        <> elabel "optional match clause"
+                       <> elabel "create clause"
                        <> elabel "return clause"
                        <> eeof)
 
