@@ -130,6 +130,8 @@ runParserQueryErrorTests = do
                        <> elabel "match clause"
                        <> elabel "optional match clause"
                        <> elabel "create clause"
+                       <> elabel "delete clause"
+                       <> elabel "detach delete clause"
                        <> elabel "return clause"
                        <> eeof)
 

@@ -94,6 +94,7 @@ data Clause =
     Match [MatchValue] -- TODO: Move this to a non-empty list data type?
   | OptionalMatch [MatchValue]
   | Create [Pattern]
+  | Delete { isDetached :: Bool, deleteValue :: [LiteralText] }-- TODO: Can also be literal text surrounded by brackets, i.e. Delete (n). Doesn't mean node.
   | Return { isDistinct :: Bool, returnValue :: ReturnValue }
   deriving (Data, Typeable, Eq, Show)
 
