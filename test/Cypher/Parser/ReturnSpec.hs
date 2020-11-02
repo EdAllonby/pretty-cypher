@@ -22,8 +22,7 @@ runStandardParserReturnTests = do
     `shouldParseReturnQuery` Return
       False
       (ReturnExpressions
-         [ ReturnProperty
-             (Property (NestedObject (UnboundText "n") ObjectEnd) Nothing)])
+         [ReturnProperty (Property (TextValue (UnboundText "n")) Nothing)])
   it "parses return clause with multiple properties"
     $ "RETURN a AS Alias1, b AS Alias2, c"
     `shouldParseReturnQuery` Return
@@ -31,14 +30,13 @@ runStandardParserReturnTests = do
       (ReturnExpressions
          [ ReturnProperty
              (Property
-                (NestedObject (UnboundText "a") ObjectEnd)
+                (TextValue (UnboundText "a"))
                 (Just (UnboundText "Alias1")))
          , ReturnProperty
              (Property
-                (NestedObject (UnboundText "b") ObjectEnd)
+                (TextValue (UnboundText "b"))
                 (Just (UnboundText "Alias2")))
-         , ReturnProperty
-             (Property (NestedObject (UnboundText "c") ObjectEnd) Nothing)])
+         , ReturnProperty (Property (TextValue (UnboundText "c")) Nothing)])
   it "parses return clause with nested properties"
     $ "RETURN a.b.c.d"
     `shouldParseReturnQuery` Return
@@ -46,13 +44,14 @@ runStandardParserReturnTests = do
       (ReturnExpressions
          [ ReturnProperty
              (Property
-                (NestedObject
-                   (UnboundText "a")
+                (ObjectValue
                    (NestedObject
-                      (UnboundText "b")
+                      (UnboundText "a")
                       (NestedObject
-                         (UnboundText "c")
-                         (NestedObject (UnboundText "d") ObjectEnd))))
+                         (UnboundText "b")
+                         (NestedObject
+                            (UnboundText "c")
+                            (NestedObject (UnboundText "d") ObjectEnd)))))
                 Nothing)])
   it "parses return clause with multiple nested properties"
     $ "RETURN a.b.c.d, e.f.g.h"
@@ -61,23 +60,25 @@ runStandardParserReturnTests = do
       (ReturnExpressions
          [ ReturnProperty
              (Property
-                (NestedObject
-                   (UnboundText "a")
+                (ObjectValue
                    (NestedObject
-                      (UnboundText "b")
+                      (UnboundText "a")
                       (NestedObject
-                         (UnboundText "c")
-                         (NestedObject (UnboundText "d") ObjectEnd))))
+                         (UnboundText "b")
+                         (NestedObject
+                            (UnboundText "c")
+                            (NestedObject (UnboundText "d") ObjectEnd)))))
                 Nothing)
          , ReturnProperty
              (Property
-                (NestedObject
-                   (UnboundText "e")
+                (ObjectValue
                    (NestedObject
-                      (UnboundText "f")
+                      (UnboundText "e")
                       (NestedObject
-                         (UnboundText "g")
-                         (NestedObject (UnboundText "h") ObjectEnd))))
+                         (UnboundText "f")
+                         (NestedObject
+                            (UnboundText "g")
+                            (NestedObject (UnboundText "h") ObjectEnd)))))
                 Nothing)])
   it "parses return clause with nested escaped properties"
     $ "RETURN `some object`.`@ n$st$d 0bject!`.unescapedText"
@@ -86,11 +87,12 @@ runStandardParserReturnTests = do
       (ReturnExpressions
          [ ReturnProperty
              (Property
-                (NestedObject
-                   (BacktickedText "some object")
+                (ObjectValue
                    (NestedObject
-                      (BacktickedText "@ n$st$d 0bject!")
-                      (NestedObject (UnboundText "unescapedText") ObjectEnd)))
+                      (BacktickedText "some object")
+                      (NestedObject
+                         (BacktickedText "@ n$st$d 0bject!")
+                         (NestedObject (UnboundText "unescapedText") ObjectEnd))))
                 Nothing)])
   it "parses return clause with aliased property"
     $ "RETURN n AS NumberOfEggs"
@@ -99,7 +101,7 @@ runStandardParserReturnTests = do
       (ReturnExpressions
          [ ReturnProperty
              (Property
-                (NestedObject (UnboundText "n") ObjectEnd)
+                (TextValue (UnboundText "n"))
                 (Just (UnboundText "NumberOfEggs")))])
   it "parses return clause with aliased literal property"
     $ "RETURN n AS `Number Of Eggs`"
@@ -108,7 +110,7 @@ runStandardParserReturnTests = do
       (ReturnExpressions
          [ ReturnProperty
              (Property
-                (NestedObject (UnboundText "n") ObjectEnd)
+                (TextValue (UnboundText "n"))
                 (Just (BacktickedText "Number Of Eggs")))])
   it
     "parses return clause with multiple nested properties and aliases and odd casing"
@@ -118,21 +120,23 @@ runStandardParserReturnTests = do
       (ReturnExpressions
          [ ReturnProperty
              (Property
-                (NestedObject
-                   (UnboundText "a")
+                (ObjectValue
                    (NestedObject
-                      (UnboundText "b")
+                      (UnboundText "a")
                       (NestedObject
-                         (BacktickedText "c$$")
-                         (NestedObject (UnboundText "d") ObjectEnd))))
+                         (UnboundText "b")
+                         (NestedObject
+                            (BacktickedText "c$$")
+                            (NestedObject (UnboundText "d") ObjectEnd)))))
                 (Just (UnboundText "ABCD")))
          , ReturnProperty
              (Property
-                (NestedObject
-                   (UnboundText "e")
+                (ObjectValue
                    (NestedObject
-                      (BacktickedText "f.g")
-                      (NestedObject (UnboundText "h") ObjectEnd)))
+                      (UnboundText "e")
+                      (NestedObject
+                         (BacktickedText "f.g")
+                         (NestedObject (UnboundText "h") ObjectEnd))))
                 (Just (UnboundText "EFGH")))])
   it "parses return clause with literal item in double quotes"
     $ "RETURN \"I'm a literal\""
@@ -140,9 +144,7 @@ runStandardParserReturnTests = do
       False
       (ReturnExpressions
          [ ReturnProperty
-             (Property
-                (NestedObject (QuotedText "I'm a literal") ObjectEnd)
-                Nothing)])
+             (Property (TextValue (QuotedText "I'm a literal")) Nothing)])
   it "parses return clause with pattern"
     $ "RETURN (a)-->()"
     `shouldParseReturnQuery` Return
@@ -196,15 +198,25 @@ runStandardParserReturnTests = do
                 , BooleanValue True
                 , DoubleValue 3.4
                 , TextValue (UnboundText "Hi")])])
+  it "parses return clause with function wrapped object"
+    $ "RETURN toInteger(person.age)"
+    `shouldParseReturnQuery` Return
+      False
+      (ReturnExpressions
+         [ ReturnFunctionWrappedPropertyWithArity
+             (Function
+                "toInteger"
+                [ ObjectValue
+                    (NestedObject
+                       (UnboundText "person")
+                       (NestedObject (UnboundText "age") ObjectEnd))])])
   it "parses return clause capturing DISTINCT keyword as first parameter"
     $ "RETURN DISTINCT 'something', (a)-->()"
     `shouldParseReturnQuery` Return
       True
       (ReturnExpressions
          [ ReturnProperty
-             (Property
-                (NestedObject (QuotedText "something") ObjectEnd)
-                Nothing)
+             (Property (TextValue (QuotedText "something")) Nothing)
          , ReturnPattern
              [ Node (AnyNode (UnboundText "a")) M.empty
              , ConnectorDirection AnonymousRightDirection

@@ -3,7 +3,7 @@
 -- See https://github.com/ennocramer/floskell/issues/39
 {-# LANGUAGE TupleSections #-}
 
-module Cypher.Parser.Pattern (parsePattern) where
+module Cypher.Parser.Pattern (parsePattern, parseProperty) where
 
 import           Cypher.Types (Pattern, PatternComponent(ConnectorDirection, Node, Relationship)
                              , RelationshipType(EmptyRelationship, LabelledRelationship,

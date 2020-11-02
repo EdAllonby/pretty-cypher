@@ -23,6 +23,7 @@ data PropertyValue = TextValue LiteralText
                    | IntegerValue Integer
                    | DoubleValue Double
                    | BooleanValue Bool
+                   | ObjectValue Object
   deriving (Data, Typeable, Eq, Show)
 
 type Properties = M.Map LiteralText PropertyValue
@@ -64,8 +65,9 @@ data Object = NestedObject LiteralText Object
             | ObjectEnd
   deriving (Data, Typeable, Eq, Show)
 
-data ReturnProperty =
-  Property { propertyObject :: Object, propertyAlias :: Maybe LiteralText }
+data ReturnProperty = Property { propertyValue :: PropertyValue
+                               , propertyAlias :: Maybe LiteralText
+                               }
   deriving (Data, Typeable, Eq, Show)
 
 data ReturnExpression =

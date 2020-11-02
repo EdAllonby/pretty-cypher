@@ -119,7 +119,7 @@ RETURN *
                            (ReturnExpressions
                               [ ReturnProperty
                                   (Property
-                                     (NestedObject (UnboundText "c") ObjectEnd)
+                                     (TextValue (UnboundText "c"))
                                      Nothing)])]
 
 runParserQueryErrorTests :: SpecWith ()

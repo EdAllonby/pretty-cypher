@@ -1,8 +1,7 @@
 module Cypher.Parser.Return (parseReturn) where
 
 import           Cypher.Types (Clause(Return), ReturnValue(..)
-                             , ReturnExpression(..), ReturnProperty(Property)
-                             , Object(..))
+                             , ReturnExpression(..), ReturnProperty(Property))
 import           Cypher.Parser.Pattern (parsePattern)
 import           Cypher.Parser.Core (parsePropertyValue, parseWrappedInFunction
                                    , commaSep, Parser, symbol', keyword'
@@ -34,10 +33,5 @@ parseReturnExpression = choice
   , ReturnProperty <$> parseReturnProperty]
 
 parseReturnProperty :: Parser ReturnProperty
-parseReturnProperty = Property <$> parseObject
+parseReturnProperty = Property <$> parsePropertyValue
   <*> optional (symbol' "AS" *> parseLiteralText)
-
-parseObject :: Parser Object
-parseObject = choice
-  [ try $ NestedObject <$> (parseLiteralText <* symbol' ".") <*> parseObject
-  , NestedObject <$> parseLiteralText <*> return ObjectEnd]

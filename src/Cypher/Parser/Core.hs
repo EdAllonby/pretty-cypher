@@ -28,8 +28,9 @@ import           Text.Megaparsec.Char (latin1Char, char, alphaNumChar, space1
                                      , string')
 import qualified Text.Megaparsec.Char.Lexer as L
 import qualified Data.Text as T
-import           Cypher.Types (Function(Function), PropertyValue(..)
+import           Cypher.Types (Object(..), Function(Function), PropertyValue(..)
                              , LiteralText(..))
+import           Control.Monad (void)
 
 type Parser = Parsec Void Text
 
@@ -99,9 +100,18 @@ parseWrappedInFunction :: Parser a -> Parser (Function a)
 parseWrappedInFunction
   wrappedParser = Function <$> parseText <*> parens wrappedParser
 
+parseObject :: Parser Object
+parseObject = choice
+  [ try $ NestedObject <$> (parseLiteralText <* symbol' ".") <*> parseObject
+  , NestedObject <$> parseLiteralText <*> return ObjectEnd]
+
+hasObjectNesting :: Parser ()
+hasObjectNesting = void $ lookAhead (parseLiteralText <* symbol' ".")
+
 parsePropertyValue :: Parser PropertyValue
 parsePropertyValue = choice
   [ DoubleValue <$> try signedDouble -- TODO: Not too sure why this one needs a try, shouldn't it be atomic? Investigate
   , IntegerValue <$> signedInteger
   , BooleanValue <$> boolean
+  , ObjectValue <$> try (hasObjectNesting *> parseObject)
   , TextValue <$> parseLiteralText]
