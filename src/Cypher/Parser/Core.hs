@@ -18,7 +18,8 @@ module Cypher.Parser.Core
     , commaSep
     , parseLiteralText
     , parseWrappedInFunction
-    , parsePropertyValue) where
+    , parsePropertyValue
+    , parseClause) where
 
 import           Data.Text (Text)
 import           Data.Void (Void)
@@ -115,3 +116,6 @@ parsePropertyValue = choice
   , BooleanValue <$> boolean
   , ObjectValue <$> try (hasObjectNesting *> parseObject)
   , TextValue <$> parseLiteralText]
+
+parseClause :: Text -> Parser a -> Parser a
+parseClause = (*>) . keyword'

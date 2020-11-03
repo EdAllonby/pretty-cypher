@@ -3,17 +3,15 @@ module Cypher.Parser.Return (parseReturn) where
 import           Cypher.Types (Clause(Return), ReturnValue(..)
                              , ReturnExpression(..), ReturnProperty(Property))
 import           Cypher.Parser.Pattern (parsePattern)
-import           Cypher.Parser.Core (parsePropertyValue, parseWrappedInFunction
-                                   , commaSep, Parser, symbol', keyword'
-                                   , parseLiteralText)
+import           Cypher.Parser.Core (parseClause, parsePropertyValue
+                                   , parseWrappedInFunction, commaSep, Parser
+                                   , symbol', parseLiteralText)
 import           Text.Megaparsec (optional, choice, MonadParsec(try))
-import           Control.Monad (void)
 import           Data.Maybe (isJust)
 
 parseReturn :: Parser Clause
-parseReturn = do
-  void (keyword' "RETURN")
-  Return <$> parseHasDistinct <*> parseReturnValue
+parseReturn =
+  parseClause "RETURN" (Return <$> parseHasDistinct <*> parseReturnValue)
 
 parseHasDistinct :: Parser Bool
 parseHasDistinct = isJust <$> (optional . symbol' $ "DISTINCT")

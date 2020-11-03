@@ -1,19 +1,15 @@
 module Cypher.Parser.Delete where
 
 import           Cypher.Types (LiteralText, Clause(DetachDelete, Delete))
-import           Cypher.Parser.Core (parseLiteralText, Parser, keyword'
+import           Cypher.Parser.Core (parseClause, parseLiteralText, Parser
                                    , commaSep)
-import           Control.Monad (void)
 
 parseDelete :: Parser Clause
-parseDelete = do
-  void (keyword' "DELETE")
-  Delete <$> parseLiteralTexts
+parseDelete = parseClause "DELETE" (Delete <$> parseLiteralTexts)
 
 parseDetachedDelete :: Parser Clause
-parseDetachedDelete = do
-  void (keyword' "DETACH DELETE")
-  DetachDelete <$> parseLiteralTexts
+parseDetachedDelete =
+  parseClause "DETACH DELETE" (DetachDelete <$> parseLiteralTexts)
 
 parseLiteralTexts :: Parser [LiteralText]
 parseLiteralTexts = commaSep parseLiteralText
