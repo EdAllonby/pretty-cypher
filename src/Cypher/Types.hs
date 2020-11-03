@@ -35,24 +35,17 @@ data RelationshipHops = VariableHops Integer Integer
                       | AnyHops
   deriving (Data, Typeable, Eq, Show)
 
-data NodeType = LabelledNode { labelledNodeVariable :: Maybe LiteralText
-                             , labelledNodeLabels :: [LiteralText]
-                             }
-              | AnyNode { anyNodeVariable :: LiteralText }
-              | EmptyNode
-  deriving (Data, Typeable, Eq, Show)
-
-data RelationshipType =
-    LabelledRelationship { labelledRelationshipVariable :: Maybe LiteralText
-                         , labelledRelationshipLabel :: [LiteralText]
-                         }
-  | AnyRelationship { anyRelationshipVariable :: LiteralText }
-  | EmptyRelationship
+data PatternComponentType =
+    LabelledPatternComponentType { labelledVariable :: Maybe LiteralText
+                                 , labelledLabels :: [LiteralText]
+                                 }
+  | AnyPatternComponentType { anyVariable :: LiteralText }
+  | EmptyPatternComponentType
   deriving (Data, Typeable, Eq, Show)
 
 data PatternComponent =
-    Node NodeType Properties
-  | Relationship RelationshipType (Maybe RelationshipHops) Properties
+    Node PatternComponentType Properties
+  | Relationship PatternComponentType (Maybe RelationshipHops) Properties
   | ConnectorDirection ConnectorDirection
   deriving (Data, Typeable, Eq, Show)
 

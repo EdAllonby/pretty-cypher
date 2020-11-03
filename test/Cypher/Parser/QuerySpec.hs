@@ -31,7 +31,7 @@ RETURN *
                            [ MatchPattern
                                Nothing
                                [ Node
-                                   (LabelledNode
+                                   (LabelledPatternComponentType
                                       (Just (UnboundText "a"))
                                       [UnboundText "Movie"])
                                    (M.fromList
@@ -41,16 +41,18 @@ RETURN *
                        , OptionalMatch
                            [ MatchPattern
                                Nothing
-                               [ Node (AnyNode (UnboundText "a")) M.empty
+                               [ Node
+                                   (AnyPatternComponentType (UnboundText "a"))
+                                   M.empty
                                , ConnectorDirection NoDirection
                                , Relationship
-                                   (LabelledRelationship
+                                   (LabelledPatternComponentType
                                       (Just (UnboundText "r"))
                                       [UnboundText "ACTS_IN"])
                                    Nothing
                                    M.empty
                                , ConnectorDirection RightDirection
-                               , Node EmptyNode M.empty]]
+                               , Node EmptyPatternComponentType M.empty]]
                        , Return False ReturnAllElements]
   it "parses query with erratic spacing"
     $ "  MATCH  (   : Person{ name: ' D. A. V. E ' , age : 32 , height : 1.6 , delta : -10 , base  : -3.14  } )   -  [  o : OWNS  ] -> (car :Car )   RETURN  *   "
@@ -58,7 +60,9 @@ RETURN *
                            [ MatchPattern
                                Nothing
                                [ Node
-                                   (LabelledNode Nothing [UnboundText "Person"])
+                                   (LabelledPatternComponentType
+                                      Nothing
+                                      [UnboundText "Person"])
                                    (M.fromList
                                       [ (UnboundText "age", IntegerValue 32)
                                       , ( UnboundText "base"
@@ -71,14 +75,14 @@ RETURN *
                                             (QuotedText " D. A. V. E "))])
                                , ConnectorDirection NoDirection
                                , Relationship
-                                   (LabelledRelationship
+                                   (LabelledPatternComponentType
                                       (Just (UnboundText "o"))
                                       [UnboundText "OWNS"])
                                    Nothing
                                    M.empty
                                , ConnectorDirection RightDirection
                                , Node
-                                   (LabelledNode
+                                   (LabelledPatternComponentType
                                       (Just (UnboundText "car"))
                                       [UnboundText "Car"])
                                    M.empty]]
@@ -89,20 +93,20 @@ RETURN *
                            [ MatchPattern
                                Nothing
                                [ Node
-                                   (LabelledNode
+                                   (LabelledPatternComponentType
                                       (Just (UnboundText "p"))
                                       [UnboundText "Person"])
                                    M.empty
                                , ConnectorDirection NoDirection
                                , Relationship
-                                   (LabelledRelationship
+                                   (LabelledPatternComponentType
                                       Nothing
                                       [UnboundText "HAS"])
                                    Nothing
                                    M.empty
                                , ConnectorDirection RightDirection
                                , Node
-                                   (LabelledNode
+                                   (LabelledPatternComponentType
                                       (Just (UnboundText "c"))
                                       [UnboundText "Car"])
                                    M.empty]]
@@ -110,7 +114,7 @@ RETURN *
                            [ MatchPattern
                                Nothing
                                [ Node
-                                   (LabelledNode
+                                   (LabelledPatternComponentType
                                       (Just (UnboundText "cat"))
                                       [UnboundText "Cat"])
                                    M.empty]]

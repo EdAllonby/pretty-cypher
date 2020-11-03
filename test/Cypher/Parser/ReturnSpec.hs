@@ -151,9 +151,9 @@ runStandardParserReturnTests = do
       False
       (ReturnExpressions
          [ ReturnPattern
-             [ Node (AnyNode (UnboundText "a")) M.empty
+             [ Node (AnyPatternComponentType (UnboundText "a")) M.empty
              , ConnectorDirection AnonymousRightDirection
-             , Node EmptyNode M.empty]])
+             , Node EmptyPatternComponentType M.empty]])
   it "parses return clause with function wrapped pattern"
     $ "RETURN count((a)-->())"
     `shouldParseReturnQuery` Return
@@ -162,9 +162,9 @@ runStandardParserReturnTests = do
          [ ReturnFunctionWrappedPattern
              (Function
                 "count"
-                [ Node (AnyNode (UnboundText "a")) M.empty
+                [ Node (AnyPatternComponentType (UnboundText "a")) M.empty
                 , ConnectorDirection AnonymousRightDirection
-                , Node EmptyNode M.empty])])
+                , Node EmptyPatternComponentType M.empty])])
   it "parses return clause with function wrapped double"
     $ "RETURN float(0.9)"
     `shouldParseReturnQuery` Return
@@ -218,9 +218,9 @@ runStandardParserReturnTests = do
          [ ReturnProperty
              (Property (TextValue (QuotedText "something")) Nothing)
          , ReturnPattern
-             [ Node (AnyNode (UnboundText "a")) M.empty
+             [ Node (AnyPatternComponentType (UnboundText "a")) M.empty
              , ConnectorDirection AnonymousRightDirection
-             , Node EmptyNode M.empty]])
+             , Node EmptyPatternComponentType M.empty]])
 
 shouldParseReturnQuery :: Text -> Clause -> Expectation
 shouldParseReturnQuery query expectedResult =

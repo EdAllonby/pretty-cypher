@@ -34,7 +34,7 @@ runQuasiQuoteTests = describe "Cypher.QuasiQuote"
                              [ MatchPattern
                                  Nothing
                                  [ Node
-                                     (LabelledNode
+                                     (LabelledPatternComponentType
                                         (Just (UnboundText "per"))
                                         [UnboundText "Person"])
                                      (M.fromList

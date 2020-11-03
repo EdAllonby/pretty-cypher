@@ -6,11 +6,10 @@
 module Cypher.Parser.Pattern (parsePattern, parseProperty) where
 
 import           Cypher.Types (Pattern, PatternComponent(ConnectorDirection, Node, Relationship)
-                             , RelationshipType(EmptyRelationship, LabelledRelationship,
-                 AnyRelationship)
-                             , NodeType(EmptyNode, LabelledNode, AnyNode)
-                             , RelationshipHops(..), PropertyValue(..)
-                             , ConnectorDirection(..), LiteralText)
+                             , RelationshipHops(..), PropertyValue
+                             , ConnectorDirection(..), LiteralText
+                             , PatternComponentType(EmptyPatternComponentType,
+                     LabelledPatternComponentType, AnyPatternComponentType))
 import           Cypher.Parser.Core (parsePropertyValue, parseLiteralText
                                    , integer, Parser, symbol, keyword', parens
                                    , brackets, curlyBrackets, commaSep)
@@ -37,21 +36,21 @@ parsePattern = manyTill
      , () <$ symbol ")"
      , eof]) -- TODO: Really don't want to have this EOF, but we have it here otherwise we need to add RETURN statements to tests. Is there another option?
 
-parseNodeType :: Parser NodeType
+parseNodeType :: Parser PatternComponentType
 parseNodeType = choice
   [ try
-      $ LabelledNode <$> optional parseLiteralText
+      $ LabelledPatternComponentType <$> optional parseLiteralText
       <*> (symbol ":" *> parseLiteralText `sepBy1` symbol ":")
-  , AnyNode <$> parseLiteralText
-  , EmptyNode <$ symbol ""]
+  , AnyPatternComponentType <$> parseLiteralText
+  , EmptyPatternComponentType <$ symbol ""]
 
-parseRelationshipType :: Parser RelationshipType
+parseRelationshipType :: Parser PatternComponentType
 parseRelationshipType = choice
   [ try
-      $ LabelledRelationship <$> optional parseLiteralText
+      $ LabelledPatternComponentType <$> optional parseLiteralText
       <*> (symbol ":" *> parseLiteralText `sepBy1` (symbol "|:" <|> symbol "|"))
-  , AnyRelationship <$> parseLiteralText
-  , EmptyRelationship <$ symbol ""]
+  , AnyPatternComponentType <$> parseLiteralText
+  , EmptyPatternComponentType <$ symbol ""]
 
 parseRelationshipHops :: Parser RelationshipHops
 parseRelationshipHops = symbol "*"

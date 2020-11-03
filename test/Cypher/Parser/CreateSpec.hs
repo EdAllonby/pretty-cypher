@@ -1,7 +1,8 @@
 module Cypher.Parser.CreateSpec (runParserCreateTests) where
 
 import           Cypher.Types (Clause(Create), LiteralText(UnboundText)
-                             , NodeType(LabelledNode), PatternComponent(Node))
+                             , PatternComponent(Node)
+                             , PatternComponentType(LabelledPatternComponentType))
 import           Test.Hspec (describe, it, SpecWith, Expectation)
 import           Test.Hspec.Megaparsec (shouldParse)
 import           Text.Megaparsec (parse)
@@ -20,13 +21,15 @@ runParserCreateTests = describe "Cypher.Parser.Create"
       `shouldParseCreateQuery` Create
         [ [Node personLabelledNode M.empty]
         , [ Node
-              (LabelledNode (Just (UnboundText "m")) [UnboundText "Movie"])
+              (LabelledPatternComponentType
+                 (Just (UnboundText "m"))
+                 [UnboundText "Movie"])
               M.empty]]
 
 shouldParseCreateQuery :: Text -> Clause -> Expectation
 shouldParseCreateQuery query expectedResult =
   parse parseCreate "" query `shouldParse` expectedResult
 
-personLabelledNode :: NodeType
+personLabelledNode :: PatternComponentType
 personLabelledNode =
-  LabelledNode (Just (UnboundText "p")) [UnboundText "Person"]
+  LabelledPatternComponentType (Just (UnboundText "p")) [UnboundText "Person"]
