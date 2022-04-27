@@ -1,5 +1,3 @@
-{-# LANGUAGE QuasiQuotes #-}
-
 module Cypher.QuasiQuoteSpec (runQuasiQuoteTests) where
 
 import Cypher.QuasiQuote (cypher)

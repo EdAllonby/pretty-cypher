@@ -1,5 +1,3 @@
-{-# LANGUAGE QuasiQuotes #-}
-
 module Cypher.Parser.QuerySpec (runParserQueryTests) where
 
 import Cypher.Parser.Query

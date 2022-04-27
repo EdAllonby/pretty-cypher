@@ -1,8 +1,3 @@
--- TODO: HLS / Floskell doesn't seem to respect the default-extensions in package.yaml.
--- Need to explicitely provide this at the top of file.
--- See https://github.com/ennocramer/floskell/issues/39
-{-# LANGUAGE TupleSections #-}
-
 module Cypher.Parser.Pattern (parsePattern, parseProperty) where
 
 import Cypher.Parser.Core
