@@ -1,8 +1,12 @@
 module Cypher.Parser.Delete where
 
-import           Cypher.Types (LiteralText, Clause(DetachDelete, Delete))
-import           Cypher.Parser.Core (parseClause, parseLiteralText, Parser
-                                   , commaSep)
+import Cypher.Parser.Core
+  ( Parser,
+    commaSep,
+    parseClause,
+    parseLiteralText,
+  )
+import Cypher.Types (Clause (Delete, DetachDelete), LiteralText)
 
 parseDelete :: Parser Clause
 parseDelete = parseClause "DELETE" (Delete <$> parseLiteralTexts)

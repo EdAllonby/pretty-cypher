@@ -1,14 +1,14 @@
-name:                pretty-cypher
-version:             0.1.0.0
-github:              "EdAllonby/pretty-cypher"
-license:             BSD3
-author:              "Ed Allonby"
-maintainer:          "edward.allonby@gmail.com"
-copyright:           "2020 Ed Allonby"
+name: pretty-cypher
+version: 0.1.0.0
+github: "EdAllonby/pretty-cypher"
+license: BSD3
+author: "Ed Allonby"
+maintainer: "edward.allonby@gmail.com"
+copyright: "2020 Ed Allonby"
 
 extra-source-files:
-- README.md
-- ChangeLog.md
+  - README.md
+  - ChangeLog.md
 
 # Metadata used when publishing your package
 # synopsis:            Short description of your package
@@ -17,51 +17,50 @@ extra-source-files:
 # To avoid duplicated efforts in documentation and dealing with the
 # complications of embedding Haddock markup inside cabal files, it is
 # common to point users to the README.md file.
-description:         Please see the README on GitHub at <https://github.com/EdAllonby/pretty-cypher#readme>
+description: Please see the README on GitHub at <https://github.com/EdAllonby/pretty-cypher#readme>
 
 dependencies:
-- base >= 4.7 && < 5
-- megaparsec
-- text
-- hspec
-- hspec-megaparsec
-- containers
-- parser-combinators
-- template-haskell
+  - base >= 4.7 && < 5
+  - megaparsec
+  - text
+  - hspec
+  - hspec-megaparsec
+  - containers
+  - parser-combinators
+  - template-haskell
 
 default-extensions:
+  - GHC2021
   - OverloadedStrings
   - RecordWildCards
   - TemplateHaskell
   - QuasiQuotes
-  - DeriveDataTypeable
-  - TupleSections
 
 ghc-options:
-- -Wall
+  - -Wall
 
 library:
   source-dirs: src
 
 executables:
   pretty-cypher-exe:
-    main:                Main.hs
-    source-dirs:         app
+    main: Main.hs
+    source-dirs: app
     ghc-options:
-    - -threaded
-    - -rtsopts
-    - -with-rtsopts=-N
+      - -threaded
+      - -rtsopts
+      - -with-rtsopts=-N
     dependencies:
-    - pretty-cypher
+      - pretty-cypher
 
 tests:
   pretty-cypher-test:
-    main:                Spec.hs
-    source-dirs:         test
+    main: Spec.hs
+    source-dirs: test
     ghc-options:
-    - -threaded
-    - -rtsopts
-    - -with-rtsopts=-N
+      - -threaded
+      - -rtsopts
+      - -with-rtsopts=-N
     dependencies:
-    - pretty-cypher
-    - raw-strings-qq 
+      - pretty-cypher
+      - raw-strings-qq

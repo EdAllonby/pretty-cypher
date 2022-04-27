@@ -1,10 +1,10 @@
 cabal-version: 1.12
 
--- This file has been generated from package.yaml by hpack version 0.33.0.
+-- This file has been generated from package.yaml by hpack version 0.34.4.
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 71eac8728f1c1504bc7c48cfd126f62815250b617ed90fd5c6c98823ae558391
+-- hash: b6229e38f3bead4484cf5b41a531c57a594286d63dba9b818e7a8102f6f7102e
 
 name:           pretty-cypher
 version:        0.1.0.0
@@ -40,7 +40,12 @@ library
       Paths_pretty_cypher
   hs-source-dirs:
       src
-  default-extensions: OverloadedStrings RecordWildCards TemplateHaskell QuasiQuotes DeriveDataTypeable TupleSections
+  default-extensions:
+      GHC2021
+      OverloadedStrings
+      RecordWildCards
+      TemplateHaskell
+      QuasiQuotes
   ghc-options: -Wall
   build-depends:
       base >=4.7 && <5
@@ -59,7 +64,12 @@ executable pretty-cypher-exe
       Paths_pretty_cypher
   hs-source-dirs:
       app
-  default-extensions: OverloadedStrings RecordWildCards TemplateHaskell QuasiQuotes DeriveDataTypeable TupleSections
+  default-extensions:
+      GHC2021
+      OverloadedStrings
+      RecordWildCards
+      TemplateHaskell
+      QuasiQuotes
   ghc-options: -Wall -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       base >=4.7 && <5
@@ -87,7 +97,12 @@ test-suite pretty-cypher-test
       Paths_pretty_cypher
   hs-source-dirs:
       test
-  default-extensions: OverloadedStrings RecordWildCards TemplateHaskell QuasiQuotes DeriveDataTypeable TupleSections
+  default-extensions:
+      GHC2021
+      OverloadedStrings
+      RecordWildCards
+      TemplateHaskell
+      QuasiQuotes
   ghc-options: -Wall -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       base >=4.7 && <5
