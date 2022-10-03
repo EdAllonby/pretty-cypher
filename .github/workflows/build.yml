@@ -1,15 +1,18 @@
 on: [push]
 name: build
 jobs:
-  runhaskell:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
     name: pretty-cypher
-    runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: haskell/actions/setup@v1
+      - uses: actions/checkout@v3
+      - uses: haskell/actions/setup@v2
         with:
-          ghc-version: 'latest'
+          ghc-version: "latest"
           enable-stack: true
-          stack-version: 'latest'
+          stack-version: "latest"
       - run: stack build
       - run: stack test
