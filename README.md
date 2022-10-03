@@ -6,6 +6,10 @@ This is currently a Neo4j Cypher language parser written in Haskell. This will e
 
 It currently supports a small subset of cypher language parsing, along with a rudimentary quasiquoter.
 
+## Dev
+
+Run tests with `stack test`
+
 ## Features 
 
 ### Parsing
