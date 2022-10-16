@@ -94,6 +94,7 @@ data MatchValue
 data Clause
   = Match [MatchValue] -- TODO: Move this to a non-empty list data type?
   | OptionalMatch [MatchValue]
+  | With [LiteralText]
   | Create [Pattern]
   | Delete [LiteralText] -- TODO: Can also be literal text surrounded by brackets, i.e. Delete (n). Doesn't mean node.
   | DetachDelete [LiteralText]

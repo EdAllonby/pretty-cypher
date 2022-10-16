@@ -23,6 +23,7 @@ runParserComplexQueryTests = do
     [r|
 MATCH (a:Movie { title: 'Wall Street' })
 OPTIONAL MATCH (a)-[r:ACTS_IN]->()
+WITH a
 RETURN *
     |]
       `shouldParseQuery` [ Match
@@ -60,6 +61,7 @@ RETURN *
                                    Node EmptyPatternComponentType M.empty
                                  ]
                              ],
+                           With [UnboundText "a"],
                            Return False ReturnAllElements
                          ]
   it "parses query with erratic spacing" $
@@ -163,6 +165,7 @@ runParserQueryErrorTests = do
     "MARCH"
       `shouldFailQuery` ( utoks "MARCH"
                             <> elabel "match clause"
+                            <> elabel "with clause"
                             <> elabel "optional match clause"
                             <> elabel "create clause"
                             <> elabel "delete clause"

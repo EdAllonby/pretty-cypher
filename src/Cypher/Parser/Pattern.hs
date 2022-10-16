@@ -43,7 +43,8 @@ parsePattern =
     ( choice
         [ parens (Node <$> parseNodeType <*> parseProperties) <?> "valid node",
           brackets
-            ( Relationship <$> parseRelationshipType
+            ( Relationship
+                <$> parseRelationshipType
                 <*> optional parseRelationshipHops
                 <*> parseProperties
             )
@@ -56,6 +57,7 @@ parsePattern =
         [ () <$ keyword' "RETURN",
           () <$ keyword' "MATCH",
           () <$ keyword' "OPTIONAL MATCH",
+          () <$ keyword' "WITH",
           () <$ symbol ",",
           () <$ symbol ")",
           eof -- TODO: Really don't want to have this EOF, but we have it here otherwise we need to add RETURN statements to tests. Is there another option?
@@ -66,7 +68,8 @@ parseNodeType :: Parser PatternComponentType
 parseNodeType =
   choice
     [ try $
-        LabelledPatternComponentType <$> optional parseLiteralText
+        LabelledPatternComponentType
+          <$> optional parseLiteralText
           <*> (symbol ":" *> parseLiteralText `sepBy1` symbol ":"),
       AnyPatternComponentType <$> parseLiteralText,
       EmptyPatternComponentType <$ symbol ""
@@ -76,7 +79,8 @@ parseRelationshipType :: Parser PatternComponentType
 parseRelationshipType =
   choice
     [ try $
-        LabelledPatternComponentType <$> optional parseLiteralText
+        LabelledPatternComponentType
+          <$> optional parseLiteralText
           <*> (symbol ":" *> parseLiteralText `sepBy1` (symbol "|:" <|> symbol "|")),
       AnyPatternComponentType <$> parseLiteralText,
       EmptyPatternComponentType <$ symbol ""

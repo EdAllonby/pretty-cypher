@@ -4,6 +4,7 @@ import Cypher.Parser.MatchSpec (runParserMatchTests)
 import Cypher.Parser.PatternSpec (runParserPatternTests)
 import Cypher.Parser.QuerySpec (runParserQueryTests)
 import Cypher.Parser.ReturnSpec (runParserReturnTests)
+import Cypher.Parser.WithSpec (runParserWithTests)
 import Cypher.QuasiQuoteSpec (runQuasiQuoteTests)
 import Test.Hspec (hspec)
 
@@ -16,4 +17,5 @@ main = hspec $
     runParserCreateTests
     runParserDeleteTests
     runParserReturnTests
+    runParserWithTests
     runQuasiQuoteTests

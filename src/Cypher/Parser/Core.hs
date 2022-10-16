@@ -17,6 +17,7 @@ module Cypher.Parser.Core
     signedDouble,
     commaSep,
     parseLiteralText,
+    parseLiteralTexts,
     parseWrappedInFunction,
     parsePropertyValue,
     parseClause,
@@ -121,6 +122,9 @@ parseLiteralText =
       UnboundText <$> parseSnakeCaseText, -- TODO: It doesn't really matter if this is snake case, we need a more general text parser.
       UnboundText <$> parseText
     ]
+
+parseLiteralTexts :: Parser [LiteralText]
+parseLiteralTexts = commaSep parseLiteralText
 
 parseWrappedInFunction :: Parser a -> Parser (Function a)
 parseWrappedInFunction
