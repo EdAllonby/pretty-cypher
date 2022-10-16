@@ -14,7 +14,21 @@ Run tests with `stack test`
 
 ### Parsing
 
-* Match Clause parsing
+* Match and optional match clause parsing
+* Create clause parsing
+* Delete and detached delete clause parsing
+* With clause parsing
+* Return clause parsing
+
+For example, it is currently possible to parse the following cypher query into the DSL:
+
+```cypher
+MATCH (a:Movie { title: 'Wall Street' })
+OPTIONAL MATCH (a)-[r:ACTS_IN]->()
+WITH *, count(r) as roles_count
+DELETE a
+RETURN *
+```
 
 ### Quasiquotes
 

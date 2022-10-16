@@ -23,7 +23,7 @@ runParserComplexQueryTests = do
     [r|
 MATCH (a:Movie { title: 'Wall Street' })
 OPTIONAL MATCH (a)-[r:ACTS_IN]->()
-WITH a
+WITH *, count(r) as roles_count
 DELETE a
 RETURN *
     |]
@@ -63,11 +63,13 @@ RETURN *
                                  ]
                              ],
                            With
-                             [ WithProperty
-                                 Property
-                                   { propertyValue = TextValue (UnboundText "a"),
-                                     propertyAlias = Nothing
-                                   }
+                             [ WithWildcard,
+                               WithFunctionWrappedProperty
+                                 ( Function
+                                     "count"
+                                     (Property (TextValue (UnboundText "r")) Nothing)
+                                     (Just (UnboundText "roles_count"))
+                                 )
                              ],
                            Delete [UnboundText "a"],
                            Return False ReturnAllElements
