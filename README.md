@@ -36,4 +36,4 @@ RETURN *
 
 ### Todo
 
-See our [project board](https://github.com/EdAllonby/pretty-cypher/projects/1) for items to do.
+See our [project board](https://github.com/users/EdAllonby/projects/2) for items to do.
