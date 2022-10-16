@@ -35,7 +35,8 @@ runParserWithTests = describe "Cypher.Parser.With" $
                       Property
                         { propertyValue = ObjectValue (NestedObject (UnboundText "otherPerson") (NestedObject (UnboundText "name") ObjectEnd)),
                           propertyAlias = Nothing
-                        }
+                        },
+                    functionAlias = Nothing
                   }
               )
           ]
@@ -54,7 +55,8 @@ runParserWithTests = describe "Cypher.Parser.With" $
                       Property
                         { propertyValue = ObjectValue (NestedObject (UnboundText "otherPerson") (NestedObject (UnboundText "name") ObjectEnd)),
                           propertyAlias = Nothing
-                        }
+                        },
+                    functionAlias = Just (UnboundText "upperCaseName")
                   }
               )
           ]

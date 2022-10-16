@@ -93,6 +93,7 @@ runParserMatchTests = describe "Cypher.Parser.Match" $
                       )
                       M.empty
                   ]
+                  Nothing
               )
           ]
     it "parses pattern with pattern variable wrapped in a function" $
@@ -113,6 +114,7 @@ runParserMatchTests = describe "Cypher.Parser.Match" $
                       )
                       M.empty
                   ]
+                  Nothing
               )
           ]
 

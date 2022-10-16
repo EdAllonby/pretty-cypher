@@ -131,7 +131,7 @@ parseLiteralTexts = commaSep parseLiteralText
 
 parseWrappedInFunction :: Parser a -> Parser (Function a)
 parseWrappedInFunction
-  wrappedParser = Function <$> parseText <*> parens wrappedParser
+  wrappedParser = Function <$> parseText <*> parens wrappedParser <*> parseAlias
 
 parseObject :: Parser Object
 parseObject =
@@ -160,4 +160,7 @@ parseProperty :: Parser Property
 parseProperty =
   Property
     <$> parsePropertyValue
-    <*> optional (symbol' "AS" *> parseLiteralText)
+    <*> parseAlias
+
+parseAlias :: Parser (Maybe LiteralText)
+parseAlias = optional (symbol' "AS" *> parseLiteralText)

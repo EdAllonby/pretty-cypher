@@ -52,7 +52,11 @@ data PatternComponent
   | ConnectorDirection ConnectorDirection
   deriving (Data, Typeable, Eq, Show)
 
-data Function a = Function {functionName :: Text, functionContents :: a}
+data Function a = Function
+  { functionName :: Text,
+    functionContents :: a,
+    functionAlias :: Maybe LiteralText
+  }
   deriving (Data, Typeable, Eq, Show)
 
 type Pattern = [PatternComponent]

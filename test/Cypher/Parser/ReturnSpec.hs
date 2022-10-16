@@ -219,6 +219,7 @@ runStandardParserReturnTests = do
                       ConnectorDirection AnonymousRightDirection,
                       Node EmptyPatternComponentType M.empty
                     ]
+                    Nothing
                 )
             ]
         )
@@ -228,7 +229,7 @@ runStandardParserReturnTests = do
         False
         ( ReturnExpressions
             [ ReturnFunctionWrappedPropertyWithArity
-                (Function "float" [DoubleValue 0.9])
+                (Function "float" [DoubleValue 0.9] Nothing)
             ]
         )
   it "parses return clause with function wrapped integer" $
@@ -237,7 +238,7 @@ runStandardParserReturnTests = do
         False
         ( ReturnExpressions
             [ ReturnFunctionWrappedPropertyWithArity
-                (Function "toFloat" [IntegerValue 3])
+                (Function "toFloat" [IntegerValue 3] Nothing)
             ]
         )
   it "parses return clause with function wrapped text" $
@@ -246,7 +247,7 @@ runStandardParserReturnTests = do
         False
         ( ReturnExpressions
             [ ReturnFunctionWrappedPropertyWithArity
-                (Function "rTrim" [TextValue (UnboundText "BlahBlahBlah")])
+                (Function "rTrim" [TextValue (UnboundText "BlahBlahBlah")] Nothing)
             ]
         )
   it "parses return clause with multi-arity function text" $
@@ -262,6 +263,7 @@ runStandardParserReturnTests = do
                       DoubleValue 3.4,
                       TextValue (UnboundText "Hi")
                     ]
+                    Nothing
                 )
             ]
         )
@@ -279,6 +281,7 @@ runStandardParserReturnTests = do
                             (NestedObject (UnboundText "age") ObjectEnd)
                         )
                     ]
+                    Nothing
                 )
             ]
         )
