@@ -60,6 +60,17 @@ runParserWithTests = describe "Cypher.Parser.With" $
                   (Just (UnboundText "foaf"))
               )
           ]
+    it "parses wildcard and other functions" $
+      "WITH *, type(r) AS connectionType"
+        `shouldParseWithQuery` With
+          [ WithWildcard,
+            WithFunctionWrappedProperty
+              ( Function
+                  "type"
+                  (Property (TextValue (UnboundText "r")) Nothing)
+                  (Just (UnboundText "connectionType"))
+              )
+          ]
 
 shouldParseWithQuery :: Text -> Clause -> Expectation
 shouldParseWithQuery query expectedResult =
