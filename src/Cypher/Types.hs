@@ -91,7 +91,11 @@ data MatchValue
       }
   deriving (Data, Typeable, Eq, Show)
 
-data WithValue = WithWildcard | WithProperty Property deriving (Data, Typeable, Eq, Show)
+data WithValue
+  = WithWildcard
+  | WithProperty Property
+  | WithFunctionWrappedProperty (Function Property)
+  deriving (Data, Typeable, Eq, Show)
 
 data Clause
   = Match [MatchValue] -- TODO: Move this to a non-empty list data type?

@@ -25,6 +25,39 @@ runParserWithTests = describe "Cypher.Parser.With" $
           [ WithProperty (Property (TextValue (UnboundText "a")) Nothing),
             WithProperty (Property (TextValue (BacktickedText "b")) Nothing)
           ]
+    it "parses function" $
+      "WITH toUpper(otherPerson.name)"
+        `shouldParseWithQuery` With
+          [ WithFunctionWrappedProperty
+              ( Function
+                  { functionName = "toUpper",
+                    functionContents =
+                      Property
+                        { propertyValue = ObjectValue (NestedObject (UnboundText "otherPerson") (NestedObject (UnboundText "name") ObjectEnd)),
+                          propertyAlias = Nothing
+                        }
+                  }
+              )
+          ]
+    it "parses function with alias" $
+      "WITH otherPerson, toUpper(otherPerson.name) AS upperCaseName"
+        `shouldParseWithQuery` With
+          [ WithProperty
+              Property
+                { propertyValue = TextValue (UnboundText "otherPerson"),
+                  propertyAlias = Nothing
+                },
+            WithFunctionWrappedProperty
+              ( Function
+                  { functionName = "toUpper",
+                    functionContents =
+                      Property
+                        { propertyValue = ObjectValue (NestedObject (UnboundText "otherPerson") (NestedObject (UnboundText "name") ObjectEnd)),
+                          propertyAlias = Nothing
+                        }
+                  }
+              )
+          ]
 
 shouldParseWithQuery :: Text -> Clause -> Expectation
 shouldParseWithQuery query expectedResult =
