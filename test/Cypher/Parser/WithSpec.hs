@@ -11,10 +11,17 @@ runParserWithTests :: SpecWith ()
 runParserWithTests = describe "Cypher.Parser.With" $
   do
     it "parses single with clause with single literal text" $
-      "WITH a" `shouldParseWithQuery` With [UnboundText "a"]
+      "WITH a"
+        `shouldParseWithQuery` With [WithProperty (Property (TextValue (UnboundText "a")) Nothing)]
+    it "parses single with clause with single literal aliased text" $
+      "WITH a as Person"
+        `shouldParseWithQuery` With [WithProperty (Property (TextValue (UnboundText "a")) (Just (UnboundText "Person")))]
     it "parses single with clause with multiple literal texts" $
       "WITH a, `b`"
-        `shouldParseWithQuery` With [UnboundText "a", BacktickedText "b"]
+        `shouldParseWithQuery` With
+          [ WithProperty (Property (TextValue (UnboundText "a")) Nothing),
+            WithProperty (Property (TextValue (BacktickedText "b")) Nothing)
+          ]
 
 shouldParseWithQuery :: Text -> Clause -> Expectation
 shouldParseWithQuery query expectedResult =

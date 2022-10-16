@@ -21,6 +21,7 @@ module Cypher.Parser.Core
     parseWrappedInFunction,
     parsePropertyValue,
     parseClause,
+    parseProperty,
   )
 where
 
@@ -29,6 +30,7 @@ import Cypher.Types
   ( Function (Function),
     LiteralText (..),
     Object (..),
+    Property (Property),
     PropertyValue (..),
   )
 import Data.Text (Text)
@@ -42,6 +44,7 @@ import Text.Megaparsec
     lookAhead,
     manyTill,
     notFollowedBy,
+    optional,
     sepBy,
     some,
     try,
@@ -152,3 +155,9 @@ parsePropertyValue =
 
 parseClause :: Text -> Parser a -> Parser a
 parseClause = (*>) . keyword'
+
+parseProperty :: Parser Property
+parseProperty =
+  Property
+    <$> parsePropertyValue
+    <*> optional (symbol' "AS" *> parseLiteralText)

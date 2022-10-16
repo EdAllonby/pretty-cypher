@@ -4,7 +4,7 @@ import Cypher.Parser.Core
   ( Parser,
     commaSep,
     parseClause,
-    parseLiteralText,
+    parseProperty,
     parsePropertyValue,
     parseWrappedInFunction,
     symbol',
@@ -12,7 +12,6 @@ import Cypher.Parser.Core
 import Cypher.Parser.Pattern (parsePattern)
 import Cypher.Types
   ( Clause (Return),
-    Property (Property),
     ReturnExpression (..),
     ReturnValue (..),
   )
@@ -41,11 +40,5 @@ parseReturnExpression =
         ReturnFunctionWrappedPropertyWithArity
           <$> parseWrappedInFunction (commaSep parsePropertyValue),
       ReturnPattern <$> parsePattern,
-      ReturnProperty <$> parseReturnProperty
+      ReturnProperty <$> parseProperty
     ]
-
-parseReturnProperty :: Parser Property
-parseReturnProperty =
-  Property
-    <$> parsePropertyValue
-    <*> optional (symbol' "AS" *> parseLiteralText)

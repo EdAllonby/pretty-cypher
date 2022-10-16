@@ -91,14 +91,17 @@ data MatchValue
       }
   deriving (Data, Typeable, Eq, Show)
 
+data WithValue = WithProperty Property deriving (Data, Typeable, Eq, Show)
+
 data Clause
   = Match [MatchValue] -- TODO: Move this to a non-empty list data type?
   | OptionalMatch [MatchValue]
-  | With [LiteralText]
+  | With [WithValue]
   | Create [Pattern]
   | Delete [LiteralText] -- TODO: Can also be literal text surrounded by brackets, i.e. Delete (n). Doesn't mean node.
   | DetachDelete [LiteralText]
   | Return {isDistinct :: Bool, returnValue :: ReturnValue}
+  | Noop
   deriving (Data, Typeable, Eq, Show)
 
 type QueryExpr = [Clause]

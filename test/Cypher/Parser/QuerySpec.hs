@@ -62,7 +62,13 @@ RETURN *
                                    Node EmptyPatternComponentType M.empty
                                  ]
                              ],
-                           With [UnboundText "a"],
+                           With
+                             [ WithProperty
+                                 Property
+                                   { propertyValue = TextValue (UnboundText "a"),
+                                     propertyAlias = Nothing
+                                   }
+                             ],
                            Delete [UnboundText "a"],
                            Return False ReturnAllElements
                          ]
