@@ -10,6 +10,9 @@ import Text.Megaparsec (parse)
 runParserWithTests :: SpecWith ()
 runParserWithTests = describe "Cypher.Parser.With" $
   do
+    it "parses wildcard" $
+      "WITH *"
+        `shouldParseWithQuery` With [WithWildcard]
     it "parses single with clause with single literal text" $
       "WITH a"
         `shouldParseWithQuery` With [WithProperty (Property (TextValue (UnboundText "a")) Nothing)]
