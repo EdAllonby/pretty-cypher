@@ -62,14 +62,14 @@ data Object
   | ObjectEnd
   deriving (Data, Typeable, Eq, Show)
 
-data ReturnProperty = Property
+data Property = Property
   { propertyValue :: PropertyValue,
     propertyAlias :: Maybe LiteralText
   }
   deriving (Data, Typeable, Eq, Show)
 
 data ReturnExpression
-  = ReturnProperty ReturnProperty
+  = ReturnProperty Property
   | ReturnPattern Pattern
   | ReturnFunctionWrappedPattern (Function Pattern)
   | ReturnFunctionWrappedPropertyWithArity (Function [PropertyValue])

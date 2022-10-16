@@ -12,8 +12,8 @@ import Cypher.Parser.Core
 import Cypher.Parser.Pattern (parsePattern)
 import Cypher.Types
   ( Clause (Return),
+    Property (Property),
     ReturnExpression (..),
-    ReturnProperty (Property),
     ReturnValue (..),
   )
 import Data.Maybe (isJust)
@@ -44,7 +44,8 @@ parseReturnExpression =
       ReturnProperty <$> parseReturnProperty
     ]
 
-parseReturnProperty :: Parser ReturnProperty
+parseReturnProperty :: Parser Property
 parseReturnProperty =
-  Property <$> parsePropertyValue
+  Property
+    <$> parsePropertyValue
     <*> optional (symbol' "AS" *> parseLiteralText)

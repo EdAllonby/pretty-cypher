@@ -6,7 +6,7 @@ cradle:
     - path: "./app/Main.hs"
       component: "pretty-cypher:exe:pretty-cypher-exe"
 
-    - path: "./app/Paths_cypher_formatter.hs"
+    - path: "./app/Paths_pretty_cypher.hs"
       component: "pretty-cypher:exe:pretty-cypher-exe"
 
     - path: "./test"
