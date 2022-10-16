@@ -24,6 +24,7 @@ runParserComplexQueryTests = do
 MATCH (a:Movie { title: 'Wall Street' })
 OPTIONAL MATCH (a)-[r:ACTS_IN]->()
 WITH a
+DELETE a
 RETURN *
     |]
       `shouldParseQuery` [ Match
@@ -62,6 +63,7 @@ RETURN *
                                  ]
                              ],
                            With [UnboundText "a"],
+                           Delete [UnboundText "a"],
                            Return False ReturnAllElements
                          ]
   it "parses query with erratic spacing" $

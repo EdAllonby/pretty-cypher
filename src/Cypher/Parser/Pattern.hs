@@ -58,6 +58,8 @@ parsePattern =
           () <$ keyword' "MATCH",
           () <$ keyword' "OPTIONAL MATCH",
           () <$ keyword' "WITH",
+          () <$ keyword' "DELETE",
+          () <$ keyword' "DETACH DELETE",
           () <$ symbol ",",
           () <$ symbol ")",
           eof -- TODO: Really don't want to have this EOF, but we have it here otherwise we need to add RETURN statements to tests. Is there another option?
