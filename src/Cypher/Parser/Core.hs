@@ -22,6 +22,7 @@ module Cypher.Parser.Core
     parsePropertyValue,
     parseClause,
     parseProperty,
+    parseWildcard,
   )
 where
 
@@ -150,7 +151,8 @@ parsePropertyValue =
       IntegerValue <$> signedInteger,
       BooleanValue <$> boolean,
       ObjectValue <$> try (hasObjectNesting *> parseObject),
-      TextValue <$> parseLiteralText
+      TextValue <$> parseLiteralText,
+      WildcardValue <$ symbol' "*"
     ]
 
 parseClause :: Text -> Parser a -> Parser a
@@ -164,3 +166,6 @@ parseProperty =
 
 parseAlias :: Parser (Maybe LiteralText)
 parseAlias = optional (symbol' "AS" *> parseLiteralText)
+
+parseWildcard :: Parser Text
+parseWildcard = symbol' "*"

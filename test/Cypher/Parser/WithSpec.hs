@@ -30,14 +30,9 @@ runParserWithTests = describe "Cypher.Parser.With" $
         `shouldParseWithQuery` With
           [ WithFunctionWrappedProperty
               ( Function
-                  { functionName = "toUpper",
-                    functionContents =
-                      Property
-                        { propertyValue = ObjectValue (NestedObject (UnboundText "otherPerson") (NestedObject (UnboundText "name") ObjectEnd)),
-                          propertyAlias = Nothing
-                        },
-                    functionAlias = Nothing
-                  }
+                  "toUpper"
+                  (Property (ObjectValue (NestedObject (UnboundText "otherPerson") (NestedObject (UnboundText "name") ObjectEnd))) Nothing)
+                  Nothing
               )
           ]
     it "parses function with alias" $
@@ -50,14 +45,19 @@ runParserWithTests = describe "Cypher.Parser.With" $
                 },
             WithFunctionWrappedProperty
               ( Function
-                  { functionName = "toUpper",
-                    functionContents =
-                      Property
-                        { propertyValue = ObjectValue (NestedObject (UnboundText "otherPerson") (NestedObject (UnboundText "name") ObjectEnd)),
-                          propertyAlias = Nothing
-                        },
-                    functionAlias = Just (UnboundText "upperCaseName")
-                  }
+                  "toUpper"
+                  (Property (ObjectValue (NestedObject (UnboundText "otherPerson") (NestedObject (UnboundText "name") ObjectEnd))) Nothing)
+                  (Just (UnboundText "upperCaseName"))
+              )
+          ]
+    it "parses wildcard wrapped in function" $
+      "WITH count(*) as foaf"
+        `shouldParseWithQuery` With
+          [ WithFunctionWrappedProperty
+              ( Function
+                  "count"
+                  (Property WildcardValue Nothing)
+                  (Just (UnboundText "foaf"))
               )
           ]
 

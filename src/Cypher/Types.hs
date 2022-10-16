@@ -25,6 +25,7 @@ data PropertyValue
   | DoubleValue Double
   | BooleanValue Bool
   | ObjectValue Object
+  | WildcardValue
   deriving (Data, Typeable, Eq, Show)
 
 type Properties = M.Map LiteralText PropertyValue

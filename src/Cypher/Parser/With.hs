@@ -5,8 +5,8 @@ import Cypher.Parser.Core
     commaSep,
     parseClause,
     parseProperty,
+    parseWildcard,
     parseWrappedInFunction,
-    symbol',
   )
 import Cypher.Types
   ( Clause (With),
@@ -21,7 +21,7 @@ parseWithValues :: Parser [WithValue]
 parseWithValues =
   commaSep
     ( choice
-        [ WithWildcard <$ symbol' "*",
+        [ WithWildcard <$ parseWildcard,
           try $ WithFunctionWrappedProperty <$> parseWrappedInFunction parseProperty,
           WithProperty <$> parseProperty
         ]

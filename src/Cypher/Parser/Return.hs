@@ -6,6 +6,7 @@ import Cypher.Parser.Core
     parseClause,
     parseProperty,
     parsePropertyValue,
+    parseWildcard,
     parseWrappedInFunction,
     symbol',
   )
@@ -28,7 +29,7 @@ parseHasDistinct = isJust <$> (optional . symbol' $ "DISTINCT")
 parseReturnValue :: Parser ReturnValue
 parseReturnValue =
   choice
-    [ ReturnAllElements <$ symbol' "*",
+    [ ReturnAllElements <$ parseWildcard,
       ReturnExpressions <$> commaSep parseReturnExpression
     ]
 
