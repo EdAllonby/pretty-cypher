@@ -1,4 +1,27 @@
-module Cypher.Types where
+module Cypher.Types
+  ( LiteralText (..),
+    ConnectorDirection (..),
+    PropertyValue (..),
+    RelationshipHops (..),
+    PatternComponentType (..),
+    PatternComponent (..),
+    LabelledPatternComponentTypeValue (..),
+    AnyPatternComponentTypeValue (..),
+    Function (..),
+    Pattern,
+    Object (..),
+    Property (..),
+    ReturnExpression (..),
+    ReturnValue (..),
+    ReturnClause (..),
+    MatchValue (..),
+    MatchPatternValue (..),
+    MatchFunctionWrappedPatternValue (..),
+    WithValue (..),
+    Clause (..),
+    QueryExpr,
+  )
+where
 
 import Data.Data (Data, Typeable)
 import Data.Map qualified as M
@@ -38,12 +61,18 @@ data RelationshipHops
   | AnyHops
   deriving (Data, Typeable, Eq, Show)
 
+newtype AnyPatternComponentTypeValue = AnyPatternComponentTypeValue {anyVariable :: LiteralText}
+  deriving (Data, Typeable, Eq, Show)
+
+data LabelledPatternComponentTypeValue = LabelledPatternComponentTypeValue
+  { labelledVariable :: Maybe LiteralText,
+    labelledLabels :: [LiteralText]
+  }
+  deriving (Data, Typeable, Eq, Show)
+
 data PatternComponentType
-  = LabelledPatternComponentType
-      { labelledVariable :: Maybe LiteralText,
-        labelledLabels :: [LiteralText]
-      }
-  | AnyPatternComponentType {anyVariable :: LiteralText}
+  = LabelledPatternComponentType LabelledPatternComponentTypeValue
+  | AnyPatternComponentType AnyPatternComponentTypeValue
   | EmptyPatternComponentType
   deriving (Data, Typeable, Eq, Show)
 
@@ -85,21 +114,33 @@ data ReturnValue
   | ReturnAllElements
   deriving (Data, Typeable, Eq, Show)
 
+data MatchFunctionWrappedPatternValue = MatchFunctionWrappedPatternValue
+  { functionWrappedPatternVariable :: Maybe Text,
+    functionWrappedPattern :: Function Pattern
+  }
+  deriving (Data, Typeable, Eq, Show)
+
+data MatchPatternValue = MatchPatternValue
+  { matchPatternVariable :: Maybe Text,
+    matchPattern :: Pattern
+  }
+  deriving (Data, Typeable, Eq, Show)
+
 data MatchValue
-  = MatchFunctionWrappedPattern
-      { functionWrappedPatternVariable :: Maybe Text,
-        functionWrappedPattern :: Function Pattern
-      }
-  | MatchPattern
-      { matchPatternVariable :: Maybe Text,
-        matchPattern :: Pattern
-      }
+  = MatchFunctionWrappedPattern MatchFunctionWrappedPatternValue
+  | MatchPattern MatchPatternValue
   deriving (Data, Typeable, Eq, Show)
 
 data WithValue
   = WithWildcard
   | WithProperty Property
   | WithFunctionWrappedProperty (Function Property)
+  deriving (Data, Typeable, Eq, Show)
+
+data ReturnClause = ReturnClause
+  { isDistinct :: Bool,
+    returnValue :: ReturnValue
+  }
   deriving (Data, Typeable, Eq, Show)
 
 data Clause
@@ -109,7 +150,7 @@ data Clause
   | Create [Pattern]
   | Delete [LiteralText] -- TODO: Can also be literal text surrounded by brackets, i.e. Delete (n). Doesn't mean node.
   | DetachDelete [LiteralText]
-  | Return {isDistinct :: Bool, returnValue :: ReturnValue}
+  | Return ReturnClause
   | Noop
   deriving (Data, Typeable, Eq, Show)
 

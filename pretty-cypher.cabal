@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 408cb64c9c8d8f825d9cae2a841ddde35245299c6df372070b38cbce707e000d
+-- hash: e6f658e17328b37fafef78a8f35d1e2c74a1633052192947298bfde3e8442f46
 
 name:           pretty-cypher
 version:        0.1.0.0
@@ -47,7 +47,7 @@ library
       RecordWildCards
       TemplateHaskell
       QuasiQuotes
-  ghc-options: -Wall
+  ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints
   build-depends:
       base >=4.7 && <5
     , containers
@@ -71,7 +71,7 @@ executable pretty-cypher-exe
       RecordWildCards
       TemplateHaskell
       QuasiQuotes
-  ghc-options: -Wall -threaded -rtsopts -with-rtsopts=-N
+  ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       base >=4.7 && <5
     , containers
@@ -105,7 +105,7 @@ test-suite pretty-cypher-test
       RecordWildCards
       TemplateHaskell
       QuasiQuotes
-  ghc-options: -Wall -threaded -rtsopts -with-rtsopts=-N
+  ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       base >=4.7 && <5
     , containers

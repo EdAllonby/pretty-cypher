@@ -13,6 +13,7 @@ import Cypher.Parser.Core
 import Cypher.Parser.Pattern (parsePattern)
 import Cypher.Types
   ( Clause (Return),
+    ReturnClause (..),
     ReturnExpression (..),
     ReturnValue (..),
   )
@@ -20,8 +21,10 @@ import Data.Maybe (isJust)
 import Text.Megaparsec (MonadParsec (try), choice, optional)
 
 parseReturn :: Parser Clause
-parseReturn =
-  parseClause "RETURN" (Return <$> parseHasDistinct <*> parseReturnValue)
+parseReturn = parseClause "RETURN" (Return <$> parseReturnClause)
+
+parseReturnClause :: Parser ReturnClause
+parseReturnClause = ReturnClause <$> parseHasDistinct <*> parseReturnValue
 
 parseHasDistinct :: Parser Bool
 parseHasDistinct = isJust <$> (optional . symbol' $ "DISTINCT")

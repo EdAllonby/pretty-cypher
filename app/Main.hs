@@ -1,4 +1,4 @@
-module Main where
+module Main(main) where
 
 import Cypher.Parser.Query (parseQuery)
 import Data.Text qualified as T

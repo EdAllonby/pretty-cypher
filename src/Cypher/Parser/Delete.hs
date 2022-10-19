@@ -1,4 +1,4 @@
-module Cypher.Parser.Delete where
+module Cypher.Parser.Delete (parseDelete, parseDetachedDelete) where
 
 import Cypher.Parser.Core
   ( Parser,

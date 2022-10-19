@@ -1,5 +1,6 @@
 module Cypher.Parser.Pattern (parsePattern, parseProperty) where
 
+import Control.Monad (void)
 import Cypher.Parser.Core
   ( Parser,
     brackets,
@@ -13,7 +14,9 @@ import Cypher.Parser.Core
     symbol,
   )
 import Cypher.Types
-  ( ConnectorDirection (..),
+  ( AnyPatternComponentTypeValue (AnyPatternComponentTypeValue),
+    ConnectorDirection (..),
+    LabelledPatternComponentTypeValue (LabelledPatternComponentTypeValue),
     LiteralText,
     Pattern,
     PatternComponent (ConnectorDirection, Node, Relationship),
@@ -54,14 +57,14 @@ parsePattern =
     )
     -- Can we unify these lookahead tokens with those specified in the above parseQuery table?
     ( lookAhead . choice $
-        [ () <$ keyword' "RETURN",
-          () <$ keyword' "MATCH",
-          () <$ keyword' "OPTIONAL MATCH",
-          () <$ keyword' "WITH",
-          () <$ keyword' "DELETE",
-          () <$ keyword' "DETACH DELETE",
-          () <$ symbol ",",
-          () <$ symbol ")",
+        [ void $ keyword' "RETURN",
+          void $ keyword' "MATCH",
+          void $ keyword' "OPTIONAL MATCH",
+          void $ keyword' "WITH",
+          void $ keyword' "DELETE",
+          void $ keyword' "DETACH DELETE",
+          void $ symbol ",",
+          void $ symbol ")",
           eof -- TODO: Really don't want to have this EOF, but we have it here otherwise we need to add RETURN statements to tests. Is there another option?
         ]
     )
@@ -71,9 +74,11 @@ parseNodeType =
   choice
     [ try $
         LabelledPatternComponentType
-          <$> optional parseLiteralText
-          <*> (symbol ":" *> parseLiteralText `sepBy1` symbol ":"),
-      AnyPatternComponentType <$> parseLiteralText,
+          <$> ( LabelledPatternComponentTypeValue
+                  <$> optional parseLiteralText
+                  <*> (symbol ":" *> parseLiteralText `sepBy1` symbol ":")
+              ),
+      AnyPatternComponentType . AnyPatternComponentTypeValue <$> parseLiteralText,
       EmptyPatternComponentType <$ symbol ""
     ]
 
@@ -82,9 +87,11 @@ parseRelationshipType =
   choice
     [ try $
         LabelledPatternComponentType
-          <$> optional parseLiteralText
-          <*> (symbol ":" *> parseLiteralText `sepBy1` (symbol "|:" <|> symbol "|")),
-      AnyPatternComponentType <$> parseLiteralText,
+          <$> ( LabelledPatternComponentTypeValue
+                  <$> optional parseLiteralText
+                  <*> (symbol ":" *> parseLiteralText `sepBy1` (symbol "|:" <|> symbol "|"))
+              ),
+      AnyPatternComponentType . AnyPatternComponentTypeValue <$> parseLiteralText,
       EmptyPatternComponentType <$ symbol ""
     ]
 

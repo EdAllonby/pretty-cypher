@@ -1,4 +1,4 @@
-module Cypher.Parser.Create where
+module Cypher.Parser.Create (parseCreate) where
 
 import Cypher.Parser.Core (Parser, commaSep, parseClause)
 import Cypher.Parser.Pattern (parsePattern)
