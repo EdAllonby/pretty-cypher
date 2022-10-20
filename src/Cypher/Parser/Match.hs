@@ -11,6 +11,8 @@ import Cypher.Parser.Core
 import Cypher.Parser.Pattern (parsePattern)
 import Cypher.Types
   ( Clause (Match, OptionalMatch),
+    MatchFunctionWrappedPatternValue (..),
+    MatchPatternValue (..),
     MatchValue (MatchFunctionWrappedPattern, MatchPattern),
   )
 import Text.Megaparsec (choice, optional, try)
@@ -26,8 +28,6 @@ parseMatchValue :: Parser MatchValue
 parseMatchValue = do
   patternVariable <- optional $ try $ parseText <* symbol "="
   choice
-    [ try $
-        MatchFunctionWrappedPattern patternVariable
-          <$> parseWrappedInFunction parsePattern,
-      MatchPattern patternVariable <$> parsePattern
+    [ try $ MatchFunctionWrappedPattern <$> (MatchFunctionWrappedPatternValue patternVariable <$> parseWrappedInFunction parsePattern),
+      MatchPattern <$> (MatchPatternValue patternVariable <$> parsePattern)
     ]

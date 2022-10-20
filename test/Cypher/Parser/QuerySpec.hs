@@ -28,39 +28,41 @@ DELETE a
 RETURN *
     |]
       `shouldParseQuery` [ Match
-                             [ MatchPattern
-                                 Nothing
-                                 [ Node
-                                     ( LabelledPatternComponentType
-                                         (Just (UnboundText "a"))
-                                         [UnboundText "Movie"]
-                                     )
-                                     ( M.fromList
-                                         [ ( UnboundText "title",
-                                             TextValue
-                                               (QuotedText "Wall Street")
-                                           )
-                                         ]
-                                     )
-                                 ]
+                             [ MatchPattern $
+                                 MatchPatternValue
+                                   Nothing
+                                   [ Node
+                                       ( LabelledPatternComponentType
+                                           (Just (UnboundText "a"))
+                                           [UnboundText "Movie"]
+                                       )
+                                       ( M.fromList
+                                           [ ( UnboundText "title",
+                                               TextValue
+                                                 (QuotedText "Wall Street")
+                                             )
+                                           ]
+                                       )
+                                   ]
                              ],
                            OptionalMatch
-                             [ MatchPattern
-                                 Nothing
-                                 [ Node
-                                     (AnyPatternComponentType $ AnyPatternComponentTypeValue (UnboundText "a"))
-                                     M.empty,
-                                   ConnectorDirection NoDirection,
-                                   Relationship
-                                     ( LabelledPatternComponentType
-                                         (Just (UnboundText "r"))
-                                         [UnboundText "ACTS_IN"]
-                                     )
-                                     Nothing
-                                     M.empty,
-                                   ConnectorDirection RightDirection,
-                                   Node EmptyPatternComponentType M.empty
-                                 ]
+                             [ MatchPattern $
+                                 MatchPatternValue
+                                   Nothing
+                                   [ Node
+                                       (AnyPatternComponentType $ AnyPatternComponentTypeValue (UnboundText "a"))
+                                       M.empty,
+                                     ConnectorDirection NoDirection,
+                                     Relationship
+                                       ( LabelledPatternComponentType
+                                           (Just (UnboundText "r"))
+                                           [UnboundText "ACTS_IN"]
+                                       )
+                                       Nothing
+                                       M.empty,
+                                     ConnectorDirection RightDirection,
+                                     Node EmptyPatternComponentType M.empty
+                                   ]
                              ],
                            With
                              [ WithWildcard,
@@ -77,85 +79,88 @@ RETURN *
   it "parses query with erratic spacing" $
     "  MATCH  (   : Person{ name: ' D. A. V. E ' , age : 32 , height : 1.6 , delta : -10 , base  : -3.14  } )   -  [  o : OWNS  ] -> (car :Car )   RETURN  *   "
       `shouldParseQuery` [ Match
-                             [ MatchPattern
-                                 Nothing
-                                 [ Node
-                                     ( LabelledPatternComponentType
-                                         Nothing
-                                         [UnboundText "Person"]
-                                     )
-                                     ( M.fromList
-                                         [ (UnboundText "age", IntegerValue 32),
-                                           ( UnboundText "base",
-                                             DoubleValue (-3.14)
-                                           ),
-                                           ( UnboundText "delta",
-                                             IntegerValue (-10)
-                                           ),
-                                           (UnboundText "height", DoubleValue 1.6),
-                                           ( UnboundText "name",
-                                             TextValue
-                                               (QuotedText " D. A. V. E ")
-                                           )
-                                         ]
-                                     ),
-                                   ConnectorDirection NoDirection,
-                                   Relationship
-                                     ( LabelledPatternComponentType
-                                         (Just (UnboundText "o"))
-                                         [UnboundText "OWNS"]
-                                     )
-                                     Nothing
-                                     M.empty,
-                                   ConnectorDirection RightDirection,
-                                   Node
-                                     ( LabelledPatternComponentType
-                                         (Just (UnboundText "car"))
-                                         [UnboundText "Car"]
-                                     )
-                                     M.empty
-                                 ]
+                             [ MatchPattern $
+                                 MatchPatternValue
+                                   Nothing
+                                   [ Node
+                                       ( LabelledPatternComponentType
+                                           Nothing
+                                           [UnboundText "Person"]
+                                       )
+                                       ( M.fromList
+                                           [ (UnboundText "age", IntegerValue 32),
+                                             ( UnboundText "base",
+                                               DoubleValue (-3.14)
+                                             ),
+                                             ( UnboundText "delta",
+                                               IntegerValue (-10)
+                                             ),
+                                             (UnboundText "height", DoubleValue 1.6),
+                                             ( UnboundText "name",
+                                               TextValue
+                                                 (QuotedText " D. A. V. E ")
+                                             )
+                                           ]
+                                       ),
+                                     ConnectorDirection NoDirection,
+                                     Relationship
+                                       ( LabelledPatternComponentType
+                                           (Just (UnboundText "o"))
+                                           [UnboundText "OWNS"]
+                                       )
+                                       Nothing
+                                       M.empty,
+                                     ConnectorDirection RightDirection,
+                                     Node
+                                       ( LabelledPatternComponentType
+                                           (Just (UnboundText "car"))
+                                           [UnboundText "Car"]
+                                       )
+                                       M.empty
+                                   ]
                              ],
                            Return False ReturnAllElements
                          ]
   it "parses multi match clause" $
     "MATCH (p:Person)-[:HAS]->(c:Car) MATCH (cat:Cat) RETURN c"
       `shouldParseQuery` [ Match
-                             [ MatchPattern
-                                 Nothing
-                                 [ Node
-                                     ( LabelledPatternComponentType
-                                         (Just (UnboundText "p"))
-                                         [UnboundText "Person"]
-                                     )
-                                     M.empty,
-                                   ConnectorDirection NoDirection,
-                                   Relationship
-                                     ( LabelledPatternComponentType
-                                         Nothing
-                                         [UnboundText "HAS"]
-                                     )
-                                     Nothing
-                                     M.empty,
-                                   ConnectorDirection RightDirection,
-                                   Node
-                                     ( LabelledPatternComponentType
-                                         (Just (UnboundText "c"))
-                                         [UnboundText "Car"]
-                                     )
-                                     M.empty
-                                 ]
+                             [ MatchPattern $
+                                 MatchPatternValue
+                                   Nothing
+                                   [ Node
+                                       ( LabelledPatternComponentType
+                                           (Just (UnboundText "p"))
+                                           [UnboundText "Person"]
+                                       )
+                                       M.empty,
+                                     ConnectorDirection NoDirection,
+                                     Relationship
+                                       ( LabelledPatternComponentType
+                                           Nothing
+                                           [UnboundText "HAS"]
+                                       )
+                                       Nothing
+                                       M.empty,
+                                     ConnectorDirection RightDirection,
+                                     Node
+                                       ( LabelledPatternComponentType
+                                           (Just (UnboundText "c"))
+                                           [UnboundText "Car"]
+                                       )
+                                       M.empty
+                                   ]
                              ],
                            Match
-                             [ MatchPattern
-                                 Nothing
-                                 [ Node
-                                     ( LabelledPatternComponentType
-                                         (Just (UnboundText "cat"))
-                                         [UnboundText "Cat"]
-                                     )
-                                     M.empty
-                                 ]
+                             [ MatchPattern $
+                                 MatchPatternValue
+                                   Nothing
+                                   [ Node
+                                       ( LabelledPatternComponentType
+                                           (Just (UnboundText "cat"))
+                                           [UnboundText "Cat"]
+                                       )
+                                       M.empty
+                                   ]
                              ],
                            Return
                              False

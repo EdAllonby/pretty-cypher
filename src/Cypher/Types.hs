@@ -87,15 +87,21 @@ data ReturnValue
   | ReturnAllElements
   deriving (Data, Typeable, Eq, Show)
 
+data MatchFunctionWrappedPatternValue = MatchFunctionWrappedPatternValue
+  { functionWrappedPatternVariable :: Maybe Text,
+    functionWrappedPattern :: Function Pattern
+  }
+  deriving (Data, Typeable, Eq, Show)
+
+data MatchPatternValue = MatchPatternValue
+  { matchPatternVariable :: Maybe Text,
+    matchPattern :: Pattern
+  }
+  deriving (Data, Typeable, Eq, Show)
+
 data MatchValue
-  = MatchFunctionWrappedPattern
-      { functionWrappedPatternVariable :: Maybe Text,
-        functionWrappedPattern :: Function Pattern
-      }
-  | MatchPattern
-      { matchPatternVariable :: Maybe Text,
-        matchPattern :: Pattern
-      }
+  = MatchFunctionWrappedPattern MatchFunctionWrappedPatternValue
+  | MatchPattern MatchPatternValue
   deriving (Data, Typeable, Eq, Show)
 
 data WithValue

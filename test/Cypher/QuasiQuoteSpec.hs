@@ -29,31 +29,32 @@ runQuasiQuoteTests = describe "Cypher.QuasiQuote" $
           do
             cypherExpr
               `shouldBe` [ Match
-                             [ MatchPattern
-                                 Nothing
-                                 [ Node
-                                     ( LabelledPatternComponentType
-                                         (Just (UnboundText "per"))
-                                         [UnboundText "Person"]
-                                     )
-                                     ( M.fromList
-                                         [ (UnboundText "age", IntegerValue 32),
-                                           ( UnboundText "base",
-                                             DoubleValue (-3.14)
-                                           ),
-                                           ( UnboundText "delta",
-                                             IntegerValue (-10)
-                                           ),
-                                           ( UnboundText "height",
-                                             DoubleValue 1.6
-                                           ),
-                                           ( UnboundText "name",
-                                             TextValue
-                                               (QuotedText " D. A. V. E ")
-                                           )
-                                         ]
-                                     )
-                                 ]
+                             [ MatchPattern $
+                                 MatchPatternValue
+                                   Nothing
+                                   [ Node
+                                       ( LabelledPatternComponentType
+                                           (Just (UnboundText "per"))
+                                           [UnboundText "Person"]
+                                       )
+                                       ( M.fromList
+                                           [ (UnboundText "age", IntegerValue 32),
+                                             ( UnboundText "base",
+                                               DoubleValue (-3.14)
+                                             ),
+                                             ( UnboundText "delta",
+                                               IntegerValue (-10)
+                                             ),
+                                             ( UnboundText "height",
+                                               DoubleValue 1.6
+                                             ),
+                                             ( UnboundText "name",
+                                               TextValue
+                                                 (QuotedText " D. A. V. E ")
+                                             )
+                                           ]
+                                       )
+                                   ]
                              ],
                            Return False ReturnAllElements
                          ]
