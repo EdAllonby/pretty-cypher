@@ -21,6 +21,7 @@ data ConnectorDirection
 
 data PropertyValue
   = TextValue LiteralText
+  | ParamValue Text
   | IntegerValue Integer
   | DoubleValue Double
   | BooleanValue Bool
@@ -38,11 +39,14 @@ data RelationshipHops
   | AnyHops
   deriving (Data, Typeable, Eq, Show)
 
-newtype AnyPatternComponentTypeValue = AnyPatternComponentTypeValue {anyVariable :: LiteralText} deriving (Data, Typeable, Eq, Show)
-
 data LabelledPatternComponentTypeValue = LabelledPatternComponentTypeValue
   { labelledVariable :: Maybe LiteralText,
     labelledLabels :: [LiteralText]
+  }
+  deriving (Data, Typeable, Eq, Show)
+
+newtype AnyPatternComponentTypeValue = AnyPatternComponentTypeValue
+  { anyVariable :: LiteralText
   }
   deriving (Data, Typeable, Eq, Show)
 

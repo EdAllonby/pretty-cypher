@@ -151,6 +151,7 @@ parsePropertyValue =
       IntegerValue <$> signedInteger,
       BooleanValue <$> boolean,
       ObjectValue <$> try (hasObjectNesting *> parseObject),
+      ParamValue <$> parseParameter,
       TextValue <$> parseLiteralText,
       WildcardValue <$ symbol' "*"
     ]
@@ -169,3 +170,6 @@ parseAlias = optional (symbol' "AS" *> parseLiteralText)
 
 parseWildcard :: Parser Text
 parseWildcard = symbol' "*"
+
+parseParameter :: Parser Text
+parseParameter = symbol' "$" *> parseText

@@ -93,6 +93,16 @@ runParserPatternNodeTests = do
                                     (AnyPatternComponentType $ AnyPatternComponentTypeValue (UnboundText "n"))
                                     standardProperties
                                 ]
+  it "parses parameter pattern with node" $
+    "(per:Person {name: $name})"
+      `shouldParsePatternQuery` [ Node
+                                    ( LabelledPatternComponentType $
+                                        LabelledPatternComponentTypeValue
+                                          (Just (UnboundText "per"))
+                                          [UnboundText "Person"]
+                                    )
+                                    (M.fromList [(UnboundText "name", ParamValue "name")])
+                                ]
 
 runParserPatternRelationshipTests :: Spec
 runParserPatternRelationshipTests = do
