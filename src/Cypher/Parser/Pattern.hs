@@ -16,6 +16,7 @@ import Cypher.Parser.Core
 import Cypher.Types
   ( AnyPatternComponentTypeValue (AnyPatternComponentTypeValue),
     ConnectorDirection (..),
+    LabelledPatternComponentTypeValue (LabelledPatternComponentTypeValue),
     LiteralText,
     Pattern,
     PatternComponent (ConnectorDirection, Node, Relationship),
@@ -79,8 +80,10 @@ parsePatternComponentType labelsParser =
   choice
     [ try $
         LabelledPatternComponentType
-          <$> optional parseLiteralText
-          <*> labelsParser,
+          <$> ( LabelledPatternComponentTypeValue
+                  <$> optional parseLiteralText
+                  <*> labelsParser
+              ),
       parseAnyComponentType,
       EmptyPatternComponentType <$ symbol ""
     ]

@@ -20,9 +20,10 @@ runParserMatchTests = describe "Cypher.Parser.Match" $
                 [ Node (AnyPatternComponentType $ AnyPatternComponentTypeValue (UnboundText "a")) M.empty,
                   ConnectorDirection NoDirection,
                   Relationship
-                    ( LabelledPatternComponentType
-                        (Just (UnboundText "r"))
-                        [UnboundText "ACTS_IN"]
+                    ( LabelledPatternComponentType $
+                        LabelledPatternComponentTypeValue
+                          (Just (UnboundText "r"))
+                          [UnboundText "ACTS_IN"]
                     )
                     Nothing
                     M.empty,
@@ -39,9 +40,10 @@ runParserMatchTests = describe "Cypher.Parser.Match" $
                 [ Node (AnyPatternComponentType $ AnyPatternComponentTypeValue (UnboundText "a")) M.empty,
                   ConnectorDirection NoDirection,
                   Relationship
-                    ( LabelledPatternComponentType
-                        (Just (UnboundText "r"))
-                        [UnboundText "ACTS_IN"]
+                    ( LabelledPatternComponentType $
+                        LabelledPatternComponentTypeValue
+                          (Just (UnboundText "r"))
+                          [UnboundText "ACTS_IN"]
                     )
                     Nothing
                     M.empty,
@@ -57,9 +59,10 @@ runParserMatchTests = describe "Cypher.Parser.Match" $
               MatchPatternValue
                 Nothing
                 [ Node
-                    ( LabelledPatternComponentType
-                        (Just (UnboundText "m"))
-                        [UnboundText "Movie"]
+                    ( LabelledPatternComponentType $
+                        LabelledPatternComponentTypeValue
+                          (Just (UnboundText "m"))
+                          [UnboundText "Movie"]
                     )
                     M.empty
                 ]
@@ -72,9 +75,10 @@ runParserMatchTests = describe "Cypher.Parser.Match" $
               MatchPatternValue
                 Nothing
                 [ Node
-                    ( LabelledPatternComponentType
-                        (Just (UnboundText "m"))
-                        [UnboundText "Movie"]
+                    ( LabelledPatternComponentType $
+                        LabelledPatternComponentTypeValue
+                          (Just (UnboundText "m"))
+                          [UnboundText "Movie"]
                     )
                     M.empty
                 ]
@@ -92,9 +96,10 @@ runParserMatchTests = describe "Cypher.Parser.Match" $
                       Relationship EmptyPatternComponentType (Just AnyHops) M.empty,
                       ConnectorDirection NoDirection,
                       Node
-                        ( LabelledPatternComponentType
-                            (Just (UnboundText "j"))
-                            [UnboundText "Job"]
+                        ( LabelledPatternComponentType $
+                            LabelledPatternComponentTypeValue
+                              (Just (UnboundText "j"))
+                              [UnboundText "Job"]
                         )
                         M.empty
                     ]
@@ -114,9 +119,10 @@ runParserMatchTests = describe "Cypher.Parser.Match" $
                       Relationship EmptyPatternComponentType (Just AnyHops) M.empty,
                       ConnectorDirection NoDirection,
                       Node
-                        ( LabelledPatternComponentType
-                            (Just (UnboundText "j"))
-                            [UnboundText "Job"]
+                        ( LabelledPatternComponentType $
+                            LabelledPatternComponentTypeValue
+                              (Just (UnboundText "j"))
+                              [UnboundText "Job"]
                         )
                         M.empty
                     ]
@@ -134,4 +140,7 @@ shouldParseOptionalMatchQuery query expectedResult =
 
 personLabelledNode :: PatternComponentType
 personLabelledNode =
-  LabelledPatternComponentType (Just (UnboundText "p")) [UnboundText "Person"]
+  LabelledPatternComponentType $
+    LabelledPatternComponentTypeValue
+      (Just (UnboundText "p"))
+      [UnboundText "Person"]

@@ -32,9 +32,10 @@ RETURN *
                                  MatchPatternValue
                                    Nothing
                                    [ Node
-                                       ( LabelledPatternComponentType
-                                           (Just (UnboundText "a"))
-                                           [UnboundText "Movie"]
+                                       ( LabelledPatternComponentType $
+                                           LabelledPatternComponentTypeValue
+                                             (Just (UnboundText "a"))
+                                             [UnboundText "Movie"]
                                        )
                                        ( M.fromList
                                            [ ( UnboundText "title",
@@ -54,9 +55,10 @@ RETURN *
                                        M.empty,
                                      ConnectorDirection NoDirection,
                                      Relationship
-                                       ( LabelledPatternComponentType
-                                           (Just (UnboundText "r"))
-                                           [UnboundText "ACTS_IN"]
+                                       ( LabelledPatternComponentType $
+                                           LabelledPatternComponentTypeValue
+                                             (Just (UnboundText "r"))
+                                             [UnboundText "ACTS_IN"]
                                        )
                                        Nothing
                                        M.empty,
@@ -83,9 +85,10 @@ RETURN *
                                  MatchPatternValue
                                    Nothing
                                    [ Node
-                                       ( LabelledPatternComponentType
-                                           Nothing
-                                           [UnboundText "Person"]
+                                       ( LabelledPatternComponentType $
+                                           LabelledPatternComponentTypeValue
+                                             Nothing
+                                             [UnboundText "Person"]
                                        )
                                        ( M.fromList
                                            [ (UnboundText "age", IntegerValue 32),
@@ -104,17 +107,19 @@ RETURN *
                                        ),
                                      ConnectorDirection NoDirection,
                                      Relationship
-                                       ( LabelledPatternComponentType
-                                           (Just (UnboundText "o"))
-                                           [UnboundText "OWNS"]
+                                       ( LabelledPatternComponentType $
+                                           LabelledPatternComponentTypeValue
+                                             (Just (UnboundText "o"))
+                                             [UnboundText "OWNS"]
                                        )
                                        Nothing
                                        M.empty,
                                      ConnectorDirection RightDirection,
                                      Node
-                                       ( LabelledPatternComponentType
-                                           (Just (UnboundText "car"))
-                                           [UnboundText "Car"]
+                                       ( LabelledPatternComponentType $
+                                           LabelledPatternComponentTypeValue
+                                             (Just (UnboundText "car"))
+                                             [UnboundText "Car"]
                                        )
                                        M.empty
                                    ]
@@ -128,24 +133,27 @@ RETURN *
                                  MatchPatternValue
                                    Nothing
                                    [ Node
-                                       ( LabelledPatternComponentType
-                                           (Just (UnboundText "p"))
-                                           [UnboundText "Person"]
+                                       ( LabelledPatternComponentType $
+                                           LabelledPatternComponentTypeValue
+                                             (Just (UnboundText "p"))
+                                             [UnboundText "Person"]
                                        )
                                        M.empty,
                                      ConnectorDirection NoDirection,
                                      Relationship
-                                       ( LabelledPatternComponentType
-                                           Nothing
-                                           [UnboundText "HAS"]
+                                       ( LabelledPatternComponentType $
+                                           LabelledPatternComponentTypeValue
+                                             Nothing
+                                             [UnboundText "HAS"]
                                        )
                                        Nothing
                                        M.empty,
                                      ConnectorDirection RightDirection,
                                      Node
-                                       ( LabelledPatternComponentType
-                                           (Just (UnboundText "c"))
-                                           [UnboundText "Car"]
+                                       ( LabelledPatternComponentType $
+                                           LabelledPatternComponentTypeValue
+                                             (Just (UnboundText "c"))
+                                             [UnboundText "Car"]
                                        )
                                        M.empty
                                    ]
@@ -155,9 +163,10 @@ RETURN *
                                  MatchPatternValue
                                    Nothing
                                    [ Node
-                                       ( LabelledPatternComponentType
-                                           (Just (UnboundText "cat"))
-                                           [UnboundText "Cat"]
+                                       ( LabelledPatternComponentType $
+                                           LabelledPatternComponentTypeValue
+                                             (Just (UnboundText "cat"))
+                                             [UnboundText "Cat"]
                                        )
                                        M.empty
                                    ]

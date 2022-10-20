@@ -24,47 +24,52 @@ runParserPatternNodeTests = do
   it "parses pattern with node" $
     "(per:Person)"
       `shouldParsePatternQuery` [ Node
-                                    ( LabelledPatternComponentType
-                                        (Just (UnboundText "per"))
-                                        [UnboundText "Person"]
+                                    ( LabelledPatternComponentType $
+                                        LabelledPatternComponentTypeValue
+                                          (Just (UnboundText "per"))
+                                          [UnboundText "Person"]
                                     )
                                     M.empty
                                 ]
   it "parses pattern with multi labelled node" $
     "(per:Person:Actor)"
       `shouldParsePatternQuery` [ Node
-                                    ( LabelledPatternComponentType
-                                        (Just (UnboundText "per"))
-                                        [ UnboundText "Person",
-                                          UnboundText "Actor"
-                                        ]
+                                    ( LabelledPatternComponentType $
+                                        LabelledPatternComponentTypeValue
+                                          (Just (UnboundText "per"))
+                                          [ UnboundText "Person",
+                                            UnboundText "Actor"
+                                          ]
                                     )
                                     M.empty
                                 ]
   it "parses pattern with labelled node specifying properties" $
     "(per:Person { name: ' D. A. V. E ', age: 32, height: 1.6, delta: -10, base: -3.14, today: true, tomorrow: false })"
       `shouldParsePatternQuery` [ Node
-                                    ( LabelledPatternComponentType
-                                        (Just (UnboundText "per"))
-                                        [UnboundText "Person"]
+                                    ( LabelledPatternComponentType $
+                                        LabelledPatternComponentTypeValue
+                                          (Just (UnboundText "per"))
+                                          [UnboundText "Person"]
                                     )
                                     standardProperties
                                 ]
   it "parses pattern with anonymous node" $
     "(:Person)"
       `shouldParsePatternQuery` [ Node
-                                    ( LabelledPatternComponentType
-                                        Nothing
-                                        [UnboundText "Person"]
+                                    ( LabelledPatternComponentType $
+                                        LabelledPatternComponentTypeValue
+                                          Nothing
+                                          [UnboundText "Person"]
                                     )
                                     M.empty
                                 ]
   it "parses pattern with anonymous node specifying properties" $
     "(:Person { name: ' D. A. V. E ', age: 32, height: 1.6, delta: -10, base: -3.14, today: true, tomorrow: false })"
       `shouldParsePatternQuery` [ Node
-                                    ( LabelledPatternComponentType
-                                        Nothing
-                                        [UnboundText "Person"]
+                                    ( LabelledPatternComponentType $
+                                        LabelledPatternComponentTypeValue
+                                          Nothing
+                                          [UnboundText "Person"]
                                     )
                                     standardProperties
                                 ]
@@ -94,9 +99,10 @@ runParserPatternRelationshipTests = do
   it "parses pattern with relationship" $
     "[fo:FOLLOWS]"
       `shouldParsePatternQuery` [ Relationship
-                                    ( LabelledPatternComponentType
-                                        (Just (UnboundText "fo"))
-                                        [UnboundText "FOLLOWS"]
+                                    ( LabelledPatternComponentType $
+                                        LabelledPatternComponentTypeValue
+                                          (Just (UnboundText "fo"))
+                                          [UnboundText "FOLLOWS"]
                                     )
                                     Nothing
                                     M.empty
@@ -104,9 +110,10 @@ runParserPatternRelationshipTests = do
   it "parses pattern with variable length relationship" $
     "[fo:FOLLOWS*4..6]"
       `shouldParsePatternQuery` [ Relationship
-                                    ( LabelledPatternComponentType
-                                        (Just (UnboundText "fo"))
-                                        [UnboundText "FOLLOWS"]
+                                    ( LabelledPatternComponentType $
+                                        LabelledPatternComponentTypeValue
+                                          (Just (UnboundText "fo"))
+                                          [UnboundText "FOLLOWS"]
                                     )
                                     (Just (VariableHops 4 6))
                                     M.empty
@@ -114,9 +121,10 @@ runParserPatternRelationshipTests = do
   it "parses pattern with fixed length relationship" $
     "[fo:FOLLOWS*8]"
       `shouldParsePatternQuery` [ Relationship
-                                    ( LabelledPatternComponentType
-                                        (Just (UnboundText "fo"))
-                                        [UnboundText "FOLLOWS"]
+                                    ( LabelledPatternComponentType $
+                                        LabelledPatternComponentTypeValue
+                                          (Just (UnboundText "fo"))
+                                          [UnboundText "FOLLOWS"]
                                     )
                                     (Just (FixedHops 8))
                                     M.empty
@@ -124,11 +132,12 @@ runParserPatternRelationshipTests = do
   it "parses pattern with multi pipe labelled relationship" $
     "[fo:FOLLOWS|UNFOLLOWS]"
       `shouldParsePatternQuery` [ Relationship
-                                    ( LabelledPatternComponentType
-                                        (Just (UnboundText "fo"))
-                                        [ UnboundText "FOLLOWS",
-                                          UnboundText "UNFOLLOWS"
-                                        ]
+                                    ( LabelledPatternComponentType $
+                                        LabelledPatternComponentTypeValue
+                                          (Just (UnboundText "fo"))
+                                          [ UnboundText "FOLLOWS",
+                                            UnboundText "UNFOLLOWS"
+                                          ]
                                     )
                                     Nothing
                                     M.empty
@@ -136,11 +145,12 @@ runParserPatternRelationshipTests = do
   it "parses pattern with multi pipe with colon labelled relationship" $
     "[fo:FOLLOWS|:UNFOLLOWS]"
       `shouldParsePatternQuery` [ Relationship
-                                    ( LabelledPatternComponentType
-                                        (Just (UnboundText "fo"))
-                                        [ UnboundText "FOLLOWS",
-                                          UnboundText "UNFOLLOWS"
-                                        ]
+                                    ( LabelledPatternComponentType $
+                                        LabelledPatternComponentTypeValue
+                                          (Just (UnboundText "fo"))
+                                          [ UnboundText "FOLLOWS",
+                                            UnboundText "UNFOLLOWS"
+                                          ]
                                     )
                                     Nothing
                                     M.empty
@@ -148,9 +158,10 @@ runParserPatternRelationshipTests = do
   it "parses pattern with screaming snake case relationship" $
     "[i:IS_A_FAN_OF]"
       `shouldParsePatternQuery` [ Relationship
-                                    ( LabelledPatternComponentType
-                                        (Just (UnboundText "i"))
-                                        [UnboundText "IS_A_FAN_OF"]
+                                    ( LabelledPatternComponentType $
+                                        LabelledPatternComponentTypeValue
+                                          (Just (UnboundText "i"))
+                                          [UnboundText "IS_A_FAN_OF"]
                                     )
                                     Nothing
                                     M.empty
@@ -158,9 +169,10 @@ runParserPatternRelationshipTests = do
   it "parses pattern with relationship specifying properties" $
     "[fo:FOLLOWS { name: ' D. A. V. E ', age: 32, height: 1.6, delta: -10, base: -3.14, today: true, tomorrow: false }]"
       `shouldParsePatternQuery` [ Relationship
-                                    ( LabelledPatternComponentType
-                                        (Just (UnboundText "fo"))
-                                        [UnboundText "FOLLOWS"]
+                                    ( LabelledPatternComponentType $
+                                        LabelledPatternComponentTypeValue
+                                          (Just (UnboundText "fo"))
+                                          [UnboundText "FOLLOWS"]
                                     )
                                     Nothing
                                     standardProperties
@@ -168,9 +180,10 @@ runParserPatternRelationshipTests = do
   it "parses pattern with anonymous relationship" $
     "[:FOLLOWS]"
       `shouldParsePatternQuery` [ Relationship
-                                    ( LabelledPatternComponentType
-                                        Nothing
-                                        [UnboundText "FOLLOWS"]
+                                    ( LabelledPatternComponentType $
+                                        LabelledPatternComponentTypeValue
+                                          Nothing
+                                          [UnboundText "FOLLOWS"]
                                     )
                                     Nothing
                                     M.empty
@@ -178,9 +191,10 @@ runParserPatternRelationshipTests = do
   it "parses pattern with anonymous relationship specifying properties" $
     "[:FOLLOWS { name: ' D. A. V. E ', age: 32, height: 1.6, delta: -10, base: -3.14, today: true, tomorrow: false }]"
       `shouldParsePatternQuery` [ Relationship
-                                    ( LabelledPatternComponentType
-                                        Nothing
-                                        [UnboundText "FOLLOWS"]
+                                    ( LabelledPatternComponentType $
+                                        LabelledPatternComponentTypeValue
+                                          Nothing
+                                          [UnboundText "FOLLOWS"]
                                     )
                                     Nothing
                                     standardProperties
@@ -318,9 +332,10 @@ runParserPatternPatternTests = do
   it "parses pattern with erratic spacing" $
     "(   : Person{ name: ' D. A. V. E ' , age : 32 , height : 1.6 , delta : -10 , base  : -3.14 , today: true, tomorrow: false } )   -  [  h : HAS  ] -> (car :Car )"
       `shouldParsePatternQuery` [ Node
-                                    ( LabelledPatternComponentType
-                                        Nothing
-                                        [UnboundText "Person"]
+                                    ( LabelledPatternComponentType $
+                                        LabelledPatternComponentTypeValue
+                                          Nothing
+                                          [UnboundText "Person"]
                                     )
                                     standardProperties,
                                   ConnectorDirection NoDirection,
@@ -330,18 +345,20 @@ runParserPatternPatternTests = do
                                     M.empty,
                                   ConnectorDirection RightDirection,
                                   Node
-                                    ( LabelledPatternComponentType
-                                        (Just (UnboundText "car"))
-                                        [UnboundText "Car"]
+                                    ( LabelledPatternComponentType $
+                                        LabelledPatternComponentTypeValue
+                                          (Just (UnboundText "car"))
+                                          [UnboundText "Car"]
                                     )
                                     M.empty
                                 ]
   it "parses strings wrapped in backticks and quotes" $
     "(`odd-ch@racter$`:`Spaced Label` {`&property`: 42})-['j':'A Job']"
       `shouldParsePatternQuery` [ Node
-                                    ( LabelledPatternComponentType
-                                        (Just (BacktickedText "odd-ch@racter$"))
-                                        [BacktickedText "Spaced Label"]
+                                    ( LabelledPatternComponentType $
+                                        LabelledPatternComponentTypeValue
+                                          (Just (BacktickedText "odd-ch@racter$"))
+                                          [BacktickedText "Spaced Label"]
                                     )
                                     ( M.fromList
                                         [ ( BacktickedText "&property",
@@ -351,9 +368,10 @@ runParserPatternPatternTests = do
                                     ),
                                   ConnectorDirection NoDirection,
                                   Relationship
-                                    ( LabelledPatternComponentType
-                                        (Just (QuotedText "j"))
-                                        [QuotedText "A Job"]
+                                    ( LabelledPatternComponentType $
+                                        LabelledPatternComponentTypeValue
+                                          (Just (QuotedText "j"))
+                                          [QuotedText "A Job"]
                                     )
                                     Nothing
                                     M.empty
@@ -377,12 +395,21 @@ standardProperties =
 
 personLabelledNode :: PatternComponentType
 personLabelledNode =
-  LabelledPatternComponentType (Just (UnboundText "p")) [UnboundText "Person"]
+  LabelledPatternComponentType $
+    LabelledPatternComponentTypeValue
+      (Just (UnboundText "p"))
+      [UnboundText "Person"]
 
 carLabelledNode :: PatternComponentType
 carLabelledNode =
-  LabelledPatternComponentType (Just (UnboundText "c")) [UnboundText "Car"]
+  LabelledPatternComponentType $
+    LabelledPatternComponentTypeValue
+      (Just (UnboundText "c"))
+      [UnboundText "Car"]
 
 hasLabelledRelationship :: PatternComponentType
 hasLabelledRelationship =
-  LabelledPatternComponentType (Just (UnboundText "h")) [UnboundText "HAS"]
+  LabelledPatternComponentType $
+    LabelledPatternComponentTypeValue
+      (Just (UnboundText "h"))
+      [UnboundText "HAS"]

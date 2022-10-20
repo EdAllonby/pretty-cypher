@@ -3,6 +3,7 @@ module Cypher.Parser.CreateSpec (runParserCreateTests) where
 import Cypher.Parser.Create (parseCreate)
 import Cypher.Types
   ( Clause (Create),
+    LabelledPatternComponentTypeValue (..),
     LiteralText (UnboundText),
     PatternComponent (Node),
     PatternComponentType (LabelledPatternComponentType),
@@ -24,9 +25,10 @@ runParserCreateTests = describe "Cypher.Parser.Create" $
         `shouldParseCreateQuery` Create
           [ [Node personLabelledNode M.empty],
             [ Node
-                ( LabelledPatternComponentType
-                    (Just (UnboundText "m"))
-                    [UnboundText "Movie"]
+                ( LabelledPatternComponentType $
+                    LabelledPatternComponentTypeValue
+                      (Just (UnboundText "m"))
+                      [UnboundText "Movie"]
                 )
                 M.empty
             ]
@@ -38,4 +40,4 @@ shouldParseCreateQuery query expectedResult =
 
 personLabelledNode :: PatternComponentType
 personLabelledNode =
-  LabelledPatternComponentType (Just (UnboundText "p")) [UnboundText "Person"]
+  LabelledPatternComponentType $ LabelledPatternComponentTypeValue (Just (UnboundText "p")) [UnboundText "Person"]

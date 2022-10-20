@@ -33,9 +33,10 @@ runQuasiQuoteTests = describe "Cypher.QuasiQuote" $
                                  MatchPatternValue
                                    Nothing
                                    [ Node
-                                       ( LabelledPatternComponentType
-                                           (Just (UnboundText "per"))
-                                           [UnboundText "Person"]
+                                       ( LabelledPatternComponentType $
+                                           LabelledPatternComponentTypeValue
+                                             (Just (UnboundText "per"))
+                                             [UnboundText "Person"]
                                        )
                                        ( M.fromList
                                            [ (UnboundText "age", IntegerValue 32),

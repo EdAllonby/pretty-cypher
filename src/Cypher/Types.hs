@@ -40,11 +40,14 @@ data RelationshipHops
 
 newtype AnyPatternComponentTypeValue = AnyPatternComponentTypeValue {anyVariable :: LiteralText} deriving (Data, Typeable, Eq, Show)
 
+data LabelledPatternComponentTypeValue = LabelledPatternComponentTypeValue
+  { labelledVariable :: Maybe LiteralText,
+    labelledLabels :: [LiteralText]
+  }
+  deriving (Data, Typeable, Eq, Show)
+
 data PatternComponentType
-  = LabelledPatternComponentType
-      { labelledVariable :: Maybe LiteralText,
-        labelledLabels :: [LiteralText]
-      }
+  = LabelledPatternComponentType LabelledPatternComponentTypeValue
   | AnyPatternComponentType AnyPatternComponentTypeValue
   | EmptyPatternComponentType
   deriving (Data, Typeable, Eq, Show)
@@ -110,6 +113,8 @@ data WithValue
   | WithFunctionWrappedProperty (Function Property)
   deriving (Data, Typeable, Eq, Show)
 
+type IsDistinct = Bool
+
 data Clause
   = Match [MatchValue] -- TODO: Move this to a non-empty list data type?
   | OptionalMatch [MatchValue]
@@ -117,7 +122,7 @@ data Clause
   | Create [Pattern]
   | Delete [LiteralText] -- TODO: Can also be literal text surrounded by brackets, i.e. Delete (n). Doesn't mean node.
   | DetachDelete [LiteralText]
-  | Return {isDistinct :: Bool, returnValue :: ReturnValue}
+  | Return IsDistinct ReturnValue
   | Noop
   deriving (Data, Typeable, Eq, Show)
 
