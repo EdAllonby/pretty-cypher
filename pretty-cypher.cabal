@@ -1,120 +1,119 @@
-cabal-version: 1.12
+cabal-version:      3.4
+name:               pretty-cypher
+version:            0.1.0.0
+-- synopsis:
+-- description:
+license:            BSD-3-Clause
+license-file:       LICENSE
+author:             Ed Allonby
+maintainer:         edward.allonby@gmail.com
+-- copyright:
+category:           Codec
+build-type:         Simple
+extra-doc-files:    CHANGELOG.md
+-- extra-source-files:
 
--- This file has been generated from package.yaml by hpack version 0.35.0.
---
--- see: https://github.com/sol/hpack
---
--- hash: 408cb64c9c8d8f825d9cae2a841ddde35245299c6df372070b38cbce707e000d
-
-name:           pretty-cypher
-version:        0.1.0.0
-description:    Please see the README on GitHub at <https://github.com/EdAllonby/pretty-cypher#readme>
-homepage:       https://github.com/EdAllonby/pretty-cypher#readme
-bug-reports:    https://github.com/EdAllonby/pretty-cypher/issues
-author:         Ed Allonby
-maintainer:     edward.allonby@gmail.com
-copyright:      2020 Ed Allonby
-license:        BSD3
-license-file:   LICENSE
-build-type:     Simple
-extra-source-files:
-    README.md
-    ChangeLog.md
-
-source-repository head
-  type: git
-  location: https://github.com/EdAllonby/pretty-cypher
+common warnings
+    ghc-options:
+        -Wall
+        -Wcompat
+        -Widentities
+        -Wincomplete-record-updates
+        -Wincomplete-uni-patterns
+        -Wmissing-home-modules
+        -Wpartial-fields
+        -Wredundant-constraints
 
 library
-  exposed-modules:
-      Cypher.Parser.Core
-      Cypher.Parser.Create
-      Cypher.Parser.Delete
-      Cypher.Parser.Match
-      Cypher.Parser.Pattern
-      Cypher.Parser.Query
-      Cypher.Parser.Return
-      Cypher.Parser.With
-      Cypher.QuasiQuote
-      Cypher.Types
-  other-modules:
-      Paths_pretty_cypher
-  hs-source-dirs:
-      src
-  default-extensions:
-      GHC2021
-      OverloadedStrings
-      RecordWildCards
-      TemplateHaskell
-      QuasiQuotes
-  ghc-options: -Wall
-  build-depends:
-      base >=4.7 && <5
-    , containers
-    , hspec
-    , hspec-megaparsec
-    , megaparsec
-    , parser-combinators
-    , template-haskell
-    , text
-  default-language: Haskell2010
+    import:           warnings
+    exposed-modules:
+        Cypher.Parser.Core
+        Cypher.Parser.Create
+        Cypher.Parser.Delete
+        Cypher.Parser.Match
+        Cypher.Parser.Pattern
+        Cypher.Parser.Query
+        Cypher.Parser.Return
+        Cypher.Parser.With
+        Cypher.QuasiQuote
+        Cypher.Types
+    -- other-modules:
+    -- other-extensions:
+    build-depends:
+        base ^>=4.17.0.0
+      , containers
+      , hspec
+      , hspec-megaparsec
+      , megaparsec
+      , parser-combinators
+      , raw-strings-qq
+      , template-haskell
+      , text
 
-executable pretty-cypher-exe
-  main-is: Main.hs
-  other-modules:
-      Paths_pretty_cypher
-  hs-source-dirs:
-      app
-  default-extensions:
-      GHC2021
-      OverloadedStrings
-      RecordWildCards
-      TemplateHaskell
-      QuasiQuotes
-  ghc-options: -Wall -threaded -rtsopts -with-rtsopts=-N
-  build-depends:
-      base >=4.7 && <5
-    , containers
-    , hspec
-    , hspec-megaparsec
-    , megaparsec
-    , parser-combinators
-    , pretty-cypher
-    , template-haskell
-    , text
-  default-language: Haskell2010
+    hs-source-dirs:   src
+    default-extensions:
+        GHC2021
+        OverloadedStrings
+        RecordWildCards
+        TemplateHaskell
+        QuasiQuotes
+    default-language: GHC2021
+
+executable pretty-cypher
+    import:           warnings
+    main-is:          Main.hs
+    -- other-modules:
+    -- other-extensions:
+    build-depends:
+        base ^>=4.17.0.0
+      , pretty-cypher
+      , containers
+      , hspec
+      , hspec-megaparsec
+      , megaparsec
+      , parser-combinators
+      , raw-strings-qq
+      , template-haskell
+      , text
+    hs-source-dirs:   app
+    default-extensions:
+        GHC2021
+        OverloadedStrings
+        RecordWildCards
+        TemplateHaskell
+        QuasiQuotes
+    default-language: GHC2021
 
 test-suite pretty-cypher-test
-  type: exitcode-stdio-1.0
-  main-is: Spec.hs
-  other-modules:
-      Cypher.Parser.CreateSpec
-      Cypher.Parser.DeleteSpec
-      Cypher.Parser.MatchSpec
-      Cypher.Parser.PatternSpec
-      Cypher.Parser.QuerySpec
-      Cypher.Parser.ReturnSpec
-      Cypher.Parser.WithSpec
-      Cypher.QuasiQuoteSpec
-      Paths_pretty_cypher
-  hs-source-dirs:
-      test
-  default-extensions:
+    import:           warnings
+    default-language: GHC2021
+    other-modules:
+        Cypher.Parser.CreateSpec
+        Cypher.Parser.DeleteSpec
+        Cypher.Parser.MatchSpec
+        Cypher.Parser.PatternSpec
+        Cypher.Parser.QuerySpec
+        Cypher.Parser.ReturnSpec
+        Cypher.Parser.WithSpec
+        Cypher.QuasiQuoteSpec
+    -- other-extensions:
+    type:             exitcode-stdio-1.0
+    hs-source-dirs:   test
+    default-extensions:
       GHC2021
       OverloadedStrings
       RecordWildCards
       TemplateHaskell
       QuasiQuotes
-  ghc-options: -Wall -threaded -rtsopts -with-rtsopts=-N
-  build-depends:
-      base >=4.7 && <5
-    , containers
-    , hspec
-    , hspec-megaparsec
-    , megaparsec
-    , parser-combinators
-    , pretty-cypher
-    , raw-strings-qq
-    , template-haskell
-    , text
-  default-language: Haskell2010
+    main-is: Spec.hs
+    build-depends:
+        base ^>=4.17.0.0
+      , pretty-cypher
+      , containers
+      , hspec
+      , hspec-megaparsec
+      , megaparsec
+      , parser-combinators
+      , raw-strings-qq
+      , template-haskell
+      , text

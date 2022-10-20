@@ -1,0 +1,6 @@
+packages:
+         ./
+
+tests: True
+test-options: "--color"
+test-show-details: streaming
