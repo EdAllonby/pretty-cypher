@@ -48,7 +48,7 @@ RETURN *
                              [ MatchPattern
                                  Nothing
                                  [ Node
-                                     (AnyPatternComponentType (UnboundText "a"))
+                                     (AnyPatternComponentType $ AnyPatternComponentTypeValue (UnboundText "a"))
                                      M.empty,
                                    ConnectorDirection NoDirection,
                                    Relationship

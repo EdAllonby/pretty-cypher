@@ -16,7 +16,7 @@ runParserMatchTests = describe "Cypher.Parser.Match" $
         `shouldParseOptionalMatchQuery` OptionalMatch
           [ MatchPattern
               Nothing
-              [ Node (AnyPatternComponentType (UnboundText "a")) M.empty,
+              [ Node (AnyPatternComponentType $ AnyPatternComponentTypeValue (UnboundText "a")) M.empty,
                 ConnectorDirection NoDirection,
                 Relationship
                   ( LabelledPatternComponentType
@@ -34,7 +34,7 @@ runParserMatchTests = describe "Cypher.Parser.Match" $
         `shouldParseOptionalMatchQuery` OptionalMatch
           [ MatchPattern
               Nothing
-              [ Node (AnyPatternComponentType (UnboundText "a")) M.empty,
+              [ Node (AnyPatternComponentType $ AnyPatternComponentTypeValue (UnboundText "a")) M.empty,
                 ConnectorDirection NoDirection,
                 Relationship
                   ( LabelledPatternComponentType

@@ -38,12 +38,14 @@ data RelationshipHops
   | AnyHops
   deriving (Data, Typeable, Eq, Show)
 
+newtype AnyPatternComponentTypeValue = AnyPatternComponentTypeValue {anyVariable :: LiteralText} deriving (Data, Typeable, Eq, Show)
+
 data PatternComponentType
   = LabelledPatternComponentType
       { labelledVariable :: Maybe LiteralText,
         labelledLabels :: [LiteralText]
       }
-  | AnyPatternComponentType {anyVariable :: LiteralText}
+  | AnyPatternComponentType AnyPatternComponentTypeValue
   | EmptyPatternComponentType
   deriving (Data, Typeable, Eq, Show)
 

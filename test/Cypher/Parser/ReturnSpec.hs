@@ -201,7 +201,7 @@ runStandardParserReturnTests = do
         False
         ( ReturnExpressions
             [ ReturnPattern
-                [ Node (AnyPatternComponentType (UnboundText "a")) M.empty,
+                [ Node (AnyPatternComponentType $ AnyPatternComponentTypeValue (UnboundText "a")) M.empty,
                   ConnectorDirection AnonymousRightDirection,
                   Node EmptyPatternComponentType M.empty
                 ]
@@ -215,7 +215,7 @@ runStandardParserReturnTests = do
             [ ReturnFunctionWrappedPattern
                 ( Function
                     "count"
-                    [ Node (AnyPatternComponentType (UnboundText "a")) M.empty,
+                    [ Node (AnyPatternComponentType $ AnyPatternComponentTypeValue (UnboundText "a")) M.empty,
                       ConnectorDirection AnonymousRightDirection,
                       Node EmptyPatternComponentType M.empty
                     ]
@@ -293,7 +293,7 @@ runStandardParserReturnTests = do
             [ ReturnProperty
                 (Property (TextValue (QuotedText "something")) Nothing),
               ReturnPattern
-                [ Node (AnyPatternComponentType (UnboundText "a")) M.empty,
+                [ Node (AnyPatternComponentType $ AnyPatternComponentTypeValue (UnboundText "a")) M.empty,
                   ConnectorDirection AnonymousRightDirection,
                   Node EmptyPatternComponentType M.empty
                 ]

@@ -79,13 +79,13 @@ runParserPatternNodeTests = do
   it "parses pattern with any node" $
     "(n)"
       `shouldParsePatternQuery` [ Node
-                                    (AnyPatternComponentType (UnboundText "n"))
+                                    (AnyPatternComponentType $ AnyPatternComponentTypeValue (UnboundText "n"))
                                     M.empty
                                 ]
   it "parses pattern with any node specifying properties" $
     "(n{ name: ' D. A. V. E ', age: 32, height: 1.6, delta: -10, base: -3.14, today: true, tomorrow: false })"
       `shouldParsePatternQuery` [ Node
-                                    (AnyPatternComponentType (UnboundText "n"))
+                                    (AnyPatternComponentType $ AnyPatternComponentTypeValue (UnboundText "n"))
                                     standardProperties
                                 ]
 
@@ -188,14 +188,14 @@ runParserPatternRelationshipTests = do
   it "parses pattern with any relationship" $
     "[a]"
       `shouldParsePatternQuery` [ Relationship
-                                    (AnyPatternComponentType (UnboundText "a"))
+                                    (AnyPatternComponentType $ AnyPatternComponentTypeValue (UnboundText "a"))
                                     Nothing
                                     M.empty
                                 ]
   it "parses pattern with any relationship specifying properties" $
     "[a { name: ' D. A. V. E ', age: 32, height: 1.6, delta: -10, base: -3.14, today: true, tomorrow: false }]"
       `shouldParsePatternQuery` [ Relationship
-                                    (AnyPatternComponentType (UnboundText "a"))
+                                    (AnyPatternComponentType $ AnyPatternComponentTypeValue (UnboundText "a"))
                                     Nothing
                                     standardProperties
                                 ]
